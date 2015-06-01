@@ -103,14 +103,14 @@ abstract class page_socialwiki {
     /**
      * page_socialwiki constructor
      *
-     * @param $wiki. Current wiki
-     * @param $subwiki. Current subwiki.
-     * @param $cm. Current course_module.
+     * @param $wiki : Current wiki
+     * @param $subwiki : Current subwiki.
+     * @param $cm Current : course_module.
      */
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $CFG, $USER;
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/toolbar.js"));
-         $PAGE->requires->js(new moodle_url("table/jquery.dataTables.min.js"));
+        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.min.js"));
         $this->subwiki = $subwiki;
 		$this->wiki=$wiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
@@ -148,7 +148,7 @@ abstract class page_socialwiki {
         $this->create_navbar();
         
 
-		//$html = $OUTPUT->header();
+	//$html = $OUTPUT->header();
         
         //var_dump($html);
         //echo $html;
@@ -215,7 +215,7 @@ abstract class page_socialwiki {
 
     /**
      * Setup page tabs, if options is empty, will set up active tab automatically
-     * @param array $options, tabs options
+     * @param array $options : tabs options
      */
     protected function setup_tabs($options = array()) {
         global $CFG, $PAGE;
@@ -265,7 +265,7 @@ abstract class page_socialwiki {
         global $PAGE;
 
         $this->page = $page;
-        $this->title = $page->title.' ID:'.$page->id;
+        $this->title = $page->title.' ID: '.$page->id;
         // set_title calls format_string itself so no probs there
         $PAGE->set_title($this->title);
     }
@@ -273,7 +273,7 @@ abstract class page_socialwiki {
     /**
      * Method to set the current page title.
      * This method must be called when the current page is not created yet.
-     * @param string $title Current page title.
+     * @param string $title : Current page title.
      */
     function set_title($title) {
         global $PAGE;
@@ -285,7 +285,7 @@ abstract class page_socialwiki {
 
     /**
      * Method to set current group id
-     * @param int $gid Current group id
+     * @param int $gid : Current group id
      */
     function set_gid($gid) {
         $this->gid = $gid;
@@ -343,7 +343,7 @@ abstract class page_socialwiki {
 
     /**
      * Generates a table view for a list of pages
-     * @param  Array $pages - a list
+     * @param  Array $pages : a list
      * @param $table_id : the id under which the table will appear in the page.
      * @return [type]
      */
@@ -470,9 +470,9 @@ class page_socialwiki_view extends page_socialwiki {
 
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
 
-        if (!empty($this->page)) {
-            //echo $this->wikioutput->prettyview_link($this->page);
-        }
+        /*if (!empty($this->page)) {
+            echo $this->wikioutput->prettyview_link($this->page);
+        }*/
 
         //echo $this->wikioutput->page_index();
 
@@ -480,7 +480,7 @@ class page_socialwiki_view extends page_socialwiki {
     }
 	
 	protected function print_pagetitle() {
-        global $OUTPUT,$PAGE;
+        global $OUTPUT;
 		//$user = socialwiki_get_user_info($this->page->userid);
 		//$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
 		$html = '';
@@ -501,10 +501,10 @@ class page_socialwiki_view extends page_socialwiki {
 
 	$unlikicon = new moodle_url('/mod/socialwiki/img/icons/likefilled.png');
 	$unliketip = 'click to unlike this page version';
-    $liketip = 'click to unlike this page version';
 	$likicon = new moodle_url('/mod/socialwiki/img/icons/hollowlike.png');
-	$likefrom = urlencode(new moodle_url('/mod/socialwiki/view.php', array('pageid' => $this->page->id)));
-	$likaction = new moodle_url('/mod/socialwiki/like.php', array('pageid' => $this->page->id, 'from'=> $likefrom)); // 'swid'=>$this->subwiki->id
+        $liketip = 'click to unlike this page version';
+	//$likefrom = urlencode(new moodle_url('/mod/socialwiki/view.php', array('pageid' => $this->page->id)));
+	//$likaction = new moodle_url('/mod/socialwiki/like.php', array('pageid' => $this->page->id, 'from'=> $likefrom)); // 'swid'=>$this->subwiki->id
 
 
   //      $html .= $OUTPUT->heading(format_string($this->page->title), 1, 'socialwiki_headingtitle','viewtitle');
@@ -512,74 +512,70 @@ class page_socialwiki_view extends page_socialwiki {
 		//$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_link'));
 		//$html .= $OUTPUT->container_end();
 
-	
-	$thetitle = html_writer::start_tag('h1');
+        
+        //Page Title
+        $thetitle = html_writer::start_tag('h1');
 	$thetitle .= format_string($this->page->title);
 	$thetitle .= html_writer::end_tag('h1');
 	
-
+        //Right aligned Like Button
+        $theliker = html_writer::start_tag('div', array('style'=>'float:right'));
 	if(socialwiki_liked($this->uid, $this->page->id)) {
-		//hide ĺike link 
-		$theliker = html_writer::start_tag('button', array('class'=> 'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip, 'style'=>'display:none'));	
+		//hide ĺike link
+		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip, 'style'=>'display:none'));	
 	} else {
 		//show like link
-
-		$theliker = html_writer::start_tag('button', array('class'=> 'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip));	
+		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip));	
 	}
+        
 	$theliker .= html_writer::tag('img', '', array('src'=>$likicon));
 	$theliker .= 'Like';
 	$theliker .= html_writer::end_tag('button');
 
 	if(socialwiki_liked($this->uid, $this->page->id)) {
 		//hide ĺike link 
-		$theliker .= html_writer::start_tag('button', array('class'=> 'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip));	
+		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip));	
 	} else {
 		//show like link
-		$theliker .= html_writer::start_tag('button', array('class'=> 'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip, 'style'=>'display:none'));	
+		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip, 'style'=>'display:none'));	
 	}
 	$theliker .= html_writer::tag('img', '', array('src'=>$unlikicon ));
 	$theliker .= 'Unlike';
 	$theliker .= html_writer::end_tag('button');
 
 	$likess = socialwiki_numlikes($this->page->id);
-	$theliker .= html_writer::tag('br', '');
+	$theliker .= html_writer::tag('br');
 
-	$theliker .= '(';
+        //show number of likes
 	$theliker .= html_writer::start_tag('span', array ('id' => 'numlikes')); //span updated asynchronously after ajax request
 	$theliker .= "$likess";
-	$theliker .= html_writer::end_tag('span');
-
 	if ($likess == 1){
-		$theliker .= ' like)';	
+		$theliker .= ' like';
 	} else {
-//	$theliker .= "($likess";
-		$theliker .= ' likes)';	
+		$theliker .= ' likes';
 	}
-
-	$t = new html_table();
-
-	$row1 = array($thetitle, $theliker);
-	$t->data = array($row1);
-	$t->attributes= array('class'=>'socialwiki_liketable'); //then set width (and other attributes possibly) in css
-	$t->size= array ('75%', '25%'); //relative sizes of right/left
-
-//	$hh = $this->output->container(html_writer::table($t),'ba');
-	$hh = html_writer::table($t);
-
-	$html .= $hh;
+        $theliker .= html_writer::end_tag('span');
+        
+        $theliker .= html_writer::end_tag('div');
+        
+        
+        $html .=html_writer::start_tag('div', array('class'=>'socialwiki_liketable'));
+	$html .= $theliker.$thetitle;
+        $html .=html_writer::end_tag('div');
+        
 	$html .= $OUTPUT->container_end();
         echo $html;
     }
 
     function print_content() {
-        global $PAGE, $CFG;
+        //global $PAGE;
 
         if (socialwiki_user_can_view($this->subwiki)) {
 
             if (!empty($this->page)) {
                 socialwiki_print_page_content($this->page, $this->modcontext, $this->subwiki->id); //function in locallib.php
             	echo $this->wikioutput->prettyview_link($this->page);
-                $wiki = $PAGE->activityrecord;
+                //$wiki = $PAGE->activityrecord;
             } else {
                 print_string('nocontent', 'socialwiki');
                 // TODO: fix this part
@@ -1593,7 +1589,7 @@ class page_socialwiki_history extends page_socialwiki {
      *
      */
     function print_content() {
-        global $PAGE,$OUTPUT;
+        global $PAGE, $OUTPUT;
 
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
@@ -1631,7 +1627,7 @@ class page_socialwiki_history extends page_socialwiki {
 		//add compare button only if there are multiple versions of a page 
 		if(count($tree->nodes)>1){
 			echo $OUTPUT->container_start('socialwiki_diffbutton');
-			echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'value'=>get_string('comparesel', 'socialwiki')));
+			echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'style'=>'margin-top:15px', 'value'=>get_string('comparesel', 'socialwiki')));
 			echo $OUTPUT->container_end();
 		}
 		echo html_writer::end_tag('form');
@@ -1726,9 +1722,10 @@ class page_socialwiki_home extends page_socialwiki {
 
     private $tab;
 
-    const REVIEW_TAB = 2;
+    
     const EXPLORE_TAB = 0;
     const TOPICS_TAB = 1;
+    const REVIEW_TAB = 2;
     const PEOPLE_TAB = 3;
 
 
@@ -1737,6 +1734,7 @@ class page_socialwiki_home extends page_socialwiki {
         Global $PAGE, $CFG;
         parent::__construct($wiki, $subwiki, $cm);
         $this->tab = $t;
+        $PAGE->set_title('Social Wiki Home');
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/likeajax_home.js"));
         require_once($CFG->dirroot . "/mod/socialwiki/table/table.php");
         require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
@@ -1853,14 +1851,18 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     function print_review_page() {
-        Global $USER;
+        //Global $USER;
         // $this->print_page_list_content();
         $this->print_favorite_pages();
         $this->print_recent_likes();
         //$userTable = UserTable::make_followed_users_table( $USER->id, $this->subwiki->id);
-        echo '<a id="Ifollow" href="#"></a><h2>People You Follow:</h2>';
         
+        echo "<a id='Ifollow' href='#'></a><h2 class='table_region'>People You Follow:</h2>";
         echo "<div class='tableregion asyncload' tabletype='followedusers'><table></table></div>";
+        
+        echo "<h2 class='table_region'>My Pages:</h2>";
+        echo "<div class='tableregion asyncload' tabletype='mypageversions'><table></table></div>";
+        
         /*if ($userTable == null){
             echo '<h3>'.get_String('youfollownobody', 'socialwiki').'</h3>';
         } else {
@@ -1874,21 +1876,21 @@ class page_socialwiki_home extends page_socialwiki {
     function print_topics_tab() {
         //global $CFG, $USER;
         //require_once($CFG->dirroot . "/mod/socialwiki/table/topicsTable.php");
-       // $topicsTable =  TopicsTable::make_all_topics_table($USER->id,$this->subwiki->id);
-        echo "<h2>All pages:</h2>";
-       //echo $topicsTable->get_as_HTML();
+        // $topicsTable =  TopicsTable::make_all_topics_table($USER->id,$this->subwiki->id);
+        echo "<h2 class='table_region'>"
+            ."<a style='float:right' class='label label-primary' "
+            ."href='create.php?action=new&swid=".$this->subwiki->id."'>Make a new Page</a>"
+            ."<div>All pages:</div></h2>";
+        //echo $topicsTable->get_as_HTML();
 
         echo "<div class='tableregion asyncload' tabletype='alltopics'><table></table></div>";
     }
 
     function print_people_tab() {
-        global $CFG, $USER;
+        //global $CFG, $USER;
         
-
-        
-
         //$userTable2 = UserTable::make_followers_table($USER->id, $this->subwiki->id);
-        echo '<a id="myfollowers" href="#"></a><h2>People Following you:</h2>';
+        echo "<a id='myfollowers' href='#'></a><h2 class='table_region'>People Following you:</h2>";
         echo "<div class='tableregion asyncload' tabletype='followers'><table></table></div>";
         /*if ($userTable2 == null){
             echo '<h3>'.get_String('youhavenofollowers', 'socialwiki').'</h3>';
@@ -1897,7 +1899,7 @@ class page_socialwiki_home extends page_socialwiki {
         }*/
         
         //$userTable3 = UserTable::make_all_users_table($USER->id, $this->subwiki->id);
-        echo "<h2>All Active Users:</h2>";
+        echo "<h2 class='table_region'>All Active Users:</h2>";
         echo "<div class='tableregion asyncload' tabletype='allusers'><table></table></div>";
         //echo $userTable3->get_as_HTML();
     }
@@ -1940,7 +1942,8 @@ class page_socialwiki_home extends page_socialwiki {
 
     
     public function print_followed_content() {
-        echo "<h2>From Users You Follow:</h2> <div class='tableregion asyncload' tabletype='versionsfollowed'>".page_socialwiki::getCombineForm()."<table></table></div>";
+        echo "<h2 class='table_region'>From Users You Follow:</h2>";
+        echo "<div class='tableregion asyncload' tabletype='versionsfollowed'>".page_socialwiki::getCombineForm()."<table></table></div>";
 
     }
 
@@ -1950,7 +1953,8 @@ class page_socialwiki_home extends page_socialwiki {
 
         //$swid = $this->subwiki->id;
         //echo '<script> var userid='.$USER->id.', swid='.$this->subwiki->id.';</script>' MOVED TO ABOVE
-        echo "<h2>Favorites:</h2> <div class='tableregion asyncload' tabletype='faves'><table></table></div>";
+        echo "<h2 class='table_region'>Favorites:</h2>";
+        echo "<div class='tableregion asyncload' tabletype='faves'><table></table></div>";
         //WILL BE RENDERED BY JAVASCRIPT in likeajax.js
         /*
         if($favs = socialwiki_get_user_favorites($USER->id, $swid)) {
@@ -1964,7 +1968,8 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     private function print_recent_likes() {
-         echo "<h2>Recent Likes:</h2> <div class='tableregion asyncload' tabletype='recentlikes'><table></table></div>";
+         echo "<h2 class='table_region'>Recent Likes:</h2>";
+         echo "<div class='tableregion asyncload' tabletype='recentlikes'><table></table></div>";
          /*
         global $USER;
         $swid = $this->subwiki->id;
@@ -2008,7 +2013,7 @@ class page_socialwiki_home extends page_socialwiki {
      *
      */
     private function print_page_list_content() {
-        global $OUTPUT,$CFG, $USER;
+        //global $OUTPUT,$CFG, $USER;
 
         echo "<h2 class='table_region'>All Page Versions:</h2>";
         echo "<div class='tableregion asyncload' tabletype='allpageversions'>".page_socialwiki::getCombineForm()."<table></table></div>";
@@ -2034,10 +2039,8 @@ class page_socialwiki_home extends page_socialwiki {
      *
      */
     private function print_updated_content() {
-
             echo "<h2 class='table_region'>New Page Versions:</h2>";
             echo "<div class='tableregion asyncload' tabletype='newpageversions'>".page_socialwiki::getCombineForm()."<table></table></div>";
-
     }
 	
 	/*
@@ -3066,6 +3069,7 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
         Global $PAGE, $CFG;
         parent::__construct($wiki, $subwiki, $cm);
         $this->uid = $targetuser;
+        $PAGE->set_title(fullname(socialwiki_get_user_info($targetuser)));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/ajax_userpage.js"));
         /*
         require_once($CFG->dirroot . "/mod/socialwiki/table/table.php");
@@ -3168,7 +3172,8 @@ class page_socialwiki_viewuserpages extends page_socialwiki{
         $html .= '<script></script>';
         $combineform = page_socialwiki::getCombineForm();//<br><input id="showLocalSR" type="checkbox"> Show articles I already have.</form>';
         $html .= '<h2 class="table_region">Favourite Pages</h2><div class="asyncload" tabletype="userfaves" >'.$combineform.'<table></table></div>';
-		$html .= $OUTPUT->container_end();
+	$html .= '<h2 class="table_region">Created Pages</h2><div class="asyncload" tabletype="userpageversions" >'.$combineform.'<table></table></div>';
+        $html .= $OUTPUT->container_end();
 		
 		$html.=$this->wikioutput->content_area_end();
 		echo $html;

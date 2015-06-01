@@ -150,11 +150,11 @@ table.datatable {
 }
 
 table.datatable thead th {
-	padding: 3px 18px 3px 10px;
+	padding: 3px 16px 3px 10px;
 	border-bottom: 1px solid black;
 	font-weight: bold;
 	cursor: pointer;
-	* cursor: hand;
+	*cursor: hand;
 }
 
 table.datatable tfoot th {

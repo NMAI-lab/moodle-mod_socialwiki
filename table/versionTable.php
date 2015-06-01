@@ -206,11 +206,13 @@ class versionTable extends socialwiki_table {
             } else if ($num >1){
             	$firstctr .= " and ".$num." others.";
             }
-                                
-            $ctr = "Others:&#013";
+            if ($num != 0) {
+                $ctr = "Others:&#013";
             foreach($contributors as $c) {
                     $ctr .= fullname(socialwiki_get_user_info($c)).'&#013'; //that's a newline
             }
+            }
+            
             if ($idfirst==$this->uid){
                 $href= "href='".$CFG->wwwroot."/mod/socialwiki/home.php?id=".$PAGE->cm->id."'";
             } else {
@@ -352,10 +354,10 @@ class versionTable extends socialwiki_table {
     public static function makeRecentLikesTable($uid, $swid, $combiner=AVG){
     	$likes = socialwiki_get_liked_pages($uid, $swid);
     	if(!empty($likes)){
-        	$headers = versionTable::getHeaders('mystuff');
-    		return new versionTable($uid, $swid,$likes, $headers, $combiner);
+            $headers = versionTable::getHeaders('mystuff');
+            return new versionTable($uid, $swid,$likes, $headers, $combiner);
     	} else {
-    		return null;
+            return null;
     	}
     }
 
@@ -371,13 +373,10 @@ class versionTable extends socialwiki_table {
 
     public static function makeContentFromFollowedTable($userid, $swid){
         
-        
         $pages = socialwiki_get_pages_from_followed($userid, $swid);
 
         if ($pages) {
-            
             $headers = versionTable::getHeaders('version');
-            
             return new versionTable($userid, $swid,$pages, $headers);
         }
         return null;
@@ -387,16 +386,23 @@ class versionTable extends socialwiki_table {
     	$pages = socialwiki_get_updated_pages_by_subwiki($swid, $uid);
 
         if ($pages) {
-            
-         	$headers = versionTable::getHeaders('version');
-            
- 		   	return new versionTable($uid, $swid,$pages, $headers, $combiner);
- 		}
- 		return null;
+            $headers = versionTable::getHeaders('version');
+            return new versionTable($uid, $swid,$pages, $headers, $combiner);
+        }
+ 	return null;
     }
 
- 	public static function makeAllVersionsTable($uid, $swid, $combiner=AVG){
- 	    $pages = socialwiki_get_page_list($swid);
+    public static function makeAllVersionsTable($uid, $swid, $combiner=AVG){
+ 	$pages = socialwiki_get_page_list($swid);
+
+        if (!empty($pages)) {
+            $headers = versionTable::getHeaders('version');
+            return new versionTable($uid, $swid, $pages, $headers, $combiner);
+        }
+    }
+    
+    public static function makeUserVersionsTable($uid, $swid, $combiner=AVG){
+ 	$pages = socialwiki_get_user_page_list($uid, $swid);
 
         if (!empty($pages)) {
             $headers = versionTable::getHeaders('version');
@@ -407,12 +413,11 @@ class versionTable extends socialwiki_table {
 
     //public static function 
 
-	public static function makeHTMLVersionTable($uid, $swid, $pages,$headers, $tabid) {
-		Global $USER;
-
-		$thetable = new versionTable($uid, $swid, $pages, $headers);
-		//echo $thetable;
-		return $thetable->get_as_HTML($tabid); // defined in parent class
+    public static function makeHTMLVersionTable($uid, $swid, $pages,$headers, $tabid) {
+        
+	$thetable = new versionTable($uid, $swid, $pages, $headers);
+	//echo $thetable;
+	return $thetable->get_as_HTML($tabid); // defined in parent class
 
     }
  	

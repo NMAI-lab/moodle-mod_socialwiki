@@ -237,7 +237,7 @@ Popular: orders the pages with the pages with more likes appearing at the top';
 $string['searchmenu']='Search views';
 $string['searchresult'] = 'Search results:';
 $string['searchterms'] = 'Search terms';
-$string['search_socialwikis'] = 'Search wikis';
+$string['search_socialwikis'] = 'Search Wiki';
 $string['special'] = 'Special';
 $string['style']='Select style for Social wiki activity';
 $string['tableofcontents'] = 'Table of contents';

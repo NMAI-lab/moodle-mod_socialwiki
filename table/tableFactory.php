@@ -90,6 +90,16 @@ switch($tabletype){
 		if ($trustcombiner!='' and $t!= null)
 			$t->set_trust_combiner($trustcombiner);
 		break;
+        case "mypageversions":
+		$t= versionTable::makeUserVersionsTable($userid, $swid);
+		if ($trustcombiner!='' and $t!= null)
+			$t->set_trust_combiner($trustcombiner);
+		break;
+        case "userpageversions":
+		$t= versionTable::makeUserVersionsTable($targetuser, $swid);
+		if ($trustcombiner!='' and $t!= null)
+			$t->set_trust_combiner($trustcombiner);
+		break;
 	case "userfaves": //faves by another user
 		$t = versionTable::make_A_User_Faves_table($userid, $swid, $targetuser);
 		if ($trustcombiner!='' and $t!= null)

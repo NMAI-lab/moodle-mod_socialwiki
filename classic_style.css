@@ -27,25 +27,25 @@
 
 .table_region
 {
-	margin-left: 25px;
-	margin-right: 25px;
-	display: inline-block;
-	overflow: auto;
-	min-width: 0px;
-	max-height: 300px;
+    margin-left: 25px;
+    margin-right: 25px;
+    //display: inline-block;
+    overflow: auto;
+    min-width: 0px;
+    max-height: 300px;
 }
 
 .home_user_name
 {
-	text-align: left;
-	margin-bottom: 0px;
-	margin-left: 25px;
+    text-align: left;
+    margin-bottom: 0px;
+    margin-left: 25px;
 }
 
 .followdata
 {
-	margin-left: 25px;
-	margin-top: 0px;
+    margin-left: 25px;
+    margin-top: 0px;
 }
 
 .tree_node
@@ -54,86 +54,88 @@ color:black !important;
 }
 
 .socialwiki_liketable {
-	width: 100%
+    width: 100%;
 }
 
 table.peer_table td {
-	padding: 3px 10px;
+    padding: 3px 10px;
 }
 
 .relation_line
 {
-background-color:black !important;
+    background-color:black !important;
 }
 
 .socialwiki_likelist, .socialwiki_followlist
 {
-text-align:center;
+    text-align:center;
 }
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
 {
-	position:relative;
-	margin-left:50px;
+    position:relative;
+    margin-left:50px;
 }
 
 .socialwiki_link
 {
-text-decoration:underline;
-margin-left:25px;
-font-weight:bold;
-font-style:italic;
+    text-decoration:underline;
+    //margin-left:25px;
+    font-weight:bold;
+    font-style:italic;
 }
 
 .socialwiki_link:link
 {
     display:inline-block;
-    margin-left:20px;
+    //margin-left:20px;
 }
 
 .socialwiki_likebutton
 {
-line-height: 20px;
-font-size: 1.5em;
-font-weight: bold;
-color:gray;
+    line-height: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color:gray;
+    width: 160px;
+    //margin-top: -14px;
 }
 
 /*this is in fact used just to display the author in the bottom of a page (should be renamed)*/
 .wikititle
 {
-text-align:right;
+    text-align:right;
 }
 
 #socialwiki_container
 {
-	display:none !important;
+    display:none !important;
 }
 
 
 #page-mod-socialwiki-search #socialwiki_content_area
 {
-overflow:auto;
-position:relative;
-text-align:left;
+    overflow:auto;
+    position:relative;
+    text-align:left;
 }
 
 #page-mod-socialwiki-history #socialwiki_content_area
 {
-overflow:auto;
-position:relative;
-text-align:left;
+    overflow:auto;
+    position:relative;
+    text-align:left;
 }
 
 .slidecontainer
 {
-	display:inline-block;
-	margin:25px;
-	width:20px;
+    display:inline-block;
+    margin:25px;
+    width:20px;
 	
 }
 
 input#preview
 {
-	display:none;
+    display:none;
 }

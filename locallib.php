@@ -164,17 +164,6 @@ function socialwiki_get_current_version($pageid) {
 }
 
 /**
- * Alias of wiki_get_current_version
- * @TODO, does the exactly same thing as wiki_get_current_version, should be removed
- * @param int $pageid
- * @return object
- */
-function socialwiki_get_last_version($pageid) {
-    return socialwiki_get_current_version($pageid);
-}
-
-
-/**
  * Get page section
  * @param int $pageid
  * @param string $section
@@ -401,7 +390,7 @@ function socialwiki_create_page($swid, $title, $format, $userid, $parent = NULL)
     $versionid = null;
     $versionid = $DB->insert_record('socialwiki_versions', $version);
 
-    // Createing a new empty page
+    // Creating a new empty page
     $page = new stdClass();
     $page->subwikiid = $swid;
     $page->title = $title;
@@ -535,21 +524,42 @@ function socialwiki_get_page_list($swid, $filter_0_likes=true) {
     global $DB;
     
     if ($filter_0_likes){
-
-
         $sql = "SELECT DISTINCT p.* FROM {socialwiki_pages} AS p INNER JOIN {socialwiki_likes} AS l ON p.id=l.pageid WHERE p.subwikiid=?";
         $records = $DB->get_records_sql($sql, array("subwikiid"=>$swid));
         return $records;
     } else {
-     $records = $DB->get_records('socialwiki_pages', array('subwikiid' => $swid), 'title ASC');    
-     return $records;
+        $records = $DB->get_records('socialwiki_pages', array('subwikiid' => $swid), 'title ASC');    
+        return $records;
     }
-    
-    
 }
 
 function socialwiki_get_topics($swid) {
     $records = socialwiki_get_page_list($swid);
+    $pages = array();
+
+    foreach ($records as $r) {
+        if (!array_key_exists($r->title, $pages)) {
+            $pages[$r->title] = array();
+            $pages[$r->title]["Views"] = 0;
+            $pages[$r->title]["Likes"] = 0;
+            $pages[$r->title]["Versions"] = 0;
+        }
+        $pages[$r->title]["Views"] += intval($r->pageviews);
+        $pages[$r->title]["Likes"] += intval(socialwiki_numlikes($r->id));
+        $pages[$r->title]["Versions"]++;
+    }
+    return $pages;
+}
+
+function socialwiki_get_user_page_list($uid, $swid) {
+    global $DB;
+    
+    $records = $DB->get_records('socialwiki_pages', array('subwikiid' => $swid, 'userid' => $uid), 'title ASC');    
+    return $records;
+}
+
+function socialwiki_get_user_topics($uid, $swid) {
+    $records = socialwiki_get_user_page_list($uid, $swid);
     $pages = array();
 
     foreach ($records as $r) {
@@ -633,7 +643,7 @@ function socialwiki_search_content($swid, $search) {
 function socialwiki_search_all($swid, $search) {
     global $DB;
     
-    $sql = "SELECT *, COUNT(pageid) AS total 
+    $sql = "SELECT {socialwiki_pages}.*, COUNT(pageid) AS total 
     FROM  {socialwiki_pages}  
     LEFT JOIN  {socialwiki_likes}  ON {socialwiki_pages}.id = {socialwiki_likes}.pageid 
     WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.cachedcontent LIKE ? OR {socialwiki_pages}.title LIKE ?)  
@@ -1718,7 +1728,6 @@ function socialwiki_get_liked_pages($userid, $subwikiid, $limit=1000) {
     return $pages;
 }
 
-
 function socialwiki_get_pages_from_followed($userid, $subwikiid, $filterUnseen= true){ //pages liked by those $userid follows
     global $DB;
 
@@ -2088,7 +2097,7 @@ function socialwiki_order_pages_using_peers($peers,$pages,$scale){
  * @param int depth 
  * @param int array checked is an array of users that have already been checked
  */ 
- function socialwiki_follow_depth($userfrom,$userto,$swid,$depth=1,&$checked=array()){
+function socialwiki_follow_depth($userfrom,$userto,$swid,$depth=1,&$checked=array()){
 	if(socialwiki_is_following($userfrom,$userto,$swid)){
 		return $depth;
 	}
@@ -2110,7 +2119,4 @@ function socialwiki_order_pages_using_peers($peers,$pages,$scale){
 
 	}
 	return 0;
- }
-
-
-
+}

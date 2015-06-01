@@ -189,7 +189,7 @@
 ./lang/en/wiki.php~:$string['pageindex_help'] = 'This wiki\'s page tree';
 ./lang/en/wiki.php~:$string['removeallwikitags'] = 'Remove all wiki tags';
 ./lang/en/wiki.php~:$string['saving'] = 'Saving wiki page';
-./lang/en/wiki.php~:$string['searchwikis'] = 'Search wikis';
+./lang/en/wiki.php~:$string['searchwikis'] = 'Search Wiki';
 ./lang/en/wiki.php~:$string['updatedpages_help'] = "Recently updated wiki pages";
 ./lang/en/wiki.php~:$string['updatedwikipages'] = "Updated wiki pages";
 ./lang/en/wiki.php~:$string['wiki'] = 'Wiki';
@@ -257,7 +257,7 @@
 ./lang/en/socialwiki.php~:$string['pageindex_help'] = 'This wiki\'s page tree';
 ./lang/en/socialwiki.php~:$string['removeallwikitags'] = 'Remove all wiki tags';
 ./lang/en/socialwiki.php~:$string['saving'] = 'Saving wiki page';
-./lang/en/socialwiki.php~:$string['search_socialwikis'] = 'Search wikis';
+./lang/en/socialwiki.php~:$string['search_socialwikis'] = 'Search Wiki';
 ./lang/en/socialwiki.php~:$string['updatedpages_help'] = "Recently updated wiki pages";
 ./lang/en/socialwiki.php~:$string['updatedwikipages'] = "Updated wiki pages";
 ./lang/en/socialwiki.php~:$string['wikiattachments'] = 'Wiki attachments';
@@ -322,7 +322,7 @@
 ./lang/en/socialwiki.php:$string['pageindex_help'] = 'This wiki\'s page tree';
 ./lang/en/socialwiki.php:$string['removeallwikitags'] = 'Remove all wiki tags';
 ./lang/en/socialwiki.php:$string['saving'] = 'Saving wiki page';
-./lang/en/socialwiki.php:$string['search_socialwikis'] = 'Search wikis';
+./lang/en/socialwiki.php:$string['search_socialwikis'] = 'Search Wiki';
 ./lang/en/socialwiki.php:$string['updatedpages_help'] = "Recently updated wiki pages";
 ./lang/en/socialwiki.php:$string['updatedwikipages'] = "Updated wiki pages";
 ./lang/en/socialwiki.php:$string['wikiattachments'] = 'Wiki attachments';
@@ -389,7 +389,7 @@
 ./lang/en/social_wiki.php~:$string['pageindex_help'] = 'This wiki\'s page tree';
 ./lang/en/social_wiki.php~:$string['removeallwikitags'] = 'Remove all wiki tags';
 ./lang/en/social_wiki.php~:$string['saving'] = 'Saving wiki page';
-./lang/en/social_wiki.php~:$string['search_social_wikis'] = 'Search wikis';
+./lang/en/social_wiki.php~:$string['search_social_wikis'] = 'Search Wiki';
 ./lang/en/social_wiki.php~:$string['updatedpages_help'] = "Recently updated wiki pages";
 ./lang/en/social_wiki.php~:$string['updatedwikipages'] = "Updated wiki pages";
 ./lang/en/social_wiki.php~:$string['social_wikimode_help'] = 'The wiki mode determines whether everyone can edit the wiki - a collaborative wiki - or whether everyone has their own wiki which only they can edit - an individual wiki.';
