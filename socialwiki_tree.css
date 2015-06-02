@@ -1,5 +1,10 @@
 /*Now the CSS*/
-* {margin: 0; padding: 0;}
+
+.hider, .collapser {
+    float: right;
+    padding: 0px;
+    cursor: pointer;
+}
 
 .tree {
 white-space: nowrap;

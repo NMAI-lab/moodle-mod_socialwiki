@@ -2120,3 +2120,35 @@ function socialwiki_follow_depth($userfrom,$userto,$swid,$depth=1,&$checked=arra
 	}
 	return 0;
 }
+
+/**
+ * Gives the time in a format that is readable
+ *
+ * @param int $time : time in system format
+ * @param boolean $timeago : if true format how long ago instead of date
+ *
+ * @return string in a readable format
+ */
+
+function socialwiki_format_time($time, $timeago = true) {
+    if (!$timeago) {
+        return strftime('%d %b %Y', $time);
+    }
+    
+    $diff = (new DateTime)->diff(new DateTime('@'.$time));
+    $types = array(
+        'y' => 'year',
+        'm' => 'month',
+        'w' => 'week',
+        'd' => 'day',
+        'h' => 'hour',
+        'i' => 'minute',
+        's' => 'second',
+    );
+    
+    foreach ($types as $t => &$i) {
+        if ($diff->$t) {
+            return $diff->$t.' '.$i.($diff->$t > 1 ? 's':'').' ago';
+        }
+    }
+}

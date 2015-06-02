@@ -12,8 +12,7 @@ $(document).ready(function()
         {
             $("#unlikelink").hide();
 	    $("#likelink").show();
-	    $("#numlikes").text(data); //data is the new number of likes
-	    
+            $("#numlikes").text(data + ((data == 1) ? ' like':' likes'));
         });
     });
     $("#likelink").click(function()
@@ -23,7 +22,7 @@ $(document).ready(function()
         {
             $("#likelink").hide();
 	    $("#unlikelink").show();
-	    $("#numlikes").text(data); //data is the new number of likes
+	    $("#numlikes").text(data + ((data == 1) ? ' like':' likes'));
         });
     });
 });

@@ -81,8 +81,8 @@ abstract class page_socialwiki {
     /**
      * @var array The tabs set used in social wiki module
      */
-    protected $tabs = array('view' => 'view', 'edit' => 'edit', 'history' => 'versions'); //refers to terms listed in file socialwiki.php under lang/en folder
-/*    protected $tabs = array('home'=>'home','view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
+    protected $tabs = array('view'=>'view', 'edit'=>'edit', 'history'=>'versions', 'admin'=>'admin'); //refers to terms listed in file socialwiki.php under lang/en folder
+    /*protected $tabs = array('home'=>'home','view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
                             'versions' => 'history','manage' => 'manage');*/
 
     /**
@@ -206,7 +206,7 @@ abstract class page_socialwiki {
         $html = '';
 
         $html .= $OUTPUT->container_start();
-        $html .= $OUTPUT->heading(format_string($this->title), 2, 'socialwiki_headingtitle');
+        $html .= $OUTPUT->heading(format_string($this->title), 1, 'socialwiki_headingtitle');
         $html .= $OUTPUT->container_end();
         echo $html;
 
@@ -539,7 +539,7 @@ class page_socialwiki_view extends page_socialwiki {
 		//show like link
 		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip, 'style'=>'display:none'));	
 	}
-	$theliker .= html_writer::tag('img', '', array('src'=>$unlikicon ));
+	$theliker .= html_writer::tag('img', '', array('src'=>$unlikicon));
 	$theliker .= 'Unlike';
 	$theliker .= html_writer::end_tag('button');
 
@@ -548,12 +548,7 @@ class page_socialwiki_view extends page_socialwiki {
 
         //show number of likes
 	$theliker .= html_writer::start_tag('span', array ('id' => 'numlikes')); //span updated asynchronously after ajax request
-	$theliker .= "$likess";
-	if ($likess == 1){
-		$theliker .= ' like';
-	} else {
-		$theliker .= ' likes';
-	}
+	$theliker .= $likess.($likess == 1 ? ' like':' likes');
         $theliker .= html_writer::end_tag('span');
         
         $theliker .= html_writer::end_tag('div');
@@ -1073,6 +1068,7 @@ class page_socialwiki_search extends page_socialwiki {
 		$PAGE->requires->jquery_plugin('ui-css');
 		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
+                $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/jquery.tagcloud.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
@@ -1577,6 +1573,7 @@ class page_socialwiki_history extends page_socialwiki {
 		$PAGE->requires->jquery();
 		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
 		$PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
+                $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
 		$PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
     }
 
@@ -1593,24 +1590,24 @@ class page_socialwiki_history extends page_socialwiki {
 
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-		$history=socialwiki_get_relations($this->page->id);
+	$history=socialwiki_get_relations($this->page->id);
 		
-		//build the tree with all of the relate pages
-		$tree=new socialwiki_tree();
-		$tree->build_tree($history);
+	//build the tree with all of the relate pages
+	$tree=new socialwiki_tree();
+	$tree->build_tree($history);
         //cho '<div class="tree">';
 		
-		//add radio buttons to compare versions if there is more than one version
-		if(count($tree->nodes)>1){
-			foreach($tree->nodes as $node){
-			$node->content .= "<br/>";
-			$node->content.=$this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
-            if ($node->id == 'l'.$this->page->id){ //current page
-                        $node->content .= "<br/>[current page]";
+	//add radio buttons to compare versions if there is more than one version
+	if(count($tree->nodes)>1){
+            foreach($tree->nodes as $node){
+                $node->content.= '<span id="comp'.$node->id.'" style="display:block">';
+                $node->content.= $this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
+                if ($node->id == 'l'.$this->page->id){ //current page
+                    $node->content .= "<br/>[current page]";
+                }
+                $node->content .= "</span>";
             }
-
-			}
-		}
+	}
 		echo $this->wikioutput->content_area_begin();
 		echo '<h1>Related Versions of page '.$this->page->title.'</h1>';
 
@@ -1655,6 +1652,9 @@ class page_socialwiki_history extends page_socialwiki {
         $PAGE->navbar->add(get_string('history', 'socialwiki'));
     }
     
+    protected function setup_tabs($options = array()) {
+        parent::setup_tabs(array('linkedwhenactive' => 'versions', 'activetab' => 'versions'));
+    }
 
     /**
      * Given an array of values, creates a group of radio buttons to be part of a form
