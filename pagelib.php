@@ -1778,13 +1778,12 @@ class page_socialwiki_home extends page_socialwiki {
 		//print the home page heading
 		echo $OUTPUT->heading('Social Wiki Home',1,"socialwiki_headingtitle colourtext");
 
-        $user_header = "<div>";
-        $user_header .= $OUTPUT->user_picture(socialwiki_get_user_info($USER->id), array('size'=>100,));
-        $user_header .= "<h2 class='home_user_name'>".fullname($USER)."</h2>";
+        $user_header = "<div class='home_picture'>";
+        $user_header .= $OUTPUT->user_picture(socialwiki_get_user_info($USER->id), array('size'=>65));
         $user_header .= "</div>";
+        $user_header .= "<h3 class='home_user'>".fullname($USER)."</h3>";
+        $user_header .= $this->generate_follow_data();
         echo $user_header;
-
-        echo $this->generate_follow_data();
 
         echo "<div>";
         echo $this->generate_home_nav();
@@ -1811,9 +1810,9 @@ class page_socialwiki_home extends page_socialwiki {
         $followers = socialwiki_get_followers($USER->id, $this->subwiki->id);
         $following = count(socialwiki_get_follows($USER->id, $this->subwiki->id));
 
-        $followdata  = html_writer::start_tag('h2',array('class'=>'followdata'));
+        $followdata  = html_writer::start_tag('h3',array('class'=>'home_user'));
         $followdata .= html_writer::tag('span', "Followers: $followers | Following: $following", array('class' => 'label label-default'));
-        $followdata .= html_writer::end_tag('h2');
+        $followdata .= html_writer::end_tag('h3');
         return $followdata;
     }
 
@@ -1968,9 +1967,9 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     private function print_recent_likes() {
-         echo "<h2 class='table_region'>Recent Likes:</h2>";
+        echo "<h2 class='table_region'>Recent Likes:</h2>";
          echo "<div class='tableregion asyncload' tabletype='recentlikes'><table></table></div>";
-         /*
+        /*
         global $USER;
         $swid = $this->subwiki->id;
         if($likes = socialwiki_get_liked_pages($USER->id, $swid)) {
@@ -1990,9 +1989,9 @@ class page_socialwiki_home extends page_socialwiki {
     private function print_userpages_content() {	
         global $USER;
         $swid = $this->subwiki->id;
-
-        $pages = array();
         
+        $pages = array();
+
         if ($contribs = socialwiki_get_contributions($swid, $USER->id)) {
             foreach ($contribs as $contrib) {
                 array_push($pages, socialwiki_get_page($contrib->pageid));

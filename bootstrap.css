@@ -666,6 +666,7 @@ select[multiple].input-lg {
   max-width: none;
 }
 .nav-tabs {
+  margin-top: 30px;
   border-bottom: 1px solid #dddddd;
 }
 .nav-tabs > li {
@@ -1283,7 +1284,7 @@ select[multiple].input-lg {
 .label {
   display: inline;
   padding: .2em .6em .3em;
-  font-size: 90%;
+  font-size: 75%;
   font-weight: 500;
   line-height: 1;
   color: #ffffff;

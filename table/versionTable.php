@@ -206,11 +206,13 @@ class versionTable extends socialwiki_table {
             } else if ($num >1){
             	$firstctr .= " and ".$num." others.";
             }
+            
+            $ctr = "";
             if ($num != 0) {
                 $ctr = "Others:&#013";
-            foreach($contributors as $c) {
+                foreach($contributors as $c) {
                     $ctr .= fullname(socialwiki_get_user_info($c)).'&#013'; //that's a newline
-            }
+                }
             }
             
             if ($idfirst==$this->uid){
