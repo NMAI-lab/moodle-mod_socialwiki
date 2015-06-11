@@ -544,12 +544,11 @@ class page_socialwiki_view extends page_socialwiki {
 	$theliker .= html_writer::end_tag('button');
 
 	$likess = socialwiki_numlikes($this->page->id);
-	$theliker .= html_writer::tag('br');
 
         //show number of likes
-	$theliker .= html_writer::start_tag('span', array ('id' => 'numlikes')); //span updated asynchronously after ajax request
+	$theliker .= html_writer::start_tag('div', array ('id' => 'numlikes')); //span updated asynchronously after ajax request
 	$theliker .= $likess.($likess == 1 ? ' like':' likes');
-        $theliker .= html_writer::end_tag('span');
+        $theliker .= html_writer::end_tag('div');
         
         $theliker .= html_writer::end_tag('div');
         
@@ -2002,7 +2001,7 @@ class page_socialwiki_home extends page_socialwiki {
 
         } else {
             echo html_writer::tag('div',get_string('nocontribs', 'socialwiki'),array('class'=>'table_region'));
-        }
+    }
     }
 
 
@@ -2038,7 +2037,7 @@ class page_socialwiki_home extends page_socialwiki {
      *
      */
     private function print_updated_content() {
-            echo "<h2 class='table_region'>New Page Versions:</h2>";
+        echo "<h2 class='table_region'>New Page Versions:</h2>";
             echo "<div class='tableregion asyncload' tabletype='newpageversions'>".page_socialwiki::getCombineForm()."<table></table></div>";
     }
 	

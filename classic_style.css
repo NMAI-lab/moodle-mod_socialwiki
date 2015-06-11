@@ -12,7 +12,7 @@
 
  You should have received a copy of the GNU General Public License
  along with Moodle. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 @import url("bootstrap.css");
 
@@ -39,17 +39,19 @@
 {
     text-align: left;
     margin: -2px 80px;
+    font-size: 24px;
+    line-height: 40px;
 }
 
 .home_picture
 {
     float:left;
-    margin-top:10px;
+    margin-top: 8.9px;
 }
 
 .tree_node
 {
-color:black !important;
+    color:black !important;
 }
 
 .socialwiki_liketable {
@@ -79,7 +81,6 @@ table.peer_table td {
 .socialwiki_link
 {
     text-decoration:underline;
-    //margin-left:25px;
     font-weight:bold;
     font-style:italic;
 }
@@ -97,7 +98,6 @@ table.peer_table td {
     font-weight: bold;
     color:gray;
     width: 160px;
-    //margin-top: -14px;
 }
 
 /*this is in fact used just to display the author in the bottom of a page (should be renamed)*/
@@ -131,10 +131,14 @@ table.peer_table td {
     display:inline-block;
     margin:25px;
     width:20px;
-	
 }
 
 input#preview
 {
     display:none;
+}
+
+#numlikes
+{
+    margin-top: 8px;
 }

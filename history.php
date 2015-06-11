@@ -35,7 +35,7 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
-require_once($CFG->dirroot.'/mod/socialwiki/socialwikitree.php');
+require_once($CFG->dirroot . '/mod/socialwiki/socialwikitree.php');
 
 $pageid = required_param('pageid', PARAM_TEXT);
 $paging = optional_param('page', 0, PARAM_INT);
@@ -62,7 +62,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/socialwiki:viewpage', $context);
-add_to_log($course->id, 'socialwiki', 'history', "history.php?pageid=".$pageid, $pageid, $cm->id);
+add_to_log($course->id, 'socialwiki', 'history', "history.php?pageid=" . $pageid, $pageid, $cm->id);
 
 /// Print the page header
 $wikipage = new page_socialwiki_history($wiki, $subwiki, $cm);

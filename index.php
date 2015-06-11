@@ -30,7 +30,6 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once('../../config.php');
 require_once('lib.php');
 
@@ -45,19 +44,19 @@ require_login($course, true);
 $PAGE->set_pagelayout('incourse');
 $context = context_course::instance($course->id);
 
-add_to_log($course->id, 'socialwiki', 'view', "index.php?id=".$id, "");
+add_to_log($course->id, 'socialwiki', 'view', "index.php?id=" . $id, "");
 
-/// Get all required stringswiki
+// Get all required stringswiki
 $strwikis = get_string("modulenameplural", "socialwiki");
 $strwiki = get_string("modulename", "socialwiki");
 
-/// Print the header
+// Print the header
 $PAGE->navbar->add($strwikis, "index.php?id=$course->id");
 $PAGE->set_title($strwikis);
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
-/// Get all the appropriate data
+// Get all the appropriate data
 if (!$wikis = get_all_instances_in_course("socialwiki", $course)) {
     notice("There are no social wikis", "../../course/view.php?id=$course->id");
     die;
@@ -65,7 +64,7 @@ if (!$wikis = get_all_instances_in_course("socialwiki", $course)) {
 
 $usesections = course_format_uses_sections($course->format);
 
-/// Print the list of instances (your module will probably extend this)
+// Print the list of instances (your module will probably extend this)
 
 $timenow = time();
 $strsectionname = get_string('sectionname', 'format_' . $course->format);
@@ -94,5 +93,5 @@ foreach ($wikis as $wiki) {
 
 echo html_writer::table($table);
 
-/// Finish the page
+// Finish the page
 echo $OUTPUT->footer();

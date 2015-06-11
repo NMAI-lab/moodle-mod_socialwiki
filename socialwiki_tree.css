@@ -2,129 +2,117 @@
 
 .hider, .collapser {
     float: right;
-    padding: 0px;
     cursor: pointer;
 }
 
+.hider {
+    margin-right: 5px;
+}
+
+.titletext {
+    padding-bottom: 6px;
+    display: block;
+    clear: right;
+}
+
 .tree {
-white-space: nowrap;
-overflow: auto;
+    white-space: nowrap;
+    overflow: auto;
 }
 
 .tree ul {
-	padding-top: 20px; position: relative;
-	margin : 0;
-	/*overflow:auto;
-	white-space: no wrap*/
-	
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
+    padding-top: 20px; position: relative;
+    margin : 0;
+    /*overflow:auto;
+    white-space: no wrap*/
+
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
 }
 
 .tree li {
-	display:inline-block;
-	float: none; /*was=left*/
-	vertical-align:top;
-	text-align: center;
-	list-style-type: none;
-	position: relative;
-	padding: 20px 5px 0 5px;
-	
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
+    display:inline-block;
+    vertical-align:top;
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 20px 5px 0 5px;
+
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
 }
 
 /*We will use ::before and ::after to draw the connectors*/
-
-.tree li::before, .tree li::after{
-	content: '';
-	position: absolute; top: 0; right: 50%;
-	border-top: 1px solid #ccc;
-	width: 50%; height: 20px;
+.tree li::before, .tree li::after {
+    content: '';
+    position: absolute; top: 0; right: 50%;
+    border-top: 1px solid #ccc;
+    width: 50%; height: 20px;
 }
-.tree li::after{
-	right: auto; left: 50%;
-	border-left: 1px solid #ccc;
+.tree li::after {
+    right: auto; left: 50%;
+    border-left: 1px solid #ccc;
 }
 
 /*We need to remove left-right connectors from elements without 
-any siblings*/
+  any siblings*/
 .tree li:only-child::after, .tree li:only-child::before {
-	display: none;
+    display: none;
 }
 
 /*Remove space from the top of single children*/
-.tree li:only-child{ padding-top: 0;}
+.tree li:only-child { 
+    padding-top: 0;
+}
 
 /*Remove left connector from first child and 
-right connector from last child*/
-.tree li:first-child::before, .tree li:last-child::after{
-	border: 0 none;
+  right connector from last child*/
+.tree li:first-child::before, .tree li:last-child::after {
+    border: 0 none;
 }
+
 /*Adding back the vertical connector to the last nodes*/
-.tree li:last-child::before{
-	border-right: 1px solid #ccc;
-	border-radius: 0 5px 0 0;
-	-webkit-border-radius: 0 5px 0 0;
-	-moz-border-radius: 0 5px 0 0;
+.tree li:last-child::before {
+    border-right: 1px solid #ccc;
+    border-radius: 0 5px 0 0;
+    -webkit-border-radius: 0 5px 0 0;
+    -moz-border-radius: 0 5px 0 0;
 }
-.tree li:first-child::after{
-	border-radius: 5px 0 0 0;
-	-webkit-border-radius: 5px 0 0 0;
-	-moz-border-radius: 5px 0 0 0;
+.tree li:first-child::after {
+    border-radius: 5px 0 0 0;
+    -webkit-border-radius: 5px 0 0 0;
+    -moz-border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
-.tree ul ul::before{
-	content: '';
-	position: absolute; top: 0; left: 50%;
-	border-left: 1px solid #ccc;
-	width: 0; height: 20px;
+.tree ul ul::before {
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    border-left: 1px solid #ccc;
+    width: 0; height: 20px;
 }
 
 .tree li div {
-	border: 1px solid #ccc;
-	padding: 5px 10px;
-	text-decoration: none;
-	display: inline-block;
-	
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
-}
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-decoration: none;
+    display: inline-block;
 
-.tree li div a{
-	padding: 5px 10px;
-	text-decoration: none;
-	display: inline-block;
-	
-	border-radius: 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	
-	transition: all 0.5s;
-	-webkit-transition: all 0.5s;
-	-moz-transition: all 0.5s;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
 }
 
 /*Time for some hover effects*/
-
 .tree li div:hover {
-	background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+    background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
 }
-/*Connector styles on hover
-.tree li div:hover+ul li::after, 
-.tree li div:hover+ul li::before, 
-.tree li div:hover+ul::before, 
-.tree li div:hover+ul ul::before{
-	border-color:  #94a0b4;
-}*/
 
 /*Thats all. I hope you enjoyed it.
 Thanks :)*/

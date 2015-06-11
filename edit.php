@@ -45,14 +45,13 @@ $attachments = optional_param('attachments', 0, PARAM_INT);
 $deleteuploads = optional_param('deleteuploads', 0, PARAM_RAW);
 //makenew 1 means create the empty first version of the page. 0 means just add a new version of the page which was previously created
 $makenew = optional_param('makenew', 0, PARAM_INT);
-$newcontent = '';	
+$newcontent = '';
 
 //echo "logging edit.php line 50";
 //echo 'pageid'.$pageid. ' contentformat'. $contentformat. 'section'.$section.'version'.$version;
-
 //This doesn't seem to get called ever?
 if (!empty($newcontent) && is_array($newcontent)) {
-    
+
     $newcontent = $newcontent['text'];
 }
 
@@ -87,31 +86,25 @@ if ($option == get_string('save', 'socialwiki')) {
     if (!confirm_sesskey()) {
         print_error(get_string('invalidsesskey', 'socialwiki'));
     }
-	if ($makenew ==0)
-	{
-        
-		$newpageid = socialwiki_create_page($subwiki->id, $page->title, $contentformat, $USER->id, $page->id);
-		$newpage = socialwiki_get_page($newpageid);
-        
-		$wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
-        
-		$wikipage->set_page($newpage);
-        
-        socialwiki_add_like($USER->id,$newpageid,$subwiki->id);
+    if ($makenew == 0) {
 
-	}
-	else
-	{
-		$wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
-		$wikipage->set_page($page);
-	}
-    
+        $newpageid = socialwiki_create_page($subwiki->id, $page->title, $contentformat, $USER->id, $page->id);
+        $newpage = socialwiki_get_page($newpageid);
+
+        $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
+
+        $wikipage->set_page($newpage);
+
+        socialwiki_add_like($USER->id, $newpageid, $subwiki->id);
+    } else {
+        $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
+        $wikipage->set_page($page);
+    }
+
     $wikipage->set_newcontent($newcontent);
-    
-    $wikipage->set_upload(true);
-    add_to_log($course->id, 'socialwiki', 'edit', "view.php?pageid=".$pageid, $pageid, $cm->id);
-    
 
+    $wikipage->set_upload(true);
+    add_to_log($course->id, 'socialwiki', 'edit', "view.php?pageid=" . $pageid, $pageid, $cm->id);
 } else {
     if ($option == get_string('preview')) {
         if (!confirm_sesskey()) {
@@ -126,17 +119,17 @@ if ($option == get_string('save', 'socialwiki')) {
 
             redirect($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $pageid);
         } else {
-            
+
             $wikipage = new page_socialwiki_edit($wiki, $subwiki, $cm, $makenew);
-                        
+
             $wikipage->set_page($page);
             $wikipage->set_upload($option == get_string('upload', 'socialwiki'));
         }
     }
 
-    /*if (has_capability('mod/socialwiki:overridelock', $context)) {
-        $wikipage->set_overridelock(true);
-    }*/
+    /* if (has_capability('mod/socialwiki:overridelock', $context)) {
+      $wikipage->set_overridelock(true);
+      } */
 }
 
 

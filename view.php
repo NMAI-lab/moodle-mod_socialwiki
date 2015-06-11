@@ -30,7 +30,6 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
@@ -61,7 +60,7 @@ $swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID
  *
  */
 if ($id) {
-	 $url = new moodle_url('/mod/socialwiki/home.php',array('id'=>$id));
+    $url = new moodle_url('/mod/socialwiki/home.php', array('id' => $id));
     redirect($url);
 
     /*
@@ -134,7 +133,7 @@ if ($id) {
 
     $groupmode = groups_get_activity_groupmode($cm);
 
-	if ($groupmode == NOGROUPS) {
+    if ($groupmode == NOGROUPS) {
         $gid = 0;
         $uid = 0;
     } else {
@@ -153,8 +152,8 @@ if ($id) {
         $edit = has_capability('mod/socialwiki:editpage', $context);
         $manageandedit = $manage && $edit;
 
-        if ($groupmode == VISIBLEGROUPS and ($modeanduser || $modeandgroupmember) and !$manageandedit) {
-            print_error('nocontent','socialwiki');
+        if ($groupmode == VISIBLEGROUPS and ( $modeanduser || $modeandgroupmember) and ! $manageandedit) {
+            print_error('nocontent', 'socialwiki');
         }
 
         $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $title);
@@ -173,7 +172,6 @@ if ($id) {
         }
         redirect($url);
     }
-
 } else {
     print_error('incorrectparameters');
 }
@@ -192,7 +190,7 @@ if (($edit != - 1) and $PAGE->user_allowed_editing()) {
 
 $wikipage = new page_socialwiki_view($wiki, $subwiki, $cm);
 
-/*The following piece of code is used in order
+/* The following piece of code is used in order
  * to perform set_url correctly. It is necessary in order
  * to make page_socialwiki_view class know that this page
  * has been called via its id.
@@ -204,12 +202,12 @@ if ($id) {
 $wikipage->set_gid($currentgroup);
 $wikipage->set_page($page);
 
-if($pageid) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?pageid=".$pageid, $pageid, $cm->id);
-} else if($id) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?id=".$id, $id, $cm->id);
-} else if($wid && $title) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?wid=".$wid."&title=".$title, $wid, $cm->id);
+if ($pageid) {
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?pageid=" . $pageid, $pageid, $cm->id);
+} else if ($id) {
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?id=" . $id, $id, $cm->id);
+} else if ($wid && $title) {
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?wid=" . $wid . "&title=" . $title, $wid, $cm->id);
 }
 
 $wikipage->print_header();
