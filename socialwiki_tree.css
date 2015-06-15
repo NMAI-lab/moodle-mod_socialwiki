@@ -1,7 +1,6 @@
 /*Now the CSS*/
 
 .hider, .collapser {
-    float: right;
     cursor: pointer;
 }
 

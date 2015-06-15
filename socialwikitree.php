@@ -74,19 +74,20 @@ class socialwiki_node {
         Global $PAGE, $CFG, $OUTPUT;
         $user = socialwiki_get_user_info($page->userid);
         //buttons to minimize and collapse
-        $this->content = html_writer::start_tag('img', array('title' => 'Collapse', 'id' => 'cop' . $this->id, 'src' => $OUTPUT->pix_url('t/up'), 'class' => 'collapser', 'value' => $this->id));
-        $this->content.= html_writer::end_tag('img');
-        $this->content.= html_writer::start_tag('img', array('title' => 'Minimize', 'id' => 'hid' . $this->id, 'src' => $OUTPUT->pix_url('t/less'), 'class' => 'hider', 'value' => $this->id));
-        $this->content.= html_writer::end_tag('img');
+        $this->content = html_writer::start_tag('span', array('style' => 'float:right'));
+            $this->content.= html_writer::start_tag('img', array('title' => 'Minimize', 'id' => 'hid' . $this->id, 'src' => $OUTPUT->pix_url('t/less'), 'class' => 'hider', 'value' => $this->id));
+            $this->content.= html_writer::end_tag('img');
+            $this->content.= html_writer::start_tag('img', array('title' => 'Collapse', 'id' => 'cop' . $this->id, 'src' => $OUTPUT->pix_url('t/up'), 'class' => 'collapser', 'value' => $this->id));
+            $this->content.= html_writer::end_tag('img');
+        $this->content .= html_writer::end_tag('span');
 
+        //title, user and date
         $this->content.= html_writer::start_tag('span', array('id' => 'content' . $this->id));
-        //title
-        $this->content.= html_writer::start_tag('span', array('class' => 'titletext'));
-        $this->content.= html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, $page->title . ' ID: ' . $page->id, array('style' => 'padding:0px;'));
-        $this->content.= html_writer::end_tag('span');
-        //user and date
-        $userlink = mod_socialwiki_renderer::makeuserlink($user->id, $PAGE->cm->id, $page->subwikiid);
-        $this->content.= html_writer::link($userlink->out(false), fullname($user)) . "&nbsp; " . socialwiki_format_time($page->timemodified);
+            $this->content.= html_writer::start_tag('span', array('class' => 'titletext'));
+            $this->content.= html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $page->id, $page->title . ' ID: ' . $page->id, array('style' => 'padding:0px;'));
+            $this->content.= html_writer::end_tag('span');
+            $userlink = mod_socialwiki_renderer::makeuserlink($user->id, $PAGE->cm->id, $page->subwikiid);
+            $this->content.= html_writer::link($userlink->out(false), fullname($user)) . "&nbsp; " . socialwiki_format_time($page->timemodified);
         $this->content.= html_writer::end_tag('span');
         //html_writer::link($userlink->out(false),fullname($user),array("class"=>"colourtext"));
         /* if(isset($page->votes)){

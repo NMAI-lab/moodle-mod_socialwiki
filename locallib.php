@@ -218,7 +218,7 @@ function socialwiki_get_version($versionid) {
  */
 function socialwiki_get_first_page($subwikid, $module = null) {
     global $DB, $USER, $COURSE;
-    $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+    $context = context_course::instance($COURSE->id);
     $teachers = socialwiki_get_teachers($context->id);
     $toreturn = array();
     foreach ($teachers as $teacher) {
@@ -1810,19 +1810,18 @@ function socialwiki_get_contributors($pageid) {
               WHERE id=?';
         $result = $DB->get_record_sql($sql, array($pageid));
 
-
         $maybe = ($result == null);
         if (isset($result->parent)) {
             $contribs = socialwiki_get_contributors($result->parent); //recursion
         } else {
             $contribs = array();
         }
-        if (isset($result->userid) && !in_array($result->userid, $contribs)) {
+        if (isset($result->userid)) {
+            $contribs = array_diff($contribs, array($result->userid));
             $contribs[] = $result->userid; //->userid;    
         } else {
             return $contribs;
         }
-
 
         return $contribs;
     }
@@ -1839,7 +1838,7 @@ function socialwiki_get_children($pageid) {
 
 function socialwiki_get_subwiki_users($swid) {
     Global $PAGE;
-    $context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+    $context = context_module::instance($PAGE->cm->id);
     $users = get_enrolled_users($context);
     $uids = array();
     foreach ($users as $u) {
@@ -1929,7 +1928,7 @@ function socialwiki_is_teacher($context, $uid) {
 
 function socialwiki_get_user_count($swid) {
     Global $PAGE, $USER;
-    $context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
+    $context = context_module::instance($PAGE->cm->id);
     $users = get_enrolled_users($context);
     $numusers = count($users) - 1;
     return $numusers;
@@ -1937,7 +1936,7 @@ function socialwiki_get_user_count($swid) {
 
 function socialwiki_get_user_count_with_cmid($swid, $cmid) {
     Global $PAGE, $USER;
-    $context = get_context_instance(CONTEXT_MODULE, $cmid);
+    $context =context_module::instance($cmid);
     $users = get_enrolled_users($context);
     $numusers = count($users) - 1;
     return $numusers;
