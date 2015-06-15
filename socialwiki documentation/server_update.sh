@@ -1,6 +1,7 @@
 #!/usr/bin/expect -f
-set pass [lindex $argv 0]
-spawn ssh cameron@inm-04.sce.carleton.ca
+set user [lindex $argv 0]
+set pass [lindex $argv 1]
+spawn ssh $user
 expect "password:"
 send "$pass\r"
 expect "$ "
