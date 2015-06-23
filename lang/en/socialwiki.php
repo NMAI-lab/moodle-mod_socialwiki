@@ -223,9 +223,9 @@ $string['saving'] = 'Saving wiki page';
 $string['savingerror'] = 'Saving error';
 $string['searchcontent'] = 'Search in page content';
 $string['search_help']='There are 3 different search views:<br/>
-Tree View: displays the search results in a tree view to so the history of the page can easily be seen.<br/>
-List View: shows a list of pages ordered using your likes and the people you are following to order the pages<br/>
-Popular: orders the pages with the pages with more likes appearing at the top';
+        Tree View: displays the search results in a tree view to so the history of the page can easily be seen.<br/>
+        List View: shows a list of pages ordered using your likes and the people you are following to order the pages<br/>
+        Popular: orders the pages with the pages with more likes appearing at the top';
 $string['searchmenu']='Search views';
 $string['searchresult'] = 'Search results:';
 $string['searchterms'] = 'Search terms';
@@ -298,10 +298,9 @@ $string['creator'] = 'Creator';
 $string['followed'] = 'Followed';
 $string['created'] = 'Created';
 $string['updated'] = 'Updated';
-$string['versions'] = 'Number of Versions';
-$string['likes'] = "Number of Likes";
-$string['views'] = "Number of Views";
-$string['contributers'] = '# of Contributers';
+$string['versions'] = 'Versions';
+$string['likes'] = "Likes";
+$string['views'] = "Views";
 $string['networkdistance'] = 'Social Distance';
 $string['contributors'] = 'Contributors'; 
 

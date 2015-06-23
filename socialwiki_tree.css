@@ -63,7 +63,7 @@
 
 /*Remove space from the top of single children*/
 .tree li:only-child { 
-    padding-top: 0;
+    padding: 0;
 }
 
 /*Remove left connector from first child and 

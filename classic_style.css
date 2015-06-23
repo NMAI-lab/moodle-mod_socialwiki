@@ -35,6 +35,10 @@
     cursor: pointer;
 }
 
+.tabtree {
+    clear: both;
+}
+
 .tabtree ul {
     text-align: left;
 }
@@ -43,16 +47,14 @@
     text-align: left;
 }
 
-.socialwiki_wikicontent .home_user
-{
+.socialwiki_wikicontent .home_user {
     text-align: left;
     margin: -2px 80px;
     font-size: 24px;
     line-height: 40px;
 }
 
-.socialwiki_wikicontent .home_picture
-{
+.socialwiki_wikicontent .home_picture {
     float:left;
     margin-top: 8.9px;
 }
@@ -62,34 +64,89 @@
     padding-left: 0;
     list-style: none;
 }
+
 .socialwiki_wikicontent .nav-tabs {
     margin-top: 30px;
     border-bottom: 1px solid #dddddd;
+}
+
+.socialwiki_wikicontent .nav-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+
+.socialwiki_wikicontent .nav-tabs > li > a {
+    margin-right: 2px;
+    line-height: 1.428571429;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+
+.socialwiki_wikicontent .nav-tabs > li > a:hover {
+    border-color: #eeeeee #eeeeee #dddddd;
+}
+
+.socialwiki_wikicontent .nav-tabs > li.active > a,
+.socialwiki_wikicontent .nav-tabs > li.active > a:hover,
+.socialwiki_wikicontent .nav-tabs > li.active > a:focus {
+    color: #555555;
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+    cursor: default;
+}
+
+.socialwiki_wikicontent .nav-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+
+.socialwiki_wikicontent .nav-tabs.nav-justified > li {
+    float: none;
+}
+
+.socialwiki_wikicontent .nav-tabs.nav-justified > li > a {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.socialwiki_wikicontent .nav-tabs.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
+
+.socialwiki_wikicontent .socialwiki_wikicontent label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.socialwiki_wikicontent img {
+    vertical-align: middle;
+}
+
+.socialwiki_wikicontent .header {
+    background: none;
 }
 
 table.peer_table td {
     padding: 1px 10px 1px 0px;
 }
 
-.relation_line
-{
+.relation_line {
     background-color:black !important;
 }
 
-.socialwiki_unfollowlink,.socialwiki_unlikelink
-{
+.socialwiki_unfollowlink,.socialwiki_unlikelink {
     position:relative;
     margin-left:50px;
 }
 
-.socialwiki_link
-{
+.socialwiki_link {
     font-weight:bold;
     font-style:italic;
 }
 
-.socialwiki_likebutton
-{
+.socialwiki_likebutton {
     line-height: 20px;
     font-size: 1.5em;
     font-weight: bold;
@@ -98,44 +155,37 @@ table.peer_table td {
     margin: 0;
 }
 
-.socialwiki_contributors
-{
+.socialwiki_contributors {
     text-align:right;
 }
 
-#socialwiki_container
-{
+#socialwiki_container {
     display:none !important;
 }
 
 
-#page-mod-socialwiki-search #socialwiki_content_area
-{
+#page-mod-socialwiki-search #socialwiki_content_area {
     overflow:auto;
     position:relative;
     text-align:left;
 }
 
-#page-mod-socialwiki-history #socialwiki_content_area
-{
+#page-mod-socialwiki-history #socialwiki_content_area {
     overflow:auto;
     position:relative;
     text-align:left;
 }
 
-.slidecontainer
-{
+.slidecontainer {
     display:inline-block;
     margin:25px;
     width:20px;
 }
 
-input#preview
-{
+input#preview {
     display:none;
 }
 
-#numlikes
-{
+#numlikes {
     margin-top: 8px;
 }

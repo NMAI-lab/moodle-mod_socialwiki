@@ -6,11 +6,15 @@ $(".hider").click(function () {
         img.attr("title", "Maximize");
         $("#content"+($(this).attr("value"))).css("display", "none");
         $("#comp"+($(this).attr("value"))).css("display", "none");
+        if ($("#"+($(this).attr("value"))))
+            $("#"+($(this).attr("value"))).css("margin-top", "-5px");
     } else {
         img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "less");
         img.attr("title", "Minimize");
         $("#content"+($(this).attr("value"))).css("display", "initial");
         $("#comp"+($(this).attr("value"))).css("display", "block");
+        if ($("#"+($(this).attr("value"))))
+            $("#"+($(this).attr("value"))).css("margin-top", "0");
     }
 });
 

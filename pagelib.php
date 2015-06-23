@@ -108,7 +108,6 @@ abstract class page_socialwiki {
      */
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $USER;
-        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
         $this->subwiki = $subwiki;
         $this->wiki = $wiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
@@ -120,7 +119,6 @@ abstract class page_socialwiki {
         $PAGE->requires->jquery();
         $this->style = socialwiki_get_currentstyle($wiki->id);
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/" . $this->style->style . "_style.css"));
-        $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/demo_table.css"));
         // the search box
         $PAGE->set_button(socialwiki_search_form($cm));
         $this->set_uid($USER->id);
@@ -837,13 +835,13 @@ class page_socialwiki_search extends page_socialwiki {
     private $exact; //1 for an exact search type
 
     protected function create_navbar() {
-        global $PAGE, $CFG;
+        global $PAGE;
 
         $PAGE->navbar->add(format_string($this->title));
     }
 
     function __construct($wiki, $subwiki, $cm) {
-        global $PAGE, $CFG;
+        global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $PAGE->requires->jquery_plugin('ui');
         $PAGE->requires->jquery_plugin('ui-css');
@@ -851,8 +849,9 @@ class page_socialwiki_search extends page_socialwiki {
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/jquery.tagcloud.js"));
-
-        require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
+        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/tableBuilder.js"));
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/demo_table.css"));
     }
 
     function set_search_string($search, $searchcontent, $exact_match = false) {
@@ -884,7 +883,7 @@ class page_socialwiki_search extends page_socialwiki {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 
         echo $this->wikioutput->content_area_begin();
-        $this->wikioutput->menu_search($PAGE->cm->id, $this->view, $this->search_string, $this->exact);
+        echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view, $this->search_string, $this->exact);
         $this->print_tree();
         echo $this->wikioutput->content_area_end();
     }
@@ -1225,8 +1224,6 @@ class page_socialwiki_history extends page_socialwiki {
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
-        $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
-        $PAGE->requires->jquery();
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
@@ -1241,7 +1238,7 @@ class page_socialwiki_history extends page_socialwiki {
      *
      */
     function print_content() {
-        global $PAGE, $OUTPUT;
+        global $OUTPUT;
 
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
@@ -1377,7 +1374,9 @@ class page_socialwiki_home extends page_socialwiki {
         parent::__construct($wiki, $subwiki, $cm);
         $this->tab = $t;
         $PAGE->set_title('Social Wiki Home');
+        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/tableBuilder.js"));
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/demo_table.css"));
     }
 
     /**
@@ -2428,11 +2427,13 @@ class page_socialwiki_admin extends page_socialwiki {
 class page_socialwiki_viewuserpages extends page_socialwiki {
 
     function __construct($wiki, $subwiki, $cm, $targetuser) {
-        Global $PAGE, $CFG;
+        Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $this->uid = $targetuser;
         $PAGE->set_title(fullname(socialwiki_get_user_info($targetuser)));
+        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/tableBuilder.js"));
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/demo_table.css"));
     }
 
     function print_content() {
