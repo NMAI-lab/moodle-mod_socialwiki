@@ -114,22 +114,13 @@ if ($option == get_string('save', 'socialwiki')) {
         $wikipage->set_page($page);
     } else {
         if ($option == get_string('cancel')) {
-            //delete lock
-            //socialwiki_delete_locks($page->id, $USER->id, $section);
-
             redirect($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $pageid);
         } else {
-
             $wikipage = new page_socialwiki_edit($wiki, $subwiki, $cm, $makenew);
-
             $wikipage->set_page($page);
             $wikipage->set_upload($option == get_string('upload', 'socialwiki'));
         }
     }
-
-    /* if (has_capability('mod/socialwiki:overridelock', $context)) {
-      $wikipage->set_overridelock(true);
-      } */
 }
 
 
@@ -153,8 +144,8 @@ if (!empty($deleteuploads)) {
 if (!empty($contentformat)) {
     $wikipage->set_format($contentformat);
 }
-$wikipage->print_header();
 
+$wikipage->print_header();
 
 $wikipage->print_content();
 

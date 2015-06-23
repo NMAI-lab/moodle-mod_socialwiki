@@ -1,6 +1,0 @@
-To use tree.js:
-
-1. Ensure it is included in your page somehow.
-2. For best results, add the control to a div with a background colour that contrasts the tree's   	colour. The default colour of the tree is white, this can be changed in tree_styles.css.
-3.Build the tree that you want to display. This should be a tree object.
-4.Create a new TreeControl: myvar = new TreeControl(tree, divID);

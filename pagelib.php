@@ -32,9 +32,7 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once($CFG->dirroot . '/mod/socialwiki/edit_form.php');
-
 require_once($CFG->dirroot . '/tag/lib.php');
 
 /**
@@ -48,11 +46,11 @@ abstract class page_socialwiki {
      * @var object Current subwiki
      */
     protected $subwiki;
-	
-	/**
+
+    /**
      * @var object Current wiki
      */
-	 protected $wiki;
+    protected $wiki;
 
     /**
      * @var int Current page
@@ -78,28 +76,29 @@ abstract class page_socialwiki {
      * @var int Current user ID
      */
     protected $uid;
+
     /**
      * @var array The tabs set used in social wiki module
      */
-    protected $tabs = array('view'=>'view', 'edit'=>'edit', 'history'=>'versions', 'admin'=>'admin'); //refers to terms listed in file socialwiki.php under lang/en folder
-    /*protected $tabs = array('home'=>'home','view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
-                            'versions' => 'history','manage' => 'manage');*/
+    protected $tabs = array('view' => 'view', 'edit' => 'edit', 'history' => 'versions', 'admin' => 'admin'); //refers to terms listed in file socialwiki.php under lang/en folder
+    /* protected $tabs = array('home'=>'home','view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
+      'versions' => 'history','manage' => 'manage'); */
 
     /**
      * @var array tabs options
      */
     protected $tabs_options = array();
+
     /**
      * @var object wiki renderer
      */
     protected $wikioutput;
-
     protected $style;
 
-
-    public static function getCombineForm(){
+    public static function getCombineForm() {
         return '<form class="combineform" action="">For each page version show: <select class="combiner"><option value="max" selected="selected">max</option><option value="min">min</option><option value="avg">avg</option><option value="sum">sum</option></select> of trust indicator values.</form>';
     }
+
     /**
      * page_socialwiki constructor
      *
@@ -108,94 +107,58 @@ abstract class page_socialwiki {
      * @param $cm Current : course_module.
      */
     function __construct($wiki, $subwiki, $cm) {
-        global $PAGE, $CFG, $USER;
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/toolbar.js"));
-        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.min.js"));
+        global $PAGE, $USER;
+        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
         $this->subwiki = $subwiki;
-		$this->wiki=$wiki;
+        $this->wiki = $wiki;
         $this->modcontext = context_module::instance($PAGE->cm->id);
         // initialise wiki renderer
         $this->wikioutput = $PAGE->get_renderer('mod_socialwiki');
         $PAGE->set_cacheable(true);
         $PAGE->set_cm($cm);
         $PAGE->set_activity_record($wiki);
-		$PAGE->requires->jquery();
+        $PAGE->requires->jquery();
         $this->style = socialwiki_get_currentstyle($wiki->id);
-        $PAGE->requires->css(new moodle_url("/mod/socialwiki/".$this->style->style."_style.css"));
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/" . $this->style->style . "_style.css"));
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/demo_table.css"));
         // the search box
         $PAGE->set_button(socialwiki_search_form($cm));
-	$this->set_uid($USER->id);
+        $this->set_uid($USER->id);
     }
 
     /**
      * This method prints the top of the page.
      */
     function print_header() {
-        global $OUTPUT, $PAGE, $CFG, $USER, $SESSION;
+        global $OUTPUT, $PAGE;
 
         $PAGE->set_heading(format_string($PAGE->course->fullname));
 
-
         $this->set_url();
-
-        if (isset($SESSION->socialwikipreviousurl) && is_array($SESSION->socialwikipreviousurl)) {
-            $this->process_session_url();
-        }
 
         $this->set_session_url();
 
         $this->create_navbar();
-        
 
-	//$html = $OUTPUT->header();
-        
+
+        //$html = $OUTPUT->header();
         //var_dump($html);
         //echo $html;
-        echo $OUTPUT->header(); 
-        
+        echo $OUTPUT->header();
 
 
-	    //test: put page title here
-	    $this->print_pagetitle();
+
+        //test: put page title here
+        $this->print_pagetitle();
 
 
         $this->setup_tabs();
-     
-
 
         // tabs are associated with pageid, so if page is empty, tabs should be disabled
         if (!empty($this->page) && !empty($this->tabs)) {
-         /*   if (socialwiki_liked($USER->id, $this->page->id))				//////////TODO: move this stuff to have like/follow buttons.
-            {
-                $this->tabs['like'] = 'unlike';
-            }else
-            {
-                $this->tabs['like'] = 'like';
-            }
-            $userto = socialwiki_get_author($this->page->id);
-            if (socialwiki_is_following($USER->id,$userto->userid,$this->page->subwikiid))
-            {
-                $this->tabs['follow'] = 'unfollow';
-            }
-            else
-            {
-                $this->tabs['follow'] = 'follow';
-
-            }*/
-
-	   
-	    $tabthing = $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options); //calls tabs function in renderer.php
-		
-
+            $tabthing = $this->wikioutput->tabs($this->page, $this->tabs, $this->tabs_options); //calls tabs function in renderer.php
             echo $tabthing;
-		
         }
-		if (isset($this->page))
-		{
-			$wiki_renderer = $PAGE->get_renderer('mod_socialwiki');
-			echo $wiki_renderer->pretty_navbar($this->page->id);
-		}
     }
 
     /**
@@ -209,8 +172,6 @@ abstract class page_socialwiki {
         $html .= $OUTPUT->heading(format_string($this->title), 1, 'socialwiki_headingtitle');
         $html .= $OUTPUT->container_end();
         echo $html;
-
-
     }
 
     /**
@@ -221,11 +182,11 @@ abstract class page_socialwiki {
         global $CFG, $PAGE;
         $groupmode = groups_get_activity_groupmode($PAGE->cm);
 
-       /* if (empty($CFG->usecomments) || !has_capability('mod/socialwiki:viewcomment', $PAGE->context)){
-            unset($this->tabs['comments']);
-        }*/
+        /* if (empty($CFG->usecomments) || !has_capability('mod/socialwiki:viewcomment', $PAGE->context)){
+          unset($this->tabs['comments']);
+          } */
 
-        if (!has_capability('mod/socialwiki:editpage', $PAGE->context)){
+        if (!has_capability('mod/socialwiki:editpage', $PAGE->context)) {
             unset($this->tabs['edit']);
         }
 
@@ -233,7 +194,7 @@ abstract class page_socialwiki {
             $currentgroup = groups_get_activity_group($PAGE->cm);
             $manage = has_capability('mod/socialwiki:managewiki', $PAGE->cm->context);
             $edit = has_capability('mod/socialwiki:editpage', $PAGE->context);
-            if (!$manage and !($edit and groups_is_member($currentgroup))) {
+            if (!$manage and ! ($edit and groups_is_member($currentgroup))) {
                 unset($this->tabs['edit']);
             }
         }
@@ -243,10 +204,9 @@ abstract class page_socialwiki {
         } else {
             $this->tabs_options = $options;
         }
-	
-	//$curtab = $this->tabs_options['activetab'];
-	//$this->tabs_options['inactivetabs'] = array ($curtab);
 
+        //$curtab = $this->tabs_options['activetab'];
+        //$this->tabs_options['inactivetabs'] = array ($curtab);
     }
 
     /**
@@ -265,7 +225,7 @@ abstract class page_socialwiki {
         global $PAGE;
 
         $this->page = $page;
-        $this->title = $page->title.' ID: '.$page->id;
+        $this->title = $page->title . ' ID: ' . $page->id;
         // set_title calls format_string itself so no probs there
         $PAGE->set_title($this->title);
     }
@@ -324,123 +284,9 @@ abstract class page_socialwiki {
         echo $OUTPUT->footer();
     }
 
-    protected function process_session_url() {
-        global $USER, $SESSION;
-
-        //delete locks if edit
-        $url = $SESSION->wikipreviousurl;
-        switch ($url['page']) {
-        case 'edit':
-            socialwiki_delete_locks($url['params']['pageid'], $USER->id, $url['params']['section'], false);
-            break;
-        }
-    }
-
     protected function set_session_url() {
         global $SESSION;
         unset($SESSION->wikipreviousurl);
-    }
-
-    /**
-     * Generates a table view for a list of pages
-     * @param  Array $pages : a list
-     * @param $table_id : the id under which the table will appear in the page.
-     * @return [type]
-     */
-
-    protected function generate_table_view($pages, $table_id) {
-        global $CFG, $PAGE, $USER;
-        require_once($CFG->dirroot . "/mod/socialwiki/locallib.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/sortableTable/sortableTable.php");
-
-        $table = new SortableTable();
-        $option=optional_param('option',null, PARAM_INT);
-
-        foreach ($pages as $page) {
-            $user = socialwiki_get_user_info($page->userid);
-            $swid = $this->subwiki->id;
-            $peer = new peer($page->userid,
-                             $swid,
-                             $USER->id,
-                             socialwiki_get_user_count($swid),
-                             null);
-            $updated = strftime('%d %b %Y', $page->timemodified);
-            $created = strftime('%d %b %Y', $page->timecreated);
-
-            $views = $page->pageviews;
-            $likes = socialwiki_numlikes($page->id);
-
-            $followlink;
-            $likelink;
-
-
-            if(socialwiki_is_following($USER->id,$page->userid,$swid))
-            {
-                $img = "<img style='width:22px; vertical-align:middle;' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/man-minus.png'></img>";
-                $followlink = "<a style='margin:0;'   class='socialwiki_unfollowlink socialwiki_link' href='".$CFG->wwwroot."/mod/socialwiki/follow.php?user2=".$page->userid."&from=".urlencode($PAGE->url->out()."&option=$option")."&swid=".$swid."&option=$option'>".$img."</a>";
-            } else {
-                $img = "<img style='width:22px; vertical-align:middle;' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/man-plus.png'></img>";
-                $followlink = "<a style='margin:0;' class='socialwiki_followlink socialwiki_link' href='".$CFG->wwwroot."/mod/socialwiki/follow.php?user2=".$page->userid."&from=".urlencode($PAGE->url->out()."&option=$option")."&swid=".$swid."'>".$img."</a>";
-            }   
-
-            $linkpage = "<a style='margin:0;' class='socialwiki_link' href=".$CFG->wwwroot."/mod/socialwiki/view.php?pageid=".$page->id.">".$page->title."</a>";
-            
-            if(socialwiki_liked($USER->id, $page->id)) {
-                $unlikeimg = "<img style='width:22px; vertical-align:middle;' class='socialwiki_unlikeimg unlikeimg_".$page->id."' alt='unlikeimg_".$page->id."' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/likefilled.png'></img>";
-                $likeimg = "<img style='width:22px; vertical-align:middle; display:none;' class='socialwiki_likeimg likeimg_".$page->id."' alt='likeimg_".$page->id."' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/hollowlike.png'></img>";
-            } else {
-                
-                $unlikeimg = "<img style='width:22px; vertical-align:middle; display:none;' class='socialwiki_unlikeimg unlikeimg_".$page->id."'  alt='unlikeimg_".$page->id."' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/likefilled.png'></img>";
-                $likeimg = "<img style='width:22px; vertical-align:middle;' class='socialwiki_likeimg likeimg_".$page->id."'  alt='likeimg_".$page->id."' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/hollowlike.png'></img>";
-            }
-
-            $name = "<a style='margin:0;' class='socialwiki_link' href='".$CFG->wwwroot."/mod/socialwiki/viewuserpages.php?userid=".$user->id."&subwikiid=".$swid."'>".fullname($user)."</a>";
-
-            $favorites = socialwiki_get_favorites($page->id, $swid);
-            $fav = "";
-
-
-            $firstfav = "";
-
-
-            if(count($favorites) > 0) {
-                $firstfav = fullname(array_shift($favorites));
-                if(count($favorites) > 0) {
-                    $firstfav .= " and ".count($favorites)." more";
-                    
-                    foreach($favorites as $f) {
-                        $fav .= fullname($f).'\n';
-                    }
-                }
-            }
-
-            $favdiv = "<a title='$fav'>$firstfav</a>";
-
-
-            $row = array(
-                get_string('title', 'socialwiki') => "<div style='white-space: nowrap; width:100%;'>$likeimg$unlikeimg$linkpage</div>",//$likelink$unlikelink$linkpage</div>",
-                get_string('creator', 'socialwiki') => "<div style='white-space: nowrap; width:100%;'>$followlink$name</div>",
-                get_string('created', 'socialwiki') => "$created",
-                get_string('updated', 'socialwiki') => "$updated",
-                get_string('likes', 'socialwiki') => "$likes",
-                get_string('views', 'socialwiki') => "$views",
-                get_string('popularity','socialwiki') => "$peer->popularity",
-                get_string('likesim','socialwiki') => "$peer->likesim",
-                get_string('followsim','socialwiki') => "$peer->followsim",
-
-                get_string('favorite','socialwiki') => "$favdiv"
-                );
-            $table->add_row($row);
-        }
-        
-        $table_markup = "";
-        
-        $table_markup .= "<div class='yui3-js-endable'>";
-        $table_markup .= $table->get_table($table_id);
-        $table_markup .= "<div id='$table_id' class='table_region'></div>";
-        $table_markup .= "</div>";
-
-        return $table_markup;
     }
 
 }
@@ -451,6 +297,7 @@ abstract class page_socialwiki {
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_view extends page_socialwiki {
+
     /**
      * @var int the coursemodule id
      */
@@ -458,9 +305,9 @@ class page_socialwiki_view extends page_socialwiki {
 
     function __construct($wiki, $subwiki, $cm) {
         global $PAGE;
-	parent::__construct($wiki, $subwiki, $cm);
-    //js code for the ajax-powered like button
-	$PAGE->requires->js(new moodle_url("/mod/socialwiki/likeajax.js"));
+        parent::__construct($wiki, $subwiki, $cm);
+        //js code for the ajax-powered like button
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/likeajax.js"));
     }
 
     function print_header() {
@@ -470,105 +317,67 @@ class page_socialwiki_view extends page_socialwiki {
 
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
 
-        /*if (!empty($this->page)) {
-            echo $this->wikioutput->prettyview_link($this->page);
-        }*/
+        /* if (!empty($this->page)) {
+          echo $this->wikioutput->prettyview_link($this->page);
+          } */
 
         //echo $this->wikioutput->page_index();
-
         //$this->print_pagetitle();
     }
-	
-	protected function print_pagetitle() {
-        global $OUTPUT;
-		//$user = socialwiki_get_user_info($this->page->userid);
-		//$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
-		$html = '';
 
-        $html .= $OUTPUT->container_start('','socialwiki_title');
-	    $html .= '<script> var pageid='.$this->page->id.'</script>'; //passes the pageid to javascript likeajax.js
-	
-	
-/*/link made by ethan
-	
-	if(socialwiki_liked($USER->id, $page->id)) {
-                $img = "<img style='width:22px; vertical-align:middle;' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/likefilled.png'></img>";
-                $likelink = "<a style='margin:0;' class='socialwiki_unlikelink socialwiki_link' href='".$CFG->wwwroot."/mod/socialwiki/like.php?pageid=".$page->id."&from=".urlencode($PAGE->url->out()."&option=$option")."'>".$img."</a>";
-            } else {
-                $img = "<img style='width:22px; vertical-align:middle;' src='".$CFG->wwwroot."/mod/socialwiki/img/icons/hollowlike.png'></img>";
-                $likelink = "<a style='margin:0;' class='socialwiki_likelink socialwiki_link' href='".$CFG->wwwroot."/mod/socialwiki/like.php?pageid=".$page->id."&from=".urlencode($PAGE->url->out()."&option=$option")."'>".$img."</a>";
-            } *///end link made by ethan
+    protected function print_pagetitle() {
+        global $OUTPUT, $CFG;
+        //$user = socialwiki_get_user_info($this->page->userid);
+        //$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
+        $html = '';
+        $html .= $OUTPUT->container_start('', 'socialwiki_title');
+        $html .= '<script> var pageid=' . $this->page->id . '</script>'; //passes the pageid to javascript likeajax.js
 
-	$unlikicon = new moodle_url('/mod/socialwiki/img/icons/likefilled.png');
-	$unliketip = 'click to unlike this page version';
-	$likicon = new moodle_url('/mod/socialwiki/img/icons/hollowlike.png');
-        $liketip = 'click to unlike this page version';
-	//$likefrom = urlencode(new moodle_url('/mod/socialwiki/view.php', array('pageid' => $this->page->id)));
-	//$likaction = new moodle_url('/mod/socialwiki/like.php', array('pageid' => $this->page->id, 'from'=> $likefrom)); // 'swid'=>$this->subwiki->id
-
-
-  //      $html .= $OUTPUT->heading(format_string($this->page->title), 1, 'socialwiki_headingtitle','viewtitle');
-		//$html .=$OUTPUT->container_start('userinfo','author');
-		//$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_link'));
-		//$html .= $OUTPUT->container_end();
-
-        
-        //Page Title
         $thetitle = html_writer::start_tag('h1');
-	$thetitle .= format_string($this->page->title);
-	$thetitle .= html_writer::end_tag('h1');
-	
-        //Right aligned Like Button
-        $theliker = html_writer::start_tag('div', array('style'=>'float:right'));
-	if(socialwiki_liked($this->uid, $this->page->id)) {
-		//hide ĺike link
-		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip, 'style'=>'display:none'));	
-	} else {
-		//show like link
-		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'likelink', 'title'=>$liketip));	
-	}
-        
-	$theliker .= html_writer::tag('img', '', array('src'=>$likicon));
-	$theliker .= 'Like';
-	$theliker .= html_writer::end_tag('button');
+        $thetitle .= format_string($this->page->title);
+        $thetitle .= html_writer::end_tag('h1');
 
-	if(socialwiki_liked($this->uid, $this->page->id)) {
-		//hide ĺike link 
-		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip));	
-	} else {
-		//show like link
-		$theliker .= html_writer::start_tag('button', array('class'=>'socialwiki_likebutton', 'id'=> 'unlikelink', 'title'=>$unliketip, 'style'=>'display:none'));	
-	}
-	$theliker .= html_writer::tag('img', '', array('src'=>$unlikicon));
-	$theliker .= 'Unlike';
-	$theliker .= html_writer::end_tag('button');
+        $unlikeicon = new moodle_url('/mod/socialwiki/img/icons/likefilled.png');
+        $likeicon = new moodle_url('/mod/socialwiki/img/icons/hollowlike.png');
+        $likeaction = new moodle_url('/mod/socialwiki/like.php');
 
-	$likess = socialwiki_numlikes($this->page->id);
+        $theliker = '<noscript>' . html_writer::start_tag('form', array('style' => "display: inline", 'action' => $likeaction, "method" => "get"));
+        $theliker.= '<input type ="hidden" name="pageid" value="' . $this->page->id . '"/>';
+        $theliker.= '<input type ="hidden" name="refresh" value="' . 1 . '"/>' . '</noscript>';
+        $theliker .= html_writer::start_tag('div', array('style' => 'float:right'));
 
+        $theliker .= html_writer::start_tag('button', array('class' => 'socialwiki_likebutton'));
+        if (socialwiki_liked($this->uid, $this->page->id)) {
+            $theliker .= html_writer::tag('img', '', array('src' => $unlikeicon, 'other' => $likeicon));
+            $theliker .= '<span other="Like" >Unlike</span>';
+        } else {
+            $theliker .= html_writer::tag('img', '', array('src' => $likeicon, 'other' => $unlikeicon));
+            $theliker .= '<span other="Unlike" >Like</span>';
+        }
+        $theliker .= html_writer::end_tag('button');
+
+        $theliker.= '<noscript>' . html_writer::end_tag('form') . '</noscript>';
+
+        $likess = socialwiki_numlikes($this->page->id);
         //show number of likes
-	$theliker .= html_writer::start_tag('div', array ('id' => 'numlikes')); //span updated asynchronously after ajax request
-	$theliker .= $likess.($likess == 1 ? ' like':' likes');
+        $theliker .= html_writer::start_tag('div', array('id' => 'numlikes'));
+        $theliker .= $likess . ($likess == 1 ? ' like' : ' likes');
         $theliker .= html_writer::end_tag('div');
-        
+
         $theliker .= html_writer::end_tag('div');
-        
-        
-        $html .=html_writer::start_tag('div', array('class'=>'socialwiki_liketable'));
-	$html .= $theliker.$thetitle;
-        $html .=html_writer::end_tag('div');
-        
-	$html .= $OUTPUT->container_end();
+
+        $html .= $theliker . $thetitle;
+
+        $html .= $OUTPUT->container_end();
         echo $html;
     }
 
     function print_content() {
-        //global $PAGE;
-
         if (socialwiki_user_can_view($this->subwiki)) {
 
             if (!empty($this->page)) {
                 socialwiki_print_page_content($this->page, $this->modcontext, $this->subwiki->id); //function in locallib.php
-            	echo $this->wikioutput->prettyview_link($this->page);
+                echo $this->wikioutput->prettyview_link($this->page);
                 //$wiki = $PAGE->activityrecord;
             } else {
                 print_string('nocontent', 'socialwiki');
@@ -600,9 +409,8 @@ class page_socialwiki_view extends page_socialwiki {
         } else {
             print_error(get_string('invalidparameters', 'socialwiki'));
         }
-	
-	$PAGE->set_url(new moodle_url($CFG->wwwroot . '/mod/socialwiki/view.php', $params));
-	//$PAGE->set_url(new moodle_url('/mod/socialwiki/view.php', $params));
+
+        $PAGE->set_url(new moodle_url($CFG->wwwroot . '/mod/socialwiki/view.php', $params));
     }
 
     function set_coursemodule($id) {
@@ -615,6 +423,7 @@ class page_socialwiki_view extends page_socialwiki {
         $PAGE->navbar->add(format_string($this->title));
         $PAGE->navbar->add(get_string('view', 'socialwiki'));
     }
+
 }
 
 /**
@@ -625,24 +434,22 @@ class page_socialwiki_view extends page_socialwiki {
 class page_socialwiki_edit extends page_socialwiki {
 
     public static $attachmentoptions;
-
     protected $sectioncontent;
+
     /** @var string the section name needed to be edited */
     protected $section;
-    protected $overridelock = false;
     protected $versionnumber = -1;
     protected $upload = false;
     protected $attachments = 0;
     protected $deleteuploads = array();
     protected $format;
-	protected $makenew;
+    protected $makenew;
 
     function __construct($wiki, $subwiki, $cm, $makenew) {
-        global $CFG, $PAGE;
+        global $CFG;
         parent::__construct($wiki, $subwiki, $cm);
-	 	$this->makenew = $makenew;
+        $this->makenew = $makenew;
         self::$attachmentoptions = array('subdirs' => false, 'maxfiles' => - 1, 'maxbytes' => $CFG->maxbytes, 'accepted_types' => '*');
-        //$PAGE->requires->js_init_call('M.mod_socialwiki.renew_lock', null, true);
     }
 
     protected function print_pagetitle() {
@@ -658,18 +465,11 @@ class page_socialwiki_edit extends page_socialwiki {
     }
 
     function print_header() {
-        global $OUTPUT, $PAGE;
-        //$PAGE->requires->data_for_js('socialwiki', array('renew_lock_timeout' => SOCIALLOCK_TIMEOUT - 5, 'pageid' => $this->page->id, 'section' => $this->section));       
-	    parent::print_header();
-        //$this->print_pagetitle();
-        
-       // print '<noscript>' . $OUTPUT->box(get_string('javascriptdisabledlocks', 'socialwiki'), 'errorbox') . '</noscript>';
+        parent::print_header();
     }
 
     function print_content() {
-        global $PAGE;
         if (socialwiki_user_can_edit($this->subwiki)) {
-
             $this->print_edit();
         } else {
             echo get_string('cannoteditpage', 'socialwiki');
@@ -684,17 +484,14 @@ class page_socialwiki_edit extends page_socialwiki {
         if (isset($this->section)) {
             $params['section'] = $this->section;
         }
-		$params['makenew'] = $this->makenew;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/edit.php'.'?makenew='.$this->makenew, $params);
+        $params['makenew'] = $this->makenew;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/edit.php' . '?makenew=' . $this->makenew, $params);
     }
 
     protected function set_session_url() {
         global $SESSION;
 
         $SESSION->wikipreviousurl = array('page' => 'edit', 'params' => array('pageid' => $this->page->id, 'section' => $this->section));
-    }
-
-    protected function process_session_url() {
     }
 
     function set_section($sectioncontent, $section) {
@@ -704,10 +501,6 @@ class page_socialwiki_edit extends page_socialwiki {
 
     public function set_versionnumber($versionnumber) {
         $this->versionnumber = $versionnumber;
-    }
-
-    public function set_overridelock($override) {
-        $this->overridelock = $override;
     }
 
     function set_format($format) {
@@ -727,21 +520,16 @@ class page_socialwiki_edit extends page_socialwiki {
     }
 
     protected function create_navbar() {
-        global $PAGE, $CFG;
+        global $PAGE;
 
         parent::create_navbar();
 
         $PAGE->navbar->add(get_string('edit', 'socialwiki'));
     }
 
-
     protected function print_edit($content = null) {
-        global $CFG, $OUTPUT, $USER, $PAGE;
+        global $CFG, $OUTPUT;
 
-
-
-        //delete old locks (> 1 hour)
-        //socialwiki_delete_old_locks();
         $version = socialwiki_get_current_version($this->page->id);
         $format = $version->contentformat;
 
@@ -756,11 +544,10 @@ class page_socialwiki_edit extends page_socialwiki {
         $versionnumber = $version->version;
         if ($this->versionnumber >= 0) {
             if ($version->version != $this->versionnumber) {
-                print $OUTPUT->box(get_string('wrongversionlock', 'socialwiki'), 'errorbox');
                 $versionnumber = $this->versionnumber;
             }
         }
-        $url = $CFG->wwwroot . '/mod/socialwiki/edit.php?pageid=' . $this->page->id.'&makenew='.$this->makenew;
+        $url = $CFG->wwwroot . '/mod/socialwiki/edit.php?pageid=' . $this->page->id . '&makenew=' . $this->makenew;
         if (!empty($this->section)) {
             $url .= "&section=" . urlencode($this->section);
         }
@@ -779,44 +566,43 @@ class page_socialwiki_edit extends page_socialwiki {
         $data->format = $format;
 
         switch ($format) {
-        case 'html':
-            $data->newcontentformat = FORMAT_HTML;
-            // Append editor context to editor options, giving preference to existing context.
-            page_socialwiki_edit::$attachmentoptions = array_merge(array('context' => $this->modcontext), page_socialwiki_edit::$attachmentoptions);
-            $data = file_prepare_standard_editor($data, 'newcontent', page_socialwiki_edit::$attachmentoptions, $this->modcontext, 'mod_socialwiki', 'attachments', $this->subwiki->id);
-            break;
-        default:
-            break;
+            case 'html':
+                $data->newcontentformat = FORMAT_HTML;
+                // Append editor context to editor options, giving preference to existing context.
+                page_socialwiki_edit::$attachmentoptions = array_merge(array('context' => $this->modcontext), page_socialwiki_edit::$attachmentoptions);
+                $data = file_prepare_standard_editor($data, 'newcontent', page_socialwiki_edit::$attachmentoptions, $this->modcontext, 'mod_socialwiki', 'attachments', $this->subwiki->id);
+                break;
+            default:
+                break;
         }
 
         if ($version->contentformat != 'html') {
             $params['fileitemid'] = $this->subwiki->id;
-            $params['component']  = 'mod_socialwiki';
-            $params['filearea']   = 'attachments';
+            $params['component'] = 'mod_socialwiki';
+            $params['filearea'] = 'attachments';
         }
-       /* if (!empty($CFG->usetags)) {
-            $params['tags'] = tag_get_tags_csv('socialwiki_pages', $this->page->id, TAG_RETURN_TEXT);
-        }*/
-        
+        /* if (!empty($CFG->usetags)) {
+          $params['tags'] = tag_get_tags_csv('socialwiki_pages', $this->page->id, TAG_RETURN_TEXT);
+          } */
+
 
         $form = new mod_socialwiki_edit_form($url, $params);
 
 
-     /*   if ($formdata = $form->get_data()) {
-            if (!empty($CFG->usetags)) {
-                $data->tags = $formdata->tags;
-            }
-        } else {
-            if (!empty($CFG->usetags)) {
-                $data->tags = tag_get_tags_array('socialwiki', $this->page->id);
-            }
-        }*/
+        /*   if ($formdata = $form->get_data()) {
+          if (!empty($CFG->usetags)) {
+          $data->tags = $formdata->tags;
+          }
+          } else {
+          if (!empty($CFG->usetags)) {
+          $data->tags = tag_get_tags_array('socialwiki', $this->page->id);
+          }
+          } */
 
-       
+
 
         $form->set_data($data);
         $form->display();
-
     }
 
 }
@@ -833,7 +619,6 @@ class page_socialwiki_comments extends page_socialwiki {
         parent::print_header();
 
         $this->print_pagetitle();
-
     }
 
     function print_content() {
@@ -905,24 +690,21 @@ class page_socialwiki_comments extends page_socialwiki {
                 $urledit = new moodle_url('/mod/socialwiki/editcomments.php', array('commentid' => $comment->id, 'pageid' => $page->id, 'action' => 'edit'));
                 $urldelet = new moodle_url('/mod/socialwiki/instancecomments.php', array('commentid' => $comment->id, 'pageid' => $page->id, 'action' => 'delete'));
                 $actionicons = true;
-            } else if ((has_capability('mod/socialwiki:editcomment', $this->modcontext)) and ($USER->id == $user->id)) {
+            } else if ((has_capability('mod/socialwiki:editcomment', $this->modcontext)) and ( $USER->id == $user->id)) {
                 $urledit = new moodle_url('/mod/socialwiki/editcomments.php', array('commentid' => $comment->id, 'pageid' => $page->id, 'action' => 'edit'));
                 $urldelet = new moodle_url('/mod/socialwiki/instancecomments.php', array('commentid' => $comment->id, 'pageid' => $page->id, 'action' => 'delete'));
                 $actionicons = true;
             }
 
             if ($actionicons) {
-                $cell6 = new html_table_cell($OUTPUT->action_icon($urledit, new pix_icon('t/edit', get_string('edit'),
-                        '', array('class' => 'iconsmall'))) . $OUTPUT->action_icon($urldelet, new pix_icon('t/delete',
-                        get_string('delete'), '', array('class' => 'iconsmall'))));
+                $cell6 = new html_table_cell($OUTPUT->action_icon($urledit, new pix_icon('t/edit', get_string('edit'), '', array('class' => 'iconsmall'))) . $OUTPUT->action_icon($urldelet, new pix_icon('t/delete', get_string('delete'), '', array('class' => 'iconsmall'))));
                 $row3 = new html_table_row();
                 $row3->cells[] = $cell5;
                 $row3->cells[] = $cell6;
                 $t->data[] = $row3;
             }
 
-            echo html_writer::tag('div', html_writer::table($t), array('class'=>'no-overflow'));
-
+            echo html_writer::tag('div', html_writer::table($t), array('class' => 'no-overflow'));
         }
     }
 
@@ -946,6 +728,7 @@ class page_socialwiki_comments extends page_socialwiki {
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_editcomment extends page_socialwiki {
+
     private $comment;
     private $action;
     private $form;
@@ -1036,7 +819,6 @@ class page_socialwiki_editcomment extends page_socialwiki {
         } else {
             socialwiki_print_editor_wiki($this->page->id, $com->content, $this->format, -1, null, false, array(), 'editcomments', $com->id);
         }
-
     }
 
 }
@@ -1047,10 +829,11 @@ class page_socialwiki_editcomment extends page_socialwiki {
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_search extends page_socialwiki {
+
     private $search_result;
-	private $search_string;
-	//the view mode for viewing results
-	private $view;
+    private $search_string;
+    //the view mode for viewing results
+    private $view;
     private $exact; //1 for an exact search type
 
     protected function create_navbar() {
@@ -1059,185 +842,61 @@ class page_socialwiki_search extends page_socialwiki {
         $PAGE->navbar->add(format_string($this->title));
     }
 
-	function __construct($wiki, $subwiki, $cm)
-	{
-		global $PAGE, $CFG;
-		parent::__construct($wiki, $subwiki, $cm);
-		$PAGE->requires->jquery_plugin('ui');
-		$PAGE->requires->jquery_plugin('ui-css');
-		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
-		$PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
-                $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
+    function __construct($wiki, $subwiki, $cm) {
+        global $PAGE, $CFG;
+        parent::__construct($wiki, $subwiki, $cm);
+        $PAGE->requires->jquery_plugin('ui');
+        $PAGE->requires->jquery_plugin('ui-css');
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/search.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/jquery.tagcloud.js"));
-        $PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
-       
-        require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
-	}
 
-    function set_search_string($search, $searchcontent, $exact_match=false) {
+        require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
+    }
+
+    function set_search_string($search, $searchcontent, $exact_match = false) {
         $swid = $this->subwiki->id;
-		$this->search_string = $search;
+        $this->search_string = $search;
         $this->exact = $exact_match;
         if ($searchcontent) {
             $this->search_result = socialwiki_search_all($swid, $search);
         } else {
             $this->search_result = socialwiki_search_title($swid, $search, $exact_match); //todo: change for exact match
         }
-
     }
 
     function set_url() {
         global $PAGE, $CFG, $COURSE;
-        if (isset($this->page))
-        {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='.$this->page->id.'&courseid='.$COURSE->id.'&cmid='.$PAGE->cm->id);
-        }
-        else
-        {
+        if (isset($this->page)) {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid=' . $this->page->id . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id);
+        } else {
             $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
         }
     }
-	
-	function set_view($option){
-		$this->view=$option;
-	}
-    
-	function print_content() {
-        global $PAGE,$OUTPUT;
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-		echo $this->wikioutput->content_area_begin();
-		//echo $this->wikioutput->title_block("Search results for: ".$this->search_string." (".count($this->search_result)."&nbsptotal)");
-		 
-		switch ($this->view) {
-			case 1:
-				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string,$this->exact);
-                //echo '<script>var makeTagCloud = false; </script>';
-				$this->print_tree();
-				break;
-			case 2:
-				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string,$this->exact);
-                //echo '<script>var makeTagCloud = false; </script>';
-				$this->print_list();
-				break;
-			case 3:
-				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string,$this->exact);
-                //echo '<script>var makeTagCloud = true; </script>';
-				$this->print_tree();
-				break;
-			default:
-				echo $this->wikioutput->menu_search($PAGE->cm->id, $this->view,$this->search_string,$this->exact);
-				$this->print_tree();
-        }
-		
-		echo $this->wikioutput->content_area_end();
+
+    function set_view($option) {
+        $this->view = $option;
     }
-	
-	//print the tree view
-	private function print_tree(){
-		/*Global $OUTPUT;
-		//create a tree from the search results
-		$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1); //variable used to scale the percentages
-		$peers=socialwiki_get_peers($this->subwiki->id,$scale);	
-		$pages=socialwiki_order_pages_using_peers($peers,$this->search_result,$scale);
-		
-		$tree=new socialwiki_tree;
-		$tree->build_tree($pages);
 
-		//display the php tree (this is hidden if JavaScript is enabled)
-		echo $OUTPUT->container_start('phptree');
-		$tree->display();
-		echo $OUTPUT->container_end();
-		
-		//send the tree and peers to javascript
-		$jpeers=json_encode($peers);
-		$jnodes=json_encode($tree->nodes);
-		$jscale=json_encode($scale);
-		echo '<script> var searchResults='.$jnodes.';var peers='.$jpeers.';var scale='.$jscale.'</script>';*/
-        /*
-        this->searchresult contains the results to the search.
-        must build a tree-shaped list with all (step 1) then only a filtered top-k subset (step 2) of the versions
+    function print_content() {
+        global $PAGE;
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
 
-        
+        echo $this->wikioutput->content_area_begin();
+        $this->wikioutput->menu_search($PAGE->cm->id, $this->view, $this->search_string, $this->exact);
+        $this->print_tree();
+        echo $this->wikioutput->content_area_end();
+    }
 
-        */
+    //print the tree view
+    private function print_tree() {
         $pages = $this->search_result;
-        $tree=new socialwiki_tree;
+        $tree = new socialwiki_tree;
         $tree->build_tree($pages);
-
-        //cho '<div class="tree">';
         $tree->display();
-        //echo '</div>';
-        /*'<div class="tree">
-    <ul>
-        <li>
-            <a href="#">Parent</a>
-            <ul>
-                <li>
-                    <a href="#">Child</a>
-                    <ul>
-                        <li>
-                            <a href="#">Grand Child</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Child</a>
-                    <ul>
-                        <li><a href="#">Grand Child</a></li>
-                        <li>
-                            <a href="#">Grand Child</a>
-                            <ul>
-                                <li>
-                                    <a href="#">Great Grand Child</a>
-                                </li>
-                                <li>
-                                    <a href="#">Great Grand Child</a>
-                                </li>
-                                <li>
-                                    <a href="#">Great Grand Child</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="#">Grand Child</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</div>';*/
+    }
 
-
-
-	}
-	
-	//print a list of pages ordered by peer votes
-	private function print_list(){
-		Global $CFG, $USER;
-		//$scale=array('follow'=>1,'like'=>1,'trust'=>1,'popular'=>1);
-		//$peers=socialwiki_get_peers($this->subwiki->id,$scale);
-		//$pages=socialwiki_order_pages_using_peers($peers,$this->search_result,$scale);
-        //echo "<div class='asyncload' tabletype='searchresults'>";
-		if(count($this->search_result)>0){
-            $restable = new versionTable($USER->id, $this->subwiki->id, $this->search_result, versionTable::getHeaders('version'));
-			echo $restable->get_as_HTML('table_searchresults');
-		}else{
-			echo"<h3 class='table_region' socialwiki_titleheader>".get_string('nopagesfound', 'socialwiki')."</h3>";
-		}
-
-	}
-	
-	//print the pages ordered by likes
-	private function print_popular(){
-		Global $CFG;
-		$pages=socialwiki_order_by_likes($this->search_result);
-		
-		if(count($pages)>0){
-            echo $this->generate_table_view($pages, 'popular_table');
-        }else{
-            echo"<h3 class='table_region' socialwiki_titleheader>No Pages Found</h3>";
-        }
-	}
 }
 
 /**
@@ -1261,7 +920,7 @@ class page_socialwiki_create extends page_socialwiki {
     }
 
     function set_url() {
-        global $PAGE, $CFG;
+        global $PAGE;
 
         $params = array();
         $params['swid'] = $this->swid;
@@ -1356,6 +1015,7 @@ class page_socialwiki_create extends page_socialwiki {
         $this->page = $id;
         return $id;
     }
+
 }
 
 class page_socialwiki_preview extends page_socialwiki_edit {
@@ -1367,14 +1027,12 @@ class page_socialwiki_preview extends page_socialwiki_edit {
         parent::__construct($wiki, $subwiki, $cm, 0);
         $buttons = $OUTPUT->update_module_button($cm->id, 'socialwiki');
         $PAGE->set_button($buttons);
-
     }
 
     function print_header() {
         global $PAGE, $CFG;
 
         parent::print_header();
-
     }
 
     function print_content() {
@@ -1404,10 +1062,6 @@ class page_socialwiki_preview extends page_socialwiki_edit {
 
     protected function setup_tabs($options = array()) {
         parent::setup_tabs(array('linkedwhenactive' => 'view', 'activetab' => 'view'));
-    }
-
-    protected function check_locks() {
-        return true;
     }
 
     protected function print_preview() {
@@ -1449,7 +1103,7 @@ class page_socialwiki_preview extends page_socialwiki_edit {
             $parseroutput = socialwiki_parse_content($data->contentformat, $text, $options);
             $this->set_newcontent($text);
             echo $OUTPUT->notification(get_string('previewwarning', 'socialwiki'), 'notifyproblem socialwiki_info');
-            $content = format_text($parseroutput['parsed_text'], FORMAT_HTML, array('overflowdiv'=>true, 'filter'=>false));
+            $content = format_text($parseroutput['parsed_text'], FORMAT_HTML, array('overflowdiv' => true, 'filter' => false));
             echo $OUTPUT->box($content, 'generalbox socialwiki_previewbox');
             $content = $this->newcontent;
         }
@@ -1510,8 +1164,9 @@ class page_socialwiki_diff extends page_socialwiki {
         parent::create_navbar();
         $PAGE->navbar->add(get_string('history', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/history.php?pageid=' . $this->page->id);
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
-	}
-     /**
+    }
+
+    /**
      * Given two pages, prints a page displaying the differences between them.
      *
      * @global object $CFG
@@ -1523,9 +1178,9 @@ class page_socialwiki_diff extends page_socialwiki {
 
         $pageid = $this->page->id;
 
-        $oldversion = socialwiki_get_wiki_page_version($this->compare,1 );
+        $oldversion = socialwiki_get_wiki_page_version($this->compare, 1);
 
-        $newversion = socialwiki_get_wiki_page_version($this->comparewith,1 );
+        $newversion = socialwiki_get_wiki_page_version($this->comparewith, 1);
 
         if ($oldversion && $newversion) {
 
@@ -1542,6 +1197,7 @@ class page_socialwiki_diff extends page_socialwiki {
             print_error('versionerror', 'socialwiki');
         }
     }
+
 }
 
 /**
@@ -1550,6 +1206,7 @@ class page_socialwiki_diff extends page_socialwiki {
  *
  */
 class page_socialwiki_history extends page_socialwiki {
+
     /**
      * @var int $paging current page
      */
@@ -1569,18 +1226,17 @@ class page_socialwiki_history extends page_socialwiki {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $PAGE->requires->js_init_call('M.mod_socialwiki.history', null, true);
-		$PAGE->requires->jquery();
-		//$PAGE->requires->js(new moodle_url("/mod/socialwiki/tree_jslib/tree.js"));
-		$PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
-                $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
-		$PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
+        $PAGE->requires->jquery();
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/socialwiki_tree.css"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/socialwiki_tree.js"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/doublescroll.js"));
     }
 
     function print_header() {
         parent::print_header();
     }
 
-	 /**
+    /**
      * Prints the history for a given wiki page
      *
      */
@@ -1589,46 +1245,37 @@ class page_socialwiki_history extends page_socialwiki {
 
 
         require_capability('mod/socialwiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-	$history=socialwiki_get_relations($this->page->id);
-		
-	//build the tree with all of the relate pages
-	$tree=new socialwiki_tree();
-	$tree->build_tree($history);
-        //cho '<div class="tree">';
-		
-	//add radio buttons to compare versions if there is more than one version
-	if(count($tree->nodes)>1){
-            foreach($tree->nodes as $node){
-                $node->content.= '<span id="comp'.$node->id.'" style="display:block">';
-                $node->content.= $this->choose_from_radio(array(substr($node->id,1) => null), 'compare', 'M.mod_socialwiki.history()', '', true). $this->choose_from_radio(array(substr($node->id,1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
-                if ($node->id == 'l'.$this->page->id){ //current page
+        $history = socialwiki_get_relations($this->page->id);
+
+        //build the tree with all of the relate pages
+        $tree = new socialwiki_tree();
+        $tree->build_tree($history);
+        //add radio buttons to compare versions if there is more than one version
+        if (count($tree->nodes) > 1) {
+            foreach ($tree->nodes as $node) {
+                $node->content.= '<span id="comp' . $node->id . '" style="display:block">';
+                $node->content.= $this->choose_from_radio(array(substr($node->id, 1) => null), 'compare', 'M.mod_socialwiki.history()', '', true) . $this->choose_from_radio(array(substr($node->id, 1) => null), 'comparewith', 'M.mod_socialwiki.history()', '', true);
+                if ($node->id == 'l' . $this->page->id) { //current page
                     $node->content .= "<br/>[current page]";
                 }
                 $node->content .= "</span>";
             }
-	}
-		echo $this->wikioutput->content_area_begin();
-		echo '<h1>Related Versions of page '.$this->page->title.'</h1>';
+        }
+        echo $this->wikioutput->content_area_begin();
+        echo '<h1>Related Versions of page ' . $this->page->title . '</h1>';
 
-		echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/diff.php'), 'method'=>'get', 'id'=>'diff'));
-		echo html_writer::tag('div', html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'pageid', 'value'=>$this->page->id)));
-		
-		//display the tree in php(hidden if javascript is enabled)
-		echo $OUTPUT->container_start('phptree');		
-		$tree->display();
-		echo $OUTPUT->container_end();
-		//$json=json_encode($tree);
-		//send the tree to javascript
-		//echo '<script> var searchResults='.$json.';</script>';
-		//add compare button only if there are multiple versions of a page 
-		if(count($tree->nodes)>1){
-			echo $OUTPUT->container_start('socialwiki_diffbutton');
-			echo html_writer::empty_tag('input', array('type'=>'submit', 'class'=>'socialwiki_form-button', 'style'=>'margin-top:15px', 'value'=>get_string('comparesel', 'socialwiki')));
-			echo $OUTPUT->container_end();
-		}
-		echo html_writer::end_tag('form');
-		echo $this->wikioutput->content_area_end();
+        echo html_writer::start_tag('form', array('action' => new moodle_url('/mod/socialwiki/diff.php'), 'method' => 'get', 'id' => 'diff'));
+        echo html_writer::tag('div', html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'pageid', 'value' => $this->page->id)));
 
+        $tree->display();
+        //add compare button only if there are multiple versions of a page 
+        if (count($tree->nodes) > 1) {
+            echo $OUTPUT->container_start('socialwiki_diffbutton');
+            echo html_writer::empty_tag('input', array('type' => 'submit', 'class' => 'socialwiki_form-button', 'style' => 'margin-top:15px', 'value' => get_string('comparesel', 'socialwiki')));
+            echo $OUTPUT->container_end();
+        }
+        echo html_writer::end_tag('form');
+        echo $this->wikioutput->content_area_end();
     }
 
     function set_url() {
@@ -1650,7 +1297,7 @@ class page_socialwiki_history extends page_socialwiki {
         parent::create_navbar();
         $PAGE->navbar->add(get_string('history', 'socialwiki'));
     }
-    
+
     protected function setup_tabs($options = array()) {
         parent::setup_tabs(array('linkedwhenactive' => 'versions', 'activetab' => 'versions'));
     }
@@ -1705,6 +1352,7 @@ class page_socialwiki_history extends page_socialwiki {
             echo $output;
         }
     }
+
 }
 
 /**
@@ -1713,32 +1361,23 @@ class page_socialwiki_history extends page_socialwiki {
  */
 class page_socialwiki_home extends page_socialwiki {
 
-    
     /**
      * @var int wiki view option
      */
     private $view;
-
     private $tab;
 
-    
     const EXPLORE_TAB = 0;
     const TOPICS_TAB = 1;
     const REVIEW_TAB = 2;
     const PEOPLE_TAB = 3;
 
-
-
     function __construct($wiki, $subwiki, $cm, $t = 0) {
-        Global $PAGE, $CFG;
+        Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
         $this->tab = $t;
         $PAGE->set_title('Social Wiki Home');
-        $PAGE->requires->js(new moodle_url("/mod/socialwiki/likeajax_home.js"));
-        require_once($CFG->dirroot . "/mod/socialwiki/table/table.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/userTable.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/topicsTable.php");
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/tableBuilder.js"));
     }
 
     /**
@@ -1747,11 +1386,10 @@ class page_socialwiki_home extends page_socialwiki {
      *                      1 - Explore Tab
      */
     public function set_tab($tab_id) {
-        if ($tab_id === self::REVIEW_TAB || 
-            $tab_id === self::EXPLORE_TAB || 
-            $tab_id === self::TOPICS_TAB ||
-            $tab_id === self::PEOPLE_TAB) 
-        {
+        if (    $tab_id === self::REVIEW_TAB  ||
+                $tab_id === self::EXPLORE_TAB ||
+                $tab_id === self::TOPICS_TAB  ||
+                $tab_id === self::PEOPLE_TAB  ) {
             $this->tab = $tab_id;
         }
     }
@@ -1760,48 +1398,41 @@ class page_socialwiki_home extends page_socialwiki {
         parent::print_header();
     }
 
-
     function print_content() {
-        global $CFG, $PAGE, $USER, $OUTPUT, $COURSE;
+        global $USER, $OUTPUT;
 
         require_capability(
-            'mod/wiki:viewpage',
-            $this->modcontext,
-            NULL,
-            true,
-            'noviewpagepermission',
-            'socialwiki'
+                'mod/wiki:viewpage', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki'
         );
-		
-		echo $this->wikioutput->content_area_begin();
-		//print the home page heading
-		echo $OUTPUT->heading('Social Wiki Home',1,"socialwiki_headingtitle colourtext");
+
+        echo $this->wikioutput->content_area_begin();
+        //print the home page heading
+        echo $OUTPUT->heading('Social Wiki Home', 1, "socialwiki_headingtitle colourtext");
 
         $user_header = "<div class='home_picture'>";
-        $user_header .= $OUTPUT->user_picture(socialwiki_get_user_info($USER->id), array('size'=>65));
+        $user_header .= $OUTPUT->user_picture(socialwiki_get_user_info($USER->id), array('size' => 65));
         $user_header .= "</div>";
-        $user_header .= "<h3 class='home_user'>".fullname($USER)."</h3>";
+        $user_header .= "<h3 class='home_user'>" . fullname($USER) . "</h3>";
         $user_header .= $this->generate_follow_data();
         echo $user_header;
 
         echo "<div>";
         echo $this->generate_home_nav();
         echo "</div>";
-        echo '<script> var userid='.$USER->id.', swid='.$this->subwiki->id.', courseid ='.$COURSE->id.' ,cmid='.$PAGE->cm->id.';</script>'; // pass variables to JS
 
-        if($this->tab === self::REVIEW_TAB) {
-            $this->print_review_page();
-        } else if ($this->tab === self::EXPLORE_TAB) {
-            $this->print_explore_page();
+        if ($this->tab === self::EXPLORE_TAB) {
+            $this->print_explore_tab();
         } else if ($this->tab === self::TOPICS_TAB) {
             $this->print_topics_tab();
+        } else if ($this->tab === self::REVIEW_TAB) {
+            $this->print_review_tab();
         } else if ($this->tab === self::PEOPLE_TAB) {
             $this->print_people_tab();
         } else {
             echo "ERROR RENDERING PAGE... Invalid tab option";
         }
 
-		echo $this->wikioutput->content_area_end();
+        echo $this->wikioutput->content_area_end();
     }
 
     function generate_follow_data() {
@@ -1809,103 +1440,108 @@ class page_socialwiki_home extends page_socialwiki {
         $followers = socialwiki_get_followers($USER->id, $this->subwiki->id);
         $following = count(socialwiki_get_follows($USER->id, $this->subwiki->id));
 
-        $followdata  = html_writer::start_tag('h3',array('class'=>'home_user'));
-        $followdata .= html_writer::tag('span', "Followers: $followers | Following: $following", array('class' => 'label label-default'));
+        $followdata = html_writer::start_tag('h3', array('class' => 'home_user'));
+        $followdata .= html_writer::tag('span', "Followers: $followers | Following: $following", array('class' => 'socialwiki_label'));
         $followdata .= html_writer::end_tag('h3');
         return $followdata;
     }
 
     function generate_nav($nav_link_array, $selected_index) {
         $navtag = "<ul class='nav nav-tabs'>\n";
-
-        $end_nav  = "</ul>\n";
-
+        $end_nav = "</ul>\n";
 
         $nav_links = "";
         $count = 0;
-        foreach($nav_link_array as $label => $link) {
-            $a  = "<a ";
+        foreach ($nav_link_array as $label => $link) {
+            $a = "<a ";
             $a .= "href='$link'>";
             $a .= "$label</a>";
-            if($count++ === $selected_index) {
+            if ($count++ === $selected_index) {
                 $nav_links .= "<li class='active'>$a</li>";
             } else {
                 $nav_links .= "<li>$a</li>";
             }
-            
         }
+
         return $navtag . $nav_links . $end_nav;
     }
 
-    function generate_home_nav($selected_index = 0) {
+    function generate_home_nav() {
         global $PAGE;
         $navlinks = array(
-            "Explore" => "home.php?id=".$PAGE->cm->id."&tabid=".self::EXPLORE_TAB,
-            "Pages" => "home.php?id=".$PAGE->cm->id."&tabid=".self::TOPICS_TAB,
-            "Manage"  => "home.php?id=".$PAGE->cm->id."&tabid=".self::REVIEW_TAB,
-            "People" => "home.php?id=".$PAGE->cm->id."&tabid=".self::PEOPLE_TAB,
+            "Explore" => "home.php?id=" . $PAGE->cm->id . "&tabid=" . self::EXPLORE_TAB,
+            "Pages"   => "home.php?id=" . $PAGE->cm->id . "&tabid=" . self::TOPICS_TAB,
+            "Manage"  => "home.php?id=" . $PAGE->cm->id . "&tabid=" . self::REVIEW_TAB,
+            "People"  => "home.php?id=" . $PAGE->cm->id . "&tabid=" . self::PEOPLE_TAB,
         );
         return $this->generate_nav($navlinks, $this->tab);
     }
 
-    function print_review_page() {
-        //Global $USER;
-        // $this->print_page_list_content();
-        $this->print_favorite_pages();
-        $this->print_recent_likes();
-        //$userTable = UserTable::make_followed_users_table( $USER->id, $this->subwiki->id);
-        
-        echo "<a id='Ifollow' href='#'></a><h2 class='table_region'>People You Follow:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='followedusers'><table></table></div>";
-        
-        echo "<h2 class='table_region'>My Pages:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='mypageversions'><table></table></div>";
-        
-        /*if ($userTable == null){
-            echo '<h3>'.get_String('youfollownobody', 'socialwiki').'</h3>';
-        } else {
-            echo $userTable->get_as_HTML();
-        }*/
-
-        
-        //$this->print_userpages_content();*/
+    function print_explore_tab() {
+        global $USER;
+        $userid = $USER->id;
+        $swid = $this->subwiki->id;
+        //Versions from Following Table
+        echo "<h2>From Users You Follow:</h2>";
+        $tabletype = 'versionsfollowed';
+        echo include 'table/tableFactory.php';
+        //New Versions Table
+        echo "<h2>New Page Versions:</h2>";
+        $tabletype = 'newpageversions';
+        echo include 'table/tableFactory.php';
+        //All Versions Table
+        echo "<h2>All Page Versions:</h2>";
+        $tabletype = 'allpageversions';
+        echo include 'table/tableFactory.php';
     }
 
     function print_topics_tab() {
-        //global $CFG, $USER;
-        //require_once($CFG->dirroot . "/mod/socialwiki/table/topicsTable.php");
-        // $topicsTable =  TopicsTable::make_all_topics_table($USER->id,$this->subwiki->id);
-        echo "<h2 class='table_region'>"
-            ."<a style='float:right' class='label label-primary' "
-            ."href='create.php?action=new&swid=".$this->subwiki->id."'>Make a new Page</a>"
-            ."<div>All pages:</div></h2>";
-        //echo $topicsTable->get_as_HTML();
+        global $USER;
+        $userid = $USER->id;
+        $swid = $this->subwiki->id;
+        //All Pages Table
+        $tabletype = 'alltopics';
+        echo "<h2>"
+        . "<a style='float:right' class='socialwiki_label' "
+        . "href='create.php?action=new&swid=" . $this->subwiki->id . "'>Make a new Page</a>"
+        . "All pages:</h2>";
+        echo include 'table/tableFactory.php';
+    }
 
-        echo "<div class='tableregion asyncload' tabletype='alltopics'><table></table></div>";
+    function print_review_tab() {
+        Global $USER;
+        $userid = $USER->id;
+        $swid = $this->subwiki->id;
+        //Favourites Table
+        echo "<h2>My Favourites:</h2>";
+        $tabletype = 'faves';
+        echo include 'table/tableFactory.php';
+        //Likes Table
+        echo "<h2>My Recent Likes:</h2>";
+        $tabletype = 'recentlikes';
+        echo include 'table/tableFactory.php';
+        //My Versions Table
+        echo "<h2>My Pages:</h2>";
+        $tabletype = 'mypageversions';
+        echo include 'table/tableFactory.php';
     }
 
     function print_people_tab() {
-        //global $CFG, $USER;
-        
-        //$userTable2 = UserTable::make_followers_table($USER->id, $this->subwiki->id);
-        echo "<a id='myfollowers' href='#'></a><h2 class='table_region'>People Following you:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='followers'><table></table></div>";
-        /*if ($userTable2 == null){
-            echo '<h3>'.get_String('youhavenofollowers', 'socialwiki').'</h3>';
-        } else {
-            echo $userTable2->get_as_HTML();
-        }*/
-        
-        //$userTable3 = UserTable::make_all_users_table($USER->id, $this->subwiki->id);
-        echo "<h2 class='table_region'>All Active Users:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='allusers'><table></table></div>";
-        //echo $userTable3->get_as_HTML();
-    }
-
-    function print_explore_page() {
-        $this->print_followed_content();
-        $this->print_updated_content();
-        $this->print_page_list_content();
+        global $USER;
+        $userid = $USER->id;
+        $swid = $this->subwiki->id;
+        //Followers Table
+        echo "<a id='myfollowers' href='#'></a><h2>Followers:</h2>";
+        $tabletype = 'followers';
+        echo include 'table/tableFactory.php';
+        //Following Table
+        echo "<a id='Ifollow' href='#'></a><h2>Following:</h2>";
+        $tabletype = 'followedusers';
+        echo include 'table/tableFactory.php';
+        //All Users Table
+        echo "<h2>All Active Users:</h2>";
+        $tabletype = 'allusers';
+        echo include 'table/tableFactory.php';
     }
 
     function set_view($option) {
@@ -1913,22 +1549,19 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     protected function set_url() {
-        global $PAGE, $CFG, $USER;
+        global $PAGE, $CFG;
         $PAGE->set_url(
-            $CFG->wwwroot . '/mod/socialwiki/home.php',
-            array('id' => $PAGE->cm->id)
+                $CFG->wwwroot . '/mod/socialwiki/home.php', array('id' => $PAGE->cm->id)
         );
     }
 
     protected function create_navbar() {
-        global $PAGE,$CFG;
+        global $PAGE, $CFG;
 
         $PAGE->navbar->add(
-            get_string(
-                'home',
-                'socialwiki'
-            ), 
-            $CFG->wwwroot . '/mod/socialwiki/home.php?id=' . $PAGE->cm->id
+                get_string(
+                        'home', 'socialwiki'
+                ), $CFG->wwwroot . '/mod/socialwiki/home.php?id=' . $PAGE->cm->id
         );
     }
 
@@ -1938,141 +1571,39 @@ class page_socialwiki_home extends page_socialwiki {
     ///////////////////////////////////
     ////////////////////////////////////////////
 
-    
-    public function print_followed_content() {
-        echo "<h2 class='table_region'>From Users You Follow:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='versionsfollowed'>".page_socialwiki::getCombineForm()."<table></table></div>";
+    /*
+     * prints a list of all the pages created by the teacher
+     * /
 
-    }
+      private function print_teacher_content() {
+      global $COURSE, $OUTPUT,$CFG,$PAGE;
 
+      $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
 
-    public function print_favorite_pages() {
-        //global $USER;
+      $teachers=socialwiki_get_teachers($context->id);
+      //moodle allows multiple teachers so print pages for all teachers and editing teachers
+      foreach($teachers as $teacher){
+      $user = socialwiki_get_user_info($teacher->id);
+      $pages = socialwiki_get_pages_from_userid($teacher->id,$this->subwiki->id);
 
-        //$swid = $this->subwiki->id;
-        //echo '<script> var userid='.$USER->id.', swid='.$this->subwiki->id.';</script>' MOVED TO ABOVE
-        echo "<h2 class='table_region'>Favorites:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='faves'><table></table></div>";
-        //WILL BE RENDERED BY JAVASCRIPT in likeajax.js
-        /*
-        if($favs = socialwiki_get_user_favorites($USER->id, $swid)) {
-            $headers = versionTable::getHeaders('mystuff');
-            echo versionTable::makeHTMLVersionTable($USER->id, $swid,$favs, $headers, 'fav_table');
-        } else {
-            echo '<h3>No favourite pages yet</h3>';
-        }*/
-        //end placeholder
+      $this->generate_table_view($pages, 'teacher_table');
+      }
+      }
+      /**
+     * print recomended pages based on peer scores
+     * /
 
-    }
+      private function print_recommended_content() {
+      global $USER,$CFG;
 
-    private function print_recent_likes() {
-        echo "<h2 class='table_region'>Recent Likes:</h2>";
-         echo "<div class='tableregion asyncload' tabletype='recentlikes'><table></table></div>";
-        /*
-        global $USER;
-        $swid = $this->subwiki->id;
-        if($likes = socialwiki_get_liked_pages($USER->id, $swid)) {
-            echo "<h2>Recent Likes:</h2>";
-            $headers = versionTable::getHeaders('mystuff');
-            echo versionTable::makeHTMLVersionTable($USER->id, $swid,$likes, $headers, 'recentlikes_table');
-        }*/
-    }
+      $pages = socialwiki_get_recommended_pages($USER->id,$this->subwiki->id);
+      if(count($pages)>0){
+      $this->generate_table_view($pages, 'recommended_table');
+      }else{
+      echo '<h3 socialwiki_titleheader>No Pages To Recommend</h3>';
+      }
+      } */
 
-    /**
-     * Prints a list of pages the user created
-     *
-     * @uses $OUTPUT, $USER
-     *
-     */
-	
-    private function print_userpages_content() {	
-        global $USER;
-        $swid = $this->subwiki->id;
-        
-        $pages = array();
-
-        if ($contribs = socialwiki_get_contributions($swid, $USER->id)) {
-            foreach ($contribs as $contrib) {
-                array_push($pages, socialwiki_get_page($contrib->pageid));
-            }
-            echo "<h2 class='table_region'>User Created Pages:</h2>";
-            $headers = versionTable::getHeaders('mystuff');
-            echo versionTable::makeHTMLVersionTable($USER->id, $swid,$pages, $headers, 'userpv_table');
-
-        } else {
-            echo html_writer::tag('div',get_string('nocontribs', 'socialwiki'),array('class'=>'table_region'));
-    }
-    }
-
-
-    /**
-     * Prints a list of all pages
-     *
-     *
-     */
-    private function print_page_list_content() {
-        //global $OUTPUT,$CFG, $USER;
-
-        echo "<h2 class='table_region'>All Page Versions:</h2>";
-        echo "<div class='tableregion asyncload' tabletype='allpageversions'>".page_socialwiki::getCombineForm()."<table></table></div>";
-        /*$pages = socialwiki_get_page_list($this->subwiki->id);
-
-        if (!empty($pages)) {
-            //echo "<div >";
-            e
-            $headers = versionTable::getHeaders('mystuff');
-            echo versionTable::makeHTMLVersionTable($USER->id, $this->subwiki->id,$pages, $headers, 'allpagev_table');
-            //echo "</div>";
-        }*/
-        
-    }
-
-    
-    
-
-    /**
-     * Prints the upages that have been modified since the last login
-     *
-     * @uses $COURSE, $OUTPUT
-     *
-     */
-    private function print_updated_content() {
-        echo "<h2 class='table_region'>New Page Versions:</h2>";
-            echo "<div class='tableregion asyncload' tabletype='newpageversions'>".page_socialwiki::getCombineForm()."<table></table></div>";
-    }
-	
-	/*
-	 *prints a list of all the pages created by the teacher
-	 * /
-	
-	private function print_teacher_content() {
-        global $COURSE, $OUTPUT,$CFG,$PAGE;
-
-		$context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
-		
-		$teachers=socialwiki_get_teachers($context->id);
-		//moodle allows multiple teachers so print pages for all teachers and editing teachers
-		foreach($teachers as $teacher){
-			$user = socialwiki_get_user_info($teacher->id);
-			$pages = socialwiki_get_pages_from_userid($teacher->id,$this->subwiki->id);
-
-			$this->generate_table_view($pages, 'teacher_table');
-		}
-    }
-	/**
-	 *print recomended pages based on peer scores
-	 * /
-	
-	private function print_recommended_content() {
-        global $USER,$CFG;
-
-		$pages = socialwiki_get_recommended_pages($USER->id,$this->subwiki->id);
-		if(count($pages)>0){
-			$this->generate_table_view($pages, 'recommended_table');
-		}else{
-	       echo '<h3 socialwiki_titleheader>No Pages To Recommend</h3>';
-		}
-	}*/
     ////////////////////////////////////
     ////////////////////////////
     ////////////////// 
@@ -2096,7 +1627,7 @@ class page_socialwiki_home extends page_socialwiki {
             if ($item->icon instanceof renderable) {
                 $icon = $this->wikioutput->render($item->icon);
                 $content = $icon . '&nbsp;' . $content; // use CSS for spacing of icons
-                }
+            }
             if ($item->helpbutton !== null) {
                 $content = trim($item->helpbutton) . html_writer::tag('span', $content, array('class' => 'clearhelpbutton'));
             }
@@ -2121,7 +1652,6 @@ class page_socialwiki_home extends page_socialwiki {
                     $attributes['class'] = 'dimmed_text';
                 }
                 $content = html_writer::link($item->action, $content, $attributes);
-
             } else if (is_string($item->action) || empty($item->action)) {
                 $attributes = array();
                 if ($title !== '') {
@@ -2160,8 +1690,7 @@ class page_socialwiki_home extends page_socialwiki {
             if (!empty($item->preceedwithhr) && $item->preceedwithhr === true) {
                 $content = html_writer::empty_tag('hr') . $content;
             }
-            $content = html_writer::tag('li', $content, $liattr);
-            $lis[] = $content;
+            $lis[] = html_writer::tag('li', $content, $liattr);
         }
 
         if (count($lis)) {
@@ -2178,6 +1707,7 @@ class page_socialwiki_home extends page_socialwiki {
  *
  */
 class page_socialwiki_deletecomment extends page_socialwiki {
+
     private $commentid;
 
     function print_header() {
@@ -2226,9 +1756,9 @@ class page_socialwiki_deletecomment extends page_socialwiki {
         $strdeletecheckfull = get_string('deletecommentcheckfull', 'socialwiki');
 
         //ask confirmation
-        $optionsyes = array('confirm'=>1, 'pageid'=>$this->page->id, 'action'=>'delete', 'commentid'=>$this->commentid, 'sesskey'=>sesskey());
+        $optionsyes = array('confirm' => 1, 'pageid' => $this->page->id, 'action' => 'delete', 'commentid' => $this->commentid, 'sesskey' => sesskey());
         $deleteurl = new moodle_url('/mod/socialwiki/instancecomments.php', $optionsyes);
-        $return = new moodle_url('/mod/socialwiki/comments.php', array('pageid'=>$this->page->id));
+        $return = new moodle_url('/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
 
         echo $OUTPUT->heading($strdeletecheckfull);
         print_container_start(false, 'socialwiki_deletecommentform');
@@ -2240,6 +1770,7 @@ class page_socialwiki_deletecomment extends page_socialwiki {
         echo '</form>';
         print_container_end();
     }
+
 }
 
 /**
@@ -2252,6 +1783,7 @@ class page_socialwiki_save extends page_socialwiki_edit {
     private $newcontent;
 
     function print_header() {
+        
     }
 
     function print_content() {
@@ -2268,12 +1800,13 @@ class page_socialwiki_save extends page_socialwiki_edit {
     }
 
     protected function set_session_url() {
+        
     }
 
     protected function print_save() {
-        global $CFG, $USER, $OUTPUT, $PAGE;
+        global $CFG, $USER;
 
-        $url = $CFG->wwwroot . '/mod/socialwiki/edit.php?pageid=' . $this->page->id.'&makenew='.$this->makenew;
+        $url = $CFG->wwwroot . '/mod/socialwiki/edit.php?pageid=' . $this->page->id . '&makenew=' . $this->makenew;
         if (!empty($this->section)) {
             $url .= "&section=" . urlencode($this->section);
         }
@@ -2287,8 +1820,8 @@ class page_socialwiki_save extends page_socialwiki_edit {
 
         if ($this->format != 'html') {
             $params['fileitemid'] = $this->page->id;
-            $params['component']  = 'mod_socialwiki';
-            $params['filearea']   = 'attachments';
+            $params['component'] = 'mod_socialwiki';
+            $params['filearea'] = 'attachments';
         }
 
         $form = new mod_socialwiki_edit_form($url, $params);
@@ -2332,14 +1865,13 @@ class page_socialwiki_save extends page_socialwiki_edit {
                 }
             }
 
-            //deleting old locks
-            socialwiki_delete_locks($this->page->id, $USER->id, $this->section);
             $url = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $this->page->id, 'group' => $this->subwiki->groupid));
             redirect($url);
         } else {
             print_error('savingerror', 'socialwiki');
         }
     }
+
 }
 
 /**
@@ -2400,7 +1932,7 @@ class page_socialwiki_viewversion extends page_socialwiki {
             echo $OUTPUT->heading(get_string('viewversion', 'socialwiki', $pageversion->version) . '<br />' . html_writer::link($restorelink->out(false), '(' . get_string('restorethis', 'socialwiki') . ')', array('class' => 'socialwiki_restore')) . '&nbsp;', 4);
             $userinfo = socialwiki_get_user_info($pageversion->userid);
             $heading = '<p><strong>' . get_string('modified', 'socialwiki') . ':</strong>&nbsp;' . userdate($pageversion->timecreated, get_string('strftimedatetime', 'langconfig'));
-            $viewlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('id' => $userinfo->id,'subwikiid'=>$this->page->subwikiid));
+            $viewlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('id' => $userinfo->id, 'subwikiid' => $this->page->subwikiid));
             $heading .= '&nbsp;&nbsp;&nbsp;<strong>' . get_string('user') . ':</strong>&nbsp;' . html_writer::link($viewlink->out(false), fullname($userinfo));
             $heading .= '&nbsp;&nbsp;&rarr;&nbsp;' . $OUTPUT->user_picture(socialwiki_get_user_info($pageversion->userid), array('popup' => true)) . '</p>';
             print_container($heading, false, 'mdl-align socialwiki_modifieduser socialwiki_headingtime');
@@ -2409,13 +1941,13 @@ class page_socialwiki_viewversion extends page_socialwiki {
             $pageversion->content = file_rewrite_pluginfile_urls($pageversion->content, 'pluginfile.php', $this->modcontext->id, 'mod_socialwiki', 'attachments', $this->subwiki->id);
 
             $parseroutput = socialwiki_parse_content($pageversion->contentformat, $pageversion->content, $options);
-            $content = print_container(format_text($parseroutput['parsed_text'], FORMAT_HTML, array('overflowdiv'=>true)), false, '', '', true);
+            $content = print_container(format_text($parseroutput['parsed_text'], FORMAT_HTML, array('overflowdiv' => true)), false, '', '', true);
             echo $OUTPUT->box($content, 'generalbox socialwiki_contentbox');
-
         } else {
             print_error('versionerror', 'socialwiki');
         }
     }
+
 }
 
 class page_socialwiki_confirmrestore extends page_socialwiki_save {
@@ -2443,6 +1975,7 @@ class page_socialwiki_confirmrestore extends page_socialwiki_save {
     function set_versionid($versionid) {
         $this->version = socialwiki_get_version($versionid);
     }
+
 }
 
 class page_socialwiki_prettyview extends page_socialwiki {
@@ -2478,9 +2011,11 @@ class page_socialwiki_prettyview extends page_socialwiki {
         echo format_text($content['parsed_text'], FORMAT_HTML);
         echo '</div>';
     }
+
 }
 
 class page_socialwiki_handlecomments extends page_socialwiki {
+
     private $action;
     private $content;
     private $commentid;
@@ -2513,7 +2048,6 @@ class page_socialwiki_handlecomments extends page_socialwiki {
                 redirect($CFG->wwwroot . '/mod/socialwiki/comments.php?pageid=' . $this->page->id, get_string('deletecomment', 'socialwiki'), 2);
             }
         }
-
     }
 
     public function set_url() {
@@ -2558,91 +2092,6 @@ class page_socialwiki_handlecomments extends page_socialwiki {
 
 }
 
-class page_socialwiki_lock extends page_socialwiki_edit {
-
-    public function print_header() {
-        $this->set_url();
-    }
-
-    protected function set_url() {
-        global $PAGE, $CFG;
-
-        $params = array('pageid' => $this->page->id);
-
-        if ($this->section) {
-            $params['section'] = $this->section;
-        }
-
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/lock.php', $params);
-    }
-
-    protected function set_session_url() {
-    }
-
-    public function print_content() {
-        global $USER, $PAGE;
-
-        require_capability('mod/socialwiki:editpage', $this->modcontext, NULL, true, 'noeditpermission', 'socialwiki');
-
-        socialwiki_set_lock($this->page->id, $USER->id, $this->section);
-    }
-
-    public function print_footer() {
-    }
-}
-
-class page_socialwiki_overridelocks extends page_socialwiki_edit {
-    function print_header() {
-        $this->set_url();
-    }
-
-    function print_content() {
-        global $CFG, $PAGE;
-
-        require_capability('mod/socialwiki:overridelock', $this->modcontext, NULL, true, 'nooverridelockpermission', 'socialwiki');
-
-        socialwiki_delete_locks($this->page->id, null, $this->section, true, true);
-
-        $args = "pageid=" . $this->page->id;
-
-        if (!empty($this->section)) {
-            $args .= "&section=" . urlencode($this->section);
-        }
-
-        redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?' . $args, get_string('overridinglocks', 'socialwiki'), 2);
-    }
-
-    function set_url() {
-        global $PAGE, $CFG;
-
-        $params = array('pageid' => $this->page->id);
-
-        if (!empty($this->section)) {
-            $params['section'] = $this->section;
-        }
-
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/overridelocks.php', $params);
-    }
-
-    protected function set_session_url() {
-    }
-
-    private function print_overridelocks() {
-        global $CFG;
-
-        socialwiki_delete_locks($this->page->id, null, $this->section, true, true);
-
-        $args = "pageid=" . $this->page->id;
-
-        if (!empty($this->section)) {
-            $args .= "&section=" . urlencode($this->section);
-        }
-
-        redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?' . $args, get_string('overridinglocks', 'socialwiki'), 2);
-    }
-
-}
-
 /**
  * This class will let user to delete wiki pages and page versions
  *
@@ -2680,13 +2129,6 @@ class page_socialwiki_admin extends page_socialwiki {
     function print_content() {
         //make sure anyone trying to access this page has managewiki capabilities
         require_capability('mod/socialwiki:managewiki', $this->modcontext, NULL, true, 'noviewpagepermission', 'socialwiki');
-
-        //update wiki cache if timedout
-        $page = $this->page;
-        if ($page->timerendered + SOCIALWIKI_REFRESH_CACHE_TIME < time()) {
-            $fresh = socialwiki_refresh_cachedcontent($page);
-            $page = $fresh['page'];
-        }
 
         //dispaly admin menu
         echo $this->wikioutput->menu_admin($this->page->id, $this->view);
@@ -2747,7 +2189,7 @@ class page_socialwiki_admin extends page_socialwiki {
     protected function print_delete_content($showorphan = true) {
         $contents = array();
         $table = new html_table();
-        $table->head = array('', get_string('pagename','socialwiki'));
+        $table->head = array('', get_string('pagename', 'socialwiki'));
         $table->attributes['class'] = 'generaltable mdl-align';
         $swid = $this->subwiki->id;
         if ($showorphan) {
@@ -2766,29 +2208,29 @@ class page_socialwiki_admin extends page_socialwiki {
 
         ///Print the form
         echo html_writer::start_tag('form', array(
-                                                'action' => new moodle_url('/mod/socialwiki/admin.php'),
-                                                'method' => 'post'));
+            'action' => new moodle_url('/mod/socialwiki/admin.php'),
+            'method' => 'post'));
         echo html_writer::tag('div', html_writer::empty_tag('input', array(
-                                                                         'type'  => 'hidden',
-                                                                         'name'  => 'pageid',
-                                                                         'value' => $this->page->id)));
+                    'type' => 'hidden',
+                    'name' => 'pageid',
+                    'value' => $this->page->id)));
 
         echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'option', 'value' => $this->view));
         echo html_writer::table($table);
         echo html_writer::start_tag('div', array('class' => 'mdl-align'));
         if (!$showorphan) {
             echo html_writer::empty_tag('input', array(
-                                                     'type'    => 'submit',
-                                                     'class'   => 'socialwiki_form-button',
-                                                     'value'   => get_string('listorphan', 'socialwiki'),
-                                                     'sesskey' => sesskey()));
+                'type' => 'submit',
+                'class' => 'socialwiki_form-button',
+                'value' => get_string('listorphan', 'socialwiki'),
+                'sesskey' => sesskey()));
         } else {
-            echo html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'listall', 'value'=>'1'));
+            echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'listall', 'value' => '1'));
             echo html_writer::empty_tag('input', array(
-                                                     'type'    => 'submit',
-                                                     'class'   => 'socialwiki_form-button',
-                                                     'value'   => get_string('listall', 'socialwiki'),
-                                                     'sesskey' => sesskey()));
+                'type' => 'submit',
+                'class' => 'socialwiki_form-button',
+                'value' => get_string('listall', 'socialwiki'),
+                'sesskey' => sesskey()));
         }
         echo html_writer::end_tag('div');
         echo html_writer::end_tag('form');
@@ -2807,14 +2249,14 @@ class page_socialwiki_admin extends page_socialwiki {
         foreach ($pages as $page) {
             $link = socialwiki_parser_link($page);
             $class = ($link['new']) ? 'class="socialwiki_newentry"' : '';
-            $pagelink = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']).' (ID:'.$page->id.')' . '</a>';
+            $pagelink = '<a href="' . $link['url'] . '"' . $class . '>' . format_string($link['content']) . ' (ID:' . $page->id . ')' . '</a>';
             $urledit = new moodle_url('/mod/socialwiki/edit.php', array('pageid' => $page->id, 'sesskey' => sesskey()));
             $urldelete = new moodle_url('/mod/socialwiki/admin.php', array(
-                                                                   'pageid'  => $this->page->id,
-                                                                   'delete'  => $page->id,
-                                                                   'option'  => $this->view,
-                                                                   'listall' => !$this->listorphan?'1': '',
-                                                                   'sesskey' => sesskey()));
+                'pageid' => $this->page->id,
+                'delete' => $page->id,
+                'option' => $this->view,
+                'listall' => !$this->listorphan ? '1' : '',
+                'sesskey' => sesskey()));
 
             $editlinks = $OUTPUT->action_icon($urledit, new pix_icon('t/edit', get_string('edit')));
             $editlinks .= $OUTPUT->action_icon($urldelete, new pix_icon('t/delete', get_string('delete')));
@@ -2899,9 +2341,9 @@ class page_socialwiki_admin extends page_socialwiki {
                     $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $user->id, 'subwikiid' => $this->page->subwikiid));
                     $picturelink = $picture . html_writer::link($userlink->out(false), fullname($user));
                     $historydate = $OUTPUT->container($date, 'socialwiki_histdate');
-                    $radiofromelement = $this->choose_from_radio(array($version->version  => null), 'fromversion', 'M.mod_socialwiki.deleteversion()', $versioncount, true);
-                    $radiotoelement = $this->choose_from_radio(array($version->version  => null), 'toversion', 'M.mod_socialwiki.deleteversion()', $versioncount, true);
-                    $contents[] = array( $radiofromelement . $radiotoelement, $viewlink, $picturelink, $time, $historydate);
+                    $radiofromelement = $this->choose_from_radio(array($version->version => null), 'fromversion', 'M.mod_socialwiki.deleteversion()', $versioncount, true);
+                    $radiotoelement = $this->choose_from_radio(array($version->version => null), 'toversion', 'M.mod_socialwiki.deleteversion()', $versioncount, true);
+                    $contents[] = array($radiofromelement . $radiotoelement, $viewlink, $picturelink, $time, $historydate);
                 }
 
                 $table = new html_table();
@@ -2911,10 +2353,10 @@ class page_socialwiki_admin extends page_socialwiki {
                 $table->rowclasses = $rowclass;
 
                 ///Print the form
-                echo html_writer::start_tag('form', array('action'=>new moodle_url('/mod/socialwiki/admin.php'), 'method' => 'post'));
+                echo html_writer::start_tag('form', array('action' => new moodle_url('/mod/socialwiki/admin.php'), 'method' => 'post'));
                 echo html_writer::tag('div', html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'pageid', 'value' => $pageid)));
                 echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'option', 'value' => $this->view));
-                echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' =>  sesskey()));
+                echo html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
                 echo html_writer::table($table);
                 echo html_writer::start_tag('div', array('class' => 'mdl-align'));
                 echo html_writer::empty_tag('input', array('type' => 'submit', 'class' => 'socialwiki_form-button', 'value' => get_string('deleteversions', 'socialwiki')));
@@ -2977,214 +2419,115 @@ class page_socialwiki_admin extends page_socialwiki {
             echo $output;
         }
     }
-}
 
-/**
- * page that allows the user to manage likes and follows
- */
-class page_socialwiki_manage extends page_socialwiki{
-	
-	function print_content(){
-		Global $USER,$PAGE,$OUTPUT,$CFG;
-        
-
-		//get the follows and likes for a user
-		$follows=socialwiki_get_follows($USER->id,$this->subwiki->id);
-		$likes=socialwiki_getlikes($USER->id,$this->subwiki->id);
-		$numfollowers=socialwiki_get_followers($USER->id,$this->subwiki->id);
-
-		//output follow heading
-		$html=$this->wikioutput->content_area_begin();
-		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.= $OUTPUT->heading('FOLLOWING',1,'colourtext');
-		$html.=$OUTPUT->container_end();
-		$html .= $OUTPUT->container_start('socialwiki_followlist');
-		
-		if (count($follows)==0){
-			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading(get_string('youfollownobody', 'socialwiki'),3,'colourtext');
-			$html.=$OUTPUT->container_end();
-		}else{
-			//display all the users being followed by the current user
-			foreach($follows as $follow){
-				$user = socialwiki_get_user_info($follow->usertoid);
-				$userlink = new moodle_url('/mod/socialwiki/viewuserpages.php', array('userid' => $follow->usertoid, 'subwikiid' => $this->subwiki->id));
-				$picture = $OUTPUT->user_picture($user, array('popup' => true));
-				$html.=$picture;
-				$html.=html_writer::link($userlink->out(false),fullname($user),array('class'=>'socialwiki_username socialwiki_link'));
-				$html.='&nbsp&nbsp&nbsp';
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/follow.php?user2='.$follow->usertoid.'&from='.urlencode($PAGE->url->out()).'&swid='.$this->subwiki->id,'Unfollow',array('class'=>'socialwiki_unfollowlink socialwiki_link'));
-				$html.='<br/>';
-			}
-
-		}
-		$html .= $OUTPUT->container_end();
-		//display the users likes
-		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',1,'colourtext');
-		$html.=$OUTPUT->container_end();
-		if (count($likes)==0){
-			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('You have not liked any pages', 3, "colourtext");
-			$html.=$OUTPUT->container_end();
-		}else{
-			//display all the pages the current user likes
-			$html .= $OUTPUT->container_start('socialwiki_likelist');
-			foreach($likes as $like){
-				$page=socialwiki_get_page($like->pageid);
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/like.php?pageid='.$page->id.'&from='.urlencode($PAGE->url->out()),'Unlike',array('class'=>'socialwiki_unlikelink socialwiki_link'));
-				$html .= "<br/><br/>";
-			}
-			$html .= $OUTPUT->container_end();
-		}
-		//display the number of people following the user
-		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		$html.= $OUTPUT->heading('YOU HAVE '.$numfollowers.' FOLLOWERS',1,'colourtext');
-		$html.=$OUTPUT->container_end();
-		$html.=$this->wikioutput->content_area_end();
-		echo $html;
-	}
-	
-	function set_url() {
-        global $PAGE, $CFG;
-        $params = array('pageid' => $this->page->id);
-		$PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/manage.php', $params);
-	}
-	protected function create_navbar() {
-        global $PAGE, $CFG;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('manage', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/manage.php?pageid=' . $this->page->id);
-    }
 }
 
 /**
  * page that allows a user to view all the pages another user has liked
  */
+class page_socialwiki_viewuserpages extends page_socialwiki {
 
-class page_socialwiki_viewuserpages extends page_socialwiki{
     function __construct($wiki, $subwiki, $cm, $targetuser) {
         Global $PAGE, $CFG;
         parent::__construct($wiki, $subwiki, $cm);
         $this->uid = $targetuser;
         $PAGE->set_title(fullname(socialwiki_get_user_info($targetuser)));
-        $PAGE->requires->js(new moodle_url("/mod/socialwiki/ajax_userpage.js"));
-        /*
-        require_once($CFG->dirroot . "/mod/socialwiki/table/table.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/versionTable.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/userTable.php");
-        require_once($CFG->dirroot . "/mod/socialwiki/table/topicsTable.php");*/
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/tableBuilder.js"));
     }
 
-	function print_content(){
-		Global $OUTPUT,$CFG,$USER,$PAGE, $COURSE;
+    function print_content() {
+        Global $OUTPUT, $CFG, $USER, $PAGE;
         require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
-        
-        echo '<script> var userid='.$USER->id.', targetuser='.$this->uid.' ,swid='.$this->subwiki->id.', courseid ='.$COURSE->id.' ,cmid='.$PAGE->cm->id.';</script>'; // pass variables to JS
-		$likes=socialwiki_getlikes($this->uid,$this->subwiki->id);
-		$user = socialwiki_get_user_info($this->uid);
-		$scale=array('like'=>1,'trust'=>1,'follow'=>1,'popular'=>1);
-		$context = get_context_instance(CONTEXT_MODULE, $PAGE->cm->id);
-		$numpeers=count(get_enrolled_users($context))-1;
-		//get this user's peer score
-		$peer= peer::socialwiki_get_peer($user->id,$this->subwiki->id,$USER->id,$numpeers,$scale);
-		
-		$html='';
-		$html.=$this->wikioutput->content_area_begin();
-		//USER INFO OUTPUT
-        $html.=$OUTPUT->container_start('userinfo');
-        //$html.= '<table class="userinfotable"><tr><td>';
-		$html.=$OUTPUT->heading(fullname($user),1,'colourtext');
-		$html.=$OUTPUT->user_picture($user,array('size'=>100,));
-        //$html.= '</td>';
 
-        //////// make button to follow/unfollow
+        $user = socialwiki_get_user_info($this->uid);
+        $scale = array('like' => 1, 'trust' => 1, 'follow' => 1, 'popular' => 1);
+        $context = context_module::instance($PAGE->cm->id);
+        $numpeers = count(get_enrolled_users($context)) - 1;
+        //get this user's peer score
+        $peer = peer::socialwiki_get_peer($user->id, $this->subwiki->id, $USER->id, $numpeers, $scale);
 
-        if(!socialwiki_is_following($USER->id,$user->id,$this->subwiki->id)&&$USER->id!=$this->uid){
-            $icon = new moodle_url('/mod/socialwiki/img/icons/man-plus.png');
-            $text = 'Follow';
-            $tip = 'click to follow this user';            
-        } else if($USER->id!=$this->uid) {
-        //show like link
-            $icon = new moodle_url('/mod/socialwiki/img/icons/man-minus.png');
-            $text = 'Unfollow';
-            $tip = 'click to unfollow this user';
-        }
-        $followaction = $CFG->wwwroot.'/mod/socialwiki/follow.php';//?user2='.$user->id; //.'&from='.'&swid='.$this->subwiki->id; // 'swid'=>$this->subwiki->id
+        $html = $this->wikioutput->content_area_begin();
+        //USER INFO OUTPUT
+        $html.= $OUTPUT->heading(fullname($user), 1, 'colourtext');
+        $html.= "<div class='home_picture'>";
+        $html.= $OUTPUT->user_picture($user, array('size' => 100,));
+        $html.= "</div>";
 
-        $theliker = html_writer::start_tag( 'form', array( 'style'=>"display: inline",  'action'=>$followaction, "method"=>"get"));
-        $theliker .= '<input type ="hidden" name="user2" value="'.$user->id.'"/>';
-        $theliker .= '<input type ="hidden" name="from" value="'.$CFG->wwwroot.'/mod/socialwiki/viewuserpages.php?userid='.$user->id.'&subwikiid='.$this->subwiki->id.'"/>';
-        $theliker .= '<input type ="hidden" name="swid" value="'.$this->subwiki->id.'"/>';
-        $theliker .= html_writer::start_tag('button', array('class'=> 'socialwiki_followbutton', 'id'=> 'followlink', 'title'=>$tip));  
-        $theliker .= html_writer::tag('img', '', array('src'=>$icon));
-        $theliker .= $text;
-        $theliker .= html_writer::end_tag('button');
-        $theliker .= html_writer::end_tag('form');
-        
         // ** result placed in table below **
-        
         //////////////////////////
         ///////////////////
+        //don't show peer scores if user is viewing themselves
+        if ($USER->id != $user->id) {
+            //PEER SCORES OUTPUT
+            $html.= $OUTPUT->container_start('peerinfo colourtext');
+            $table = new html_table();
+            $table->head = array('PEER SCORES');
+            $table->attributes['class'] = 'peer_table colourtext';
+            $table->align = array('left');
+            $table->data = array();
 
-		$html.=$OUTPUT->container_end();
-		
-		//don't show peer scores if user is viewing themselves
-		if($USER->id!=$user->id){
-			//PEER SCORES OUTPUT
-			$html.=$OUTPUT->container_start('peerinfo colourtext');
-			$table = new html_table();
-			$table->head = array('PEER SCORES');
-			$table->attributes['class'] = 'peer_table colourtext';
-			$table->align = array('left');
-			$table->data=array();
-            $row1 = new html_table_row(array('FOLLOW DISTANCE:',$peer->depth, $theliker));
-            $row1->cells[2]->rowspan=3;
-			$table->data[]=$row1;// /trust==0? 0:1/$peer->trust);
-			//$table->data[]=array('TRUST:',$peer->trust);
-			$table->data[]=array('FOLLOW SIMILARITY:',$peer->followsim);
-			$table->data[]=array('LIKE SIMILARITY:',$peer->likesim);
-			$table->data[]=array('PEER POPULARITY:',$peer->popularity);
-			//$table->data[]=array('TOTAL:',$peer->score);
-			$html.=html_writer::table($table);
-			$html.=$OUTPUT->container_end();
-		}
-		
-		//START OF USER LIKES OUTPUT
-		$html.=$OUTPUT->container_start('socialwiki_manageheading');
-		/*$html.='<br/><br/><br/>'. $OUTPUT->heading('LIKES',2,'colourtext');
-		$html.=$OUTPUT->container_end();
-		if (count($likes)==0){
-			$html.=$OUTPUT->container_start('socialwiki_manageheading');
-			$html.= $OUTPUT->heading('They have not liked any pages', 3, "colourtext");
-			
-		}else{
-			//display all the pages the current user likes
-			$html .= $OUTPUT->container_start('socialwiki_likelist');
-			foreach($likes as $like){
-				$page=socialwiki_get_page($like->pageid);
-				$html.=html_writer::link($CFG->wwwroot.'/mod/socialwiki/view.php?pageid='.$page->id,$page->title.' (ID:'.$page->id.')',array('class'=>'socialwiki_link'));
-				$html .= "<br/><br/>";
-			}
-        }*/
-        $html .= '<script></script>';
-        $combineform = page_socialwiki::getCombineForm();//<br><input id="showLocalSR" type="checkbox"> Show articles I already have.</form>';
-        $html .= '<h2 class="table_region">Favourite Pages</h2><div class="asyncload" tabletype="userfaves" >'.$combineform.'<table></table></div>';
-	$html .= '<h2 class="table_region">Created Pages</h2><div class="asyncload" tabletype="userpageversions" >'.$combineform.'<table></table></div>';
-        $html .= $OUTPUT->container_end();
-		
-		$html.=$this->wikioutput->content_area_end();
-		echo $html;
-	}
+            //////// make button to follow/unfollow
+            if (!socialwiki_is_following($USER->id, $user->id, $this->subwiki->id) && $USER->id != $this->uid) {
+                $icon = new moodle_url('/mod/socialwiki/img/icons/man-plus.png');
+                $text = 'Follow';
+                $tip = 'click to follow this user';
+            } else if ($USER->id != $this->uid) {
+                //show like link
+                $icon = new moodle_url('/mod/socialwiki/img/icons/man-minus.png');
+                $text = 'Unfollow';
+                $tip = 'click to unfollow this user';
+            }
+            $followaction = $CFG->wwwroot . '/mod/socialwiki/follow.php';
 
-	function set_url() {
-        global $PAGE, $CFG;
-        
-		$params = array('userid' => $this->uid,'subwikiid'=>$this->subwiki->id);
-		$PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
-	}
-	protected function create_navbar() {
-        global $PAGE, $CFG;
-        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid.'&subwikiid='.$this->subwiki->id);
+            $theliker = html_writer::start_tag('form', array('style' => "display: inline", 'action' => $followaction, "method" => "get"));
+            $theliker.= '<input type ="hidden" name="user2" value="' . $user->id . '"/>';
+            $theliker.= '<input type ="hidden" name="from" value="' . $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $user->id . '&subwikiid=' . $this->subwiki->id . '"/>';
+            $theliker.= '<input type ="hidden" name="swid" value="' . $this->subwiki->id . '"/>';
+            $theliker.= html_writer::start_tag('button', array('class' => 'socialwiki_followbutton', 'id' => 'followlink', 'title' => $tip));
+            $theliker.= html_writer::tag('img', '', array('src' => $icon));
+            $theliker.= $text;
+            $theliker.= html_writer::end_tag('button');
+            $theliker.= html_writer::end_tag('form');
+
+            $row1 = new html_table_row(array('FOLLOW DISTANCE:', $peer->depth, $theliker));
+            $row1->cells[2]->rowspan = 3;
+
+            $table->data[] = $row1; // /trust==0? 0:1/$peer->trust);
+            //$table->data[]=array('TRUST:',$peer->trust);
+            $table->data[] = array('FOLLOW SIMILARITY:', $peer->followsim);
+            $table->data[] = array('LIKE SIMILARITY:', $peer->likesim);
+            $table->data[] = array('PEER POPULARITY:', $peer->popularity);
+            //$table->data[]=array('TOTAL:',$peer->score);
+
+            $html.=html_writer::table($table);
+            $html.=$OUTPUT->container_end();
+        }
+
+        //Favourites Table
+        $userid = $user->id;
+        $swid = $this->subwiki->id;
+        $html.= "<h2>Favourite Pages:</h2>";
+        $tabletype = 'userfaves';
+        $html.= include 'table/tableFactory.php';
+        //User Verions Table
+        $html.= "<h2>Created Pages:</h2>";
+        $tabletype = 'userpageversions';
+        $html.= include 'table/tableFactory.php';
+
+        $html.= $this->wikioutput->content_area_end();
+        echo $html;
     }
+
+    function set_url() {
+        global $PAGE, $CFG;
+
+        $params = array('userid' => $this->uid, 'subwikiid' => $this->subwiki->id);
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
+    }
+
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid . '&subwikiid=' . $this->subwiki->id);
+    }
+
 }

@@ -116,11 +116,6 @@ function socialwiki_delete_instance($id) {
         # Get existing pages #
         if ($pages = $DB->get_records('socialwiki_pages', array('subwikiid' => $subwiki->id))) {
             foreach ($pages as $page) {
-                # Get locks, and delete them #
-                if (!$DB->delete_records('socialwiki_locks', array('pageid' => $page->id), IGNORE_MISSING)) {
-                    $result = false;
-                }
-
                 # Get versions, and delete them #
                 if (!$DB->delete_records('socialwiki_versions', array('pageid' => $page->id), IGNORE_MISSING)) {
                     $result = false;

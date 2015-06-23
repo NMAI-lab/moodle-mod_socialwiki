@@ -1,26 +1,18 @@
 <?php
 
-//require_once('../../../config.php');
-
 abstract class socialwiki_table {
 
     protected $uid; //uid of user viewing
     protected $swid;
     protected $headers;
-
-    //protected $cmid; //course module id, needed in versiontable...
-    //protected $tabid; // table id for the html
-
+    
     /**
      * creates a table with the given headers, current uid (userid), subwikiid
      */
     public function __construct($u, $s, $h) {
-        Global $PAGE;
         $this->uid = $u;
         $this->swid = $s;
-        $this->headers = $h;
-        //$this->cmid = $PAGE->cm->id;
-        // $this->initTable($col_names);
+        $this->headers = socialwiki_table::getHeaders($h);
     }
 
     abstract protected function get_table_data();
@@ -50,63 +42,48 @@ abstract class socialwiki_table {
         $t .= "</tbody></table>";
         return $t;
     }
-
-    public function get_as_JSON() {
-        return json_encode($this->get_table_data());
-    }
-
-    protected function make_time_String($t) {
-        $display = '<span style="display:none">' . $t . '</span>';
-        $aday = 86400;
-        $timeofday = time() % $aday;
-        $lastmidnight = time() - $timeofday;
-        //seconds since midnight
-        if ($t < $lastmidnight) { //yesterday or earlier
-            $format = '%x';
-        } else {
-            $format = '%H:%M';
+    
+    public static function getHeaders($type) {
+        switch ($type) {
+            case "version":
+                return array(
+                    get_string('title', 'socialwiki'),
+                    get_string('contributors', 'socialwiki'),
+                    get_string('updated', 'socialwiki'),
+                    get_string('likes', 'socialwiki'),
+                    get_string('views', 'socialwiki'),
+                    get_string('favorite', 'socialwiki'),
+                    get_string('popularity', 'socialwiki'),
+                    get_string('likesim', 'socialwiki'),
+                    get_string('followsim', 'socialwiki'),
+                    get_string('networkdistance', 'socialwiki')
+                );
+            case "mystuff":
+                return array(
+                    get_string('title', 'socialwiki'),
+                    get_string('contributors', 'socialwiki'),
+                    get_string('updated', 'socialwiki'),
+                    get_string('likes', 'socialwiki'),
+                    get_string('views', 'socialwiki'),
+                    get_string('favorite', 'socialwiki')
+                );
+            case "topics":
+                return array(
+                    get_string('title', 'socialwiki'),
+                    get_string('versions', 'socialwiki'),
+                    get_string('views', 'socialwiki'),
+                    get_string('likes', 'socialwiki')
+                );
+            case "user":
+                return array(
+                    get_string('name', 'socialwiki'),
+                    get_string('popularity', 'socialwiki'),
+                    get_string('likesim', 'socialwiki'),
+                    get_string('followsim', 'socialwiki'),
+                    get_string('networkdistance', 'socialwiki')
+                );
+            default:
+                return array('error in getHeaders:' . $type);
         }
-        $display .= strftime($format, $t);
-        return $display;
     }
-
-    // public function initTable($col_names) {
-    // 	for ($i = 0; $i<$col_names.count(); $i++) {
-    // 		array_push($columns,
-    // 			new column($i, $label)
-    // 		);
-    // 	}
-    // }
-
-    // public function has_column($col_name) {
-    // 	foreach($columns as $c) {
-    // 		if ($c->get_label === $col_name) {
-    // 			return true;
-    // 		}
-    // 	}
-    // 	return false;
-    // }
-
-    // public function get_column($col_name) {
-    // 	foreach($columns as $c) {
-    // 		if($c->get_label === $col_name) {
-    // 			return $c;
-    // 		}
-    // 	}
-    // 	return null;
-    // }
-
-    // public function toggle_visibility($col_name) {
-    // 	$col = $this->get_column($col_name)
-    // 	if (is_set($col)) {
-    // 		$col->toggle_visibility();
-    // 	}
-    // }
-
-    // public function set_visibility($col_name, $visibility) {
-    // 	$col = $this->get_column($col_name)
-    // 	if (is_set($col)) {
-    // 		$col->set_visible($visibility);
-    // 	}
-    // } 
 }

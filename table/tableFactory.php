@@ -20,113 +20,54 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-Global $CFG, $PAGE;
+Global $CFG;
 
-require_once('../../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
-require_once($CFG->dirroot . '/mod/socialwiki/table/table.php');
+$trustcombiner = 'max';  //default for now, should remove entirely
 require_once($CFG->dirroot . '/mod/socialwiki/table/userTable.php');
 require_once($CFG->dirroot . '/mod/socialwiki/table/topicsTable.php');
 require_once($CFG->dirroot . '/mod/socialwiki/table/versionTable.php');
-//allowed tabletypes
-const FAVES= 'faves';
-const RECENTLIKES = 'recentlikes';
-const NEWPAGEVERSIONS= 'newpageversions';
-const ALLPAGEVERSIONS= 'allpageversions'; 
-const FOLLOWEDUSERS= 'followedusers'; 
-const FOLLOWERS= 'followers'; 
-const ALLUSERS= 'allusers'; 
-const ALLTOPICS= 'alltopics'; 
-const USERFAVES= 'userfaves';
-const VERSIONSFOLLOWED = 'versionsfollowed';
-
-
-
-$tabletype = required_param('type', PARAM_TEXT);
-$userid = required_param('userid', PARAM_INT);
-$swid = required_param('swid', PARAM_INT);
-$courseid = optional_param('courseid',0, PARAM_INT);
-$cmid = required_param('cmid', PARAM_INT);
-$targetuser = optional_param('targetuser', 0, PARAM_INT); 
-$trustcombiner = optional_param('trustcombiner', '', PARAM_TEXT); //max, min, sum, avg
-//when we view another user's page
-
-//not sure I fully understand this...
-$cm = get_coursemodule_from_id('socialwiki', $cmid, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-require_login($course, true, $cm);
-
-//echo '<p>';
-//var_dump($_SESSION);
-//echo '</p>';
-
-$PAGE->set_cm($cm);
-
 
 $t = null;
-switch($tabletype){
-	case "faves":
-		$t= versionTable::makeFavouritesTable($userid, $swid );
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "recentlikes":
-		$t= versionTable::makeRecentLikesTable($userid, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "versionsfollowed":
-		$t= versionTable::makeContentFromFollowedTable($userid, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "newpageversions":
-		$t= versionTable::makeNewPageVersionsTable($userid, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "allpageversions":
-		$t= versionTable::makeAllVersionsTable($userid, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-        case "mypageversions":
-		$t= versionTable::makeUserVersionsTable($userid, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-        case "userpageversions":
-		$t= versionTable::makeUserVersionsTable($targetuser, $swid);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "userfaves": //faves by another user
-		$t = versionTable::make_A_User_Faves_table($userid, $swid, $targetuser);
-		if ($trustcombiner!='' and $t!= null)
-			$t->set_trust_combiner($trustcombiner);
-		break;
-	case "followedusers":
-		$t = UserTable::make_followed_users_table($userid, $swid);
-		break;
-	case "followers":
-		$t = UserTable::make_followers_table($userid, $swid);
-		break;
-	case "allusers":
-		$t = UserTable::make_all_users_table($userid, $swid);
-		break;
-	case "alltopics":
-		$t = TopicsTable::make_all_topics_table($userid, $swid, $courseid, $cmid);
-		break;
-	default:
-		$tabletype ='unknowntabletype';
-}
-if ($t!=null)
-	echo $t->get_as_HTML();
-else {
-	$message= get_string('no'.$tabletype, 'socialwiki');
-
-	echo "<table><tr><td>$message</td></tr></table>";
+switch ($tabletype) {
+    case "recentlikes":      //user likes
+        $t = versionTable::makeRecentLikesTable($userid, $swid, $trustcombiner);
+        break;
+    case "faves":            //user favourites
+    case "userfaves":        //favourites by another user
+        $t = versionTable::makeFavouritesTable($userid, $swid, $trustcombiner);
+        break;
+    case "mypageversions":   //user pages
+    case "userpageversions": //pages by another user
+        $t = versionTable::makeUserVersionsTable($userid, $swid, $trustcombiner);
+        break;
+    case "versionsfollowed": //versions by followed users
+        $t = versionTable::makeFollowedVersionsTable($userid, $swid, $trustcombiner);
+        break;
+    case "newpageversions":  //new versions
+        $t = versionTable::makeNewVersionsTable($userid, $swid, $trustcombiner);
+        break;
+    case "allpageversions":  //all versions
+        $t = versionTable::makeAllVersionsTable($userid, $swid, $trustcombiner);
+        break;
+    case "followedusers":    //followed users
+        $t = userTable::makeFollowedUsersTable($userid, $swid);
+        break;
+    case "followers":        //followers
+        $t = userTable::makeFollowersTable($userid, $swid);
+        break;
+    case "allusers":         //all users
+        $t = userTable::makeAllUsersTable($userid, $swid);
+        break;
+    case "alltopics":        //all pages (grouped versions)
+        $t = topicsTable::makeTopicsTable($userid, $swid);
+        break;
+    default:
+        $tabletype = 'unknowntabletype ' . $tabletype;
 }
 
-	
-
+if ($t != null) {
+    return $t->get_as_HTML();
+} else {
+    $message = get_string('no' . $tabletype, 'socialwiki');
+    return "<table><tr><td>$message</td></tr></table>";
+}

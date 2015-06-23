@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/mod/socialwiki/socialwikitree.php');
 
 $search = optional_param('searchstring', null, PARAM_TEXT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
-$searchcontent = optional_param('searchsocialwiki_socialwiki_socialwiki_wikicontent', 1, PARAM_INT); //?
+$searchcontent = optional_param('searchcontent', 1, PARAM_INT); //search page content
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $pageid = optional_param('pageid', -1, PARAM_INT);
 $option = optional_param('option', 0, PARAM_INT); // Option ID
@@ -63,7 +63,7 @@ if ($search == "*")
     $search = "";
 
 if ($exact != 0) { //exact match on page title
-    $wikipage->set_search_string($search, $searchcontent, true);
+    $wikipage->set_search_string($search, 0, true);
 } else {
     $wikipage->set_search_string($search, $searchcontent, false);
 }

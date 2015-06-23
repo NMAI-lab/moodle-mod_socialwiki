@@ -14,8 +14,26 @@
  along with Moodle. If not, see <http://www.gnu.org/licenses/>.
 */
 
-@import url("bootstrap.css");
+.socialwiki_label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 500;
+    line-height: 1;
+    color: #ffffff;
+    background-color: #428bca;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
 
+.socialwiki_label[href]:hover,
+.socialwiki_label[href]:focus {
+    background-color: #3071a9;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 .tabtree ul {
     text-align: left;
@@ -25,17 +43,7 @@
     text-align: left;
 }
 
-.table_region
-{
-    margin-left: 25px;
-    margin-right: 25px;
-    //display: inline-block;
-    overflow: auto;
-    min-width: 0px;
-    max-height: 300px;
-}
-
-.home_user
+.socialwiki_wikicontent .home_user
 {
     text-align: left;
     margin: -2px 80px;
@@ -43,33 +51,29 @@
     line-height: 40px;
 }
 
-.home_picture
+.socialwiki_wikicontent .home_picture
 {
     float:left;
     margin-top: 8.9px;
 }
 
-.tree_node
-{
-    color:black !important;
+.socialwiki_wikicontent .nav {
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
 }
-
-.socialwiki_liketable {
-    width: 100%;
+.socialwiki_wikicontent .nav-tabs {
+    margin-top: 30px;
+    border-bottom: 1px solid #dddddd;
 }
 
 table.peer_table td {
-    padding: 3px 10px;
+    padding: 1px 10px 1px 0px;
 }
 
 .relation_line
 {
     background-color:black !important;
-}
-
-.socialwiki_likelist, .socialwiki_followlist
-{
-    text-align:center;
 }
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
@@ -80,15 +84,8 @@ table.peer_table td {
 
 .socialwiki_link
 {
-    text-decoration:underline;
     font-weight:bold;
     font-style:italic;
-}
-
-.socialwiki_link:link
-{
-    display:inline-block;
-    //margin-left:20px;
 }
 
 .socialwiki_likebutton
@@ -98,10 +95,10 @@ table.peer_table td {
     font-weight: bold;
     color:gray;
     width: 160px;
+    margin: 0;
 }
 
-/*this is in fact used just to display the author in the bottom of a page (should be renamed)*/
-.wikititle
+.socialwiki_contributors
 {
     text-align:right;
 }

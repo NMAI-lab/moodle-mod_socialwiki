@@ -123,18 +123,6 @@
         <KEY NAME="subwikifk" TYPE="foreign" FIELDS="subwikiid" REFTABLE="socialwiki_subwikis" REFFIELDS="id" COMMENT="Foreign key to socialwiki_subwiki table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="socialwiki_locks" COMMENT="Manages page locks">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="pageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Locked page"/>
-        <FIELD NAME="sectionname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="locked page section"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Locking user"/>
-        <FIELD NAME="lockedat" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="timestamp"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
     <TABLE NAME="socialwiki_user_views" COMMENT="Social wiki user views">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>

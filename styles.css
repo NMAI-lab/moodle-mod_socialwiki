@@ -169,11 +169,6 @@
     float: left;
 }
 
-.socialwiki_diffuserleft,.socialwiki_diffuserright {
-    font-weight: normal;
-    padding-top: 1%;
-}
-
 .socialwiki_diffuserleft {
     float: right;
 }
@@ -376,24 +371,12 @@ a.socialwiki_edit_section {
 {
     margin-left:10px;
 }
-.following .like
-{
-    margin-left:5px;
-}
-.socialwiki_manageheading
-{
-    text-align:center;
-}
 
 .socialwiki_followlist
 {
     text-align:left;
 }
 
-.phptree
-{
-    text-align:left;
-}
 .socialwiki_treebox
 {
     margin-left:5px;
@@ -424,7 +407,7 @@ a.socialwiki_edit_section {
 .peer_table
 {
     text-align:center;
-    margin: auto;
+    margin: 5px 15px;
 }
 
 .peerinfo

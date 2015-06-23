@@ -35,7 +35,6 @@ class peer {
     public $depth; //social distance: 1 for I'm following this user, 2 for friend of a friend, etc.
 
     function __construct($arr) {
-
         $this->id = $arr['id'];
         $this->likesim = $arr['likesim'];
         $this->followsim = $arr['followsim'];
@@ -67,15 +66,6 @@ class peer {
         $newpeer->popularity = socialwiki_get_followers($id, $swid); //not dividing
 
         return $newpeer;
-        /* if($scale == null) {
-          $scale = array(
-          'trust' => 1,
-          'like' => 1,
-          'follow' => 1,
-          'popular' => 1
-          );
-          }
-          $newpeer->set_score($scale); */
     }
 
     function compute_depth($userid, $swid) {
@@ -158,14 +148,7 @@ class peer {
             $_SESSION['socialwiki_session_peers'] = $sessionpeers;
         }
 
-
-
         return new peer($sessionpeers[$id]);
-        /*
-          echo '<p>';
-          var_dump($_SESSION);
-          echo '</p>';
-         */
     }
 
     /**
@@ -176,34 +159,23 @@ class peer {
     static function socialwiki_update_peers($updatelikes, $updatenetwork, $swid, $thisuser = null) {
         Global $USER;
         //get peer lists from session
-
-
         if ($thisuser == null) {
             $thisuser = $USER->id;
         }
-        //echo 'hi2<br/>';
 
         if (!isset($_SESSION['socialwiki_session_peers'])) {
-            echo '<p>no peers in session var!</p>';
             return;
         }
 
-
         $sessionpeers = $_SESSION['socialwiki_session_peers'];
-        //echo 'hi3<br/>';
-
         foreach ($sessionpeers as $peerinfo) {
             //echo 'peerinfo=';
             //var_dump($peerinfo);
 
             $peer = new peer($peerinfo);  //get peer from session var
-
             if ($updatelikes) {
-
                 $peer->set_like_sim($thisuser, $swid);
-                //	echo 'hi again2<br/>';
             }
-
 
             if ($updatenetwork) {
                 $peer->compute_depth($thisuser, $swid);
@@ -211,8 +183,6 @@ class peer {
             }
 
             $sessionpeers[$peer->id] = $peer->to_array(); //place back into session
-            //echo 'hi again 3<br/>';
-            //die();
         }
 
         $_SESSION['socialwiki_session_peers'] = $sessionpeers;

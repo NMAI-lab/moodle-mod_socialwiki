@@ -64,7 +64,7 @@ class socialwiki_node {
     }
 
     function compute_trust($page) {
-        $this->peerlist = socialwiki_get_likers($page->id, $page->subwikiid);
+        $this->peerlist = socialwiki_get_page_likes($page->id, $page->subwikiid);
 
         $this->trustvalue = count($this->peerlist); //set default trust value to popularity
     }

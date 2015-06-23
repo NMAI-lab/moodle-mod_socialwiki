@@ -1,41 +1,41 @@
 $(".hider").click(function () {
-    var img = document.querySelector("#hid".concat($(this).attr("value")));
-    if (document.querySelector("#content".concat($(this).attr("value"))).style.display !== "none") {
-        img.src = img.src.substring(0, img.src.length - 4) + "more";
-        img.title = "Maximize";
-        document.querySelector("#content".concat($(this).attr("value"))).style.display = "none";
-        document.querySelector("#comp".concat($(this).attr("value"))).style.display = "none";
+    var img = $("#hid"+($(this).attr("value")));
+    
+    if (img.attr("title") === "Minimize") {
+        img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "more");
+        img.attr("title", "Maximize");
+        $("#content"+($(this).attr("value"))).css("display", "none");
+        $("#comp"+($(this).attr("value"))).css("display", "none");
     } else {
-        img.src = img.src.substring(0, img.src.length - 4) + "less";
-        img.title = "Minimize";
-        document.querySelector("#content".concat($(this).attr("value"))).style.display = null;
-        document.querySelector("#comp".concat($(this).attr("value"))).style.display = "block";
+        img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "less");
+        img.attr("title", "Minimize");
+        $("#content"+($(this).attr("value"))).css("display", "initial");
+        $("#comp"+($(this).attr("value"))).css("display", "block");
     }
-
 });
 
 $(".collapser").click(function () {
-    var img = document.querySelector("#cop".concat($(this).attr("value")));
-    if (document.querySelector("#hid".concat($(this).attr("value"))).style.display !== "none") {
-        img.src = img.src.substring(0, img.src.length - 2) + "down";
-        img.title = "Grow";
-        document.querySelector("#content".concat($(this).attr("value"))).style.display = "none";
-        document.querySelector("#hid".concat($(this).attr("value"))).style.display = "none";
-        if (document.querySelector("#comp".concat($(this).attr("value"))))
-            document.querySelector("#comp".concat($(this).attr("value"))).style.display = "none";
-        if (document.querySelector("#".concat($(this).attr("value"))))
-            document.querySelector("#".concat($(this).attr("value"))).style.display = "none";
+    var img = $("#cop"+($(this).attr("value")));
+    
+    if (img.attr("title") === "Collapse") {
+        img.attr("src", img.attr("src").substring(0, img.attr("src").length - 2) + "down");
+        img.attr("title", "Expand");
+        $("#content"+($(this).attr("value"))).css("display", "none");
+        $("#hid"+($(this).attr("value"))).css("display", "none");
+        if ($("#comp"+($(this).attr("value"))))
+            $("#comp"+($(this).attr("value"))).css("display", "none");
+        if ($("#"+($(this).attr("value"))))
+            $("#"+($(this).attr("value"))).css("display", "none");
     } else {
-        img.src = img.src.substring(0, img.src.length - 4) + "up";
-        img.title = "Collapse";
-        document.querySelector("#hid".concat($(this).attr("value"))).style.display = null;
-        if (document.querySelector("#hid".concat($(this).attr("value"))).title !== "Maximize") {
-            document.querySelector("#content".concat($(this).attr("value"))).style.display = null;
-            if (document.querySelector("#comp".concat($(this).attr("value"))))
-                document.querySelector("#comp".concat($(this).attr("value"))).style.display = "block";
+        img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "up");
+        img.attr("title", "Collapse");
+        $("#hid"+($(this).attr("value"))).css("display", "inline");
+        if ($("#hid"+($(this).attr("value"))).title !== "Maximize") {
+            $("#content"+($(this).attr("value"))).css("display", "block");
+            if ($("#comp"+($(this).attr("value"))))
+                $("#comp"+($(this).attr("value"))).css("display", "block");
         }
-
-        if (document.querySelector("#".concat($(this).attr("value"))))
-            document.querySelector("#".concat($(this).attr("value"))).style.display = null;
+        if ($("#"+($(this).attr("value"))))
+            $("#"+($(this).attr("value"))).css("display", "block");
     }
 });
