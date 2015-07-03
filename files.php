@@ -8,76 +8,69 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Wiki files management
  *
  * @package mod-wiki-2.0
- * @copyrigth 2011 Dongsheng Cai <dongsheng@moodle.com>
+ * @copyright 2011 Dongsheng Cai <dongsheng@moodle.com>
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 
-//$pageid       = optional_param('pageid', 0, PARAM_INT); // Page ID
-$swid          = required_param('swid', PARAM_INT); // Subwiki ID
-$wid          = optional_param('wid', 0, PARAM_INT); // Wiki ID
-$currentgroup = optional_param('group', 0, PARAM_INT); // Group ID
-$userid       = optional_param('uid', 0, PARAM_INT); // User ID
+$swid = required_param('swid', PARAM_INT); // Subwiki ID.
+$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID.
+$currentgroup = optional_param('group', 0, PARAM_INT); // Group ID.
+$userid = optional_param('uid', 0, PARAM_INT); // User ID.
 $groupanduser = optional_param('groupanduser', null, PARAM_TEXT);
-
-/*if (!$page = socialwiki_get_page($pageid)) {
-    print_error('incorrectpageid', 'socialwiki');
-}*/
 
 if ($groupanduser) {
     list($currentgroup, $userid) = explode('-', $groupanduser);
     $currentgroup = clean_param($currentgroup, PARAM_INT);
-    $userid       = clean_param($userid, PARAM_INT);
+    $userid = clean_param($userid, PARAM_INT);
 }
 
 if ($wid) {
-    // in group mode
+    // In group mode.
     if (!$wiki = socialwiki_get_wiki($wid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
     if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid)) {
-        // create subwiki if doesn't exist
+        // Create subwiki if doesn't exist.
         $subwikiid = socialwiki_add_subwiki($wiki->id, $currentgroup, $userid);
         $subwiki = socialwiki_get_subwiki($subwikiid);
     }
 } else {
-    // no group
+    // No group.
     if (!$subwiki = socialwiki_get_subwiki($swid)) {
         print_error('incorrectsubwikiid', 'socialwiki');
     }
 
-    // Checking wiki instance of that subwiki
+    // Checking wiki instance of that subwiki.
     if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
 }
 
-// Checking course module instance
+// Checking course module instance.
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
     print_error('invalidcoursemodule');
 }
 
-// Checking course instance
+// Checking course instance.
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $context = context_module::instance($cm->id);
 
-
-$PAGE->set_url('/mod/socialwiki/files.php');//, array('pageid'=>$pageid));
+$PAGE->set_url('/mod/socialwiki/files.php');
 require_login($course, true, $cm);
 $PAGE->set_context($context);
 $PAGE->set_title(get_string('wikifiles', 'socialwiki'));
@@ -87,22 +80,17 @@ echo $OUTPUT->header();
 
 $renderer = $PAGE->get_renderer('mod_socialwiki');
 echo "<h2>Files available to include in pages</h2>";
-//var_dump($PAGE->navigation);
-//echo $renderer->pretty_navbar($pageid);
 
-//echo "<h2>hi there ===</h2>";
 echo $OUTPUT->box_start('generalbox');
-//echo "<h2>ho there ===</h2>";
 if (has_capability('mod/socialwiki:viewpage', $context)) {
-    //echo $renderer->socialwiki_print_subwiki_selector($PAGE->activityrecord, $subwiki, $page, 'files');
     echo $renderer->socialwiki_files_tree($context, $subwiki);
 } else {
     echo $OUTPUT->notification(get_string('cannotviewfiles', 'socialwiki'));
 }
 echo $OUTPUT->box_end();
-//echo "<h2>hi there dudu ===</h2>";
 
 if (has_capability('mod/socialwiki:managefiles', $context)) {
-    echo $OUTPUT->single_button(new moodle_url('/mod/socialwiki/filesedit.php', array('subwiki'=>$subwiki->id)), get_string('editfiles', 'socialwiki'), 'get');//, 'pageid'=>$pageid
+    echo $OUTPUT->single_button(new moodle_url('/mod/socialwiki/filesedit.php',
+            array('subwiki' => $subwiki->id)), get_string('editfiles', 'socialwiki'), 'get');
 }
 echo $OUTPUT->footer();

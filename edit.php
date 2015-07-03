@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,18 +8,18 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file contains all necessary code to edit a wiki page
  *
  * @package mod-wiki-2.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -30,11 +29,9 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-
-require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
 $pageid = required_param('pageid', PARAM_INT);
 $contentformat = optional_param('contentformat', '', PARAM_ALPHA);
@@ -43,15 +40,13 @@ $section = optional_param('section', "", PARAM_TEXT);
 $version = optional_param('version', -1, PARAM_INT);
 $attachments = optional_param('attachments', 0, PARAM_INT);
 $deleteuploads = optional_param('deleteuploads', 0, PARAM_RAW);
-//makenew 1 means create the empty first version of the page. 0 means just add a new version of the page which was previously created
+// 1 means create the empty first version of the page.
+// 0 means just add a new version of the page which was previously created.
 $makenew = optional_param('makenew', 0, PARAM_INT);
 $newcontent = '';
 
-//echo "logging edit.php line 50";
-//echo 'pageid'.$pageid. ' contentformat'. $contentformat. 'section'.$section.'version'.$version;
-//This doesn't seem to get called ever?
+// This doesn't seem to get called ever?
 if (!empty($newcontent) && is_array($newcontent)) {
-
     $newcontent = $newcontent['text'];
 }
 
@@ -95,10 +90,16 @@ if ($option == get_string('save', 'socialwiki')) {
 
         $wikipage->set_page($newpage);
 
+        socialwiki_increment_pageviews($newpage);
+        socialwiki_increment_user_views($USER->id, $newpage->id);
+
         socialwiki_add_like($USER->id, $newpageid, $subwiki->id);
     } else {
         $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
         $wikipage->set_page($page);
+
+        socialwiki_increment_pageviews($newpage);
+        socialwiki_increment_user_views($USER->id, $newpage->id);
     }
 
     $wikipage->set_newcontent($newcontent);
@@ -123,7 +124,6 @@ if ($option == get_string('save', 'socialwiki')) {
     }
 }
 
-
 if ($version >= 0) {
     $wikipage->set_versionnumber($version);
 }
@@ -131,7 +131,6 @@ if ($version >= 0) {
 if (!empty($section)) {
     $wikipage->set_section($sectioncontent, $section);
 }
-
 
 if (!empty($attachments)) {
     $wikipage->set_attachments($attachments);
@@ -150,5 +149,4 @@ $wikipage->print_header();
 $wikipage->print_content();
 
 $wikipage->print_footer();
-
 

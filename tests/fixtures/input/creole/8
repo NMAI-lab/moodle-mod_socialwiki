@@ -23,6 +23,6 @@ Bad headers:
 Two tables (treated as such) with some format:
 
 |= Name   |= Surname   |
-| **George**  | //Washington// |
+| **George**  | // Washington// |
 
 | Abraham | Lincoln    |

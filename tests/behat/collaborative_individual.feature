@@ -87,4 +87,3 @@ Feature: A teacher can set a wiki to be collaborative or individual
     And I should see "Individual student2 edition"
     And I should not see "Individual teacher1 edition"
 
-

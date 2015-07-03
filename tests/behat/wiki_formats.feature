@@ -1,6 +1,6 @@
 @mod @mod_wiki
 Feature: There is a choice of formats for editing a wiki page
-  In order to allow users to use their favorite wiki format
+  In order to allow users to use their favourite wiki format
   As a user
   I need to choose which wiki format do I want to use
 
@@ -30,11 +30,11 @@ Feature: There is a choice of formats for editing a wiki page
     And I press "Create page"
     Then "div.wikieditor-toolbar" "css_element" should exists
     # Click on bold, italic, interal link and H1
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[1]" "xpath_element"
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[2]" "xpath_element"
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[4]" "xpath_element"
-    And the "newcontent" field should match "**Bold text**//Italic text//[[Internal link]]" value
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[8]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[1]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[2]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[4]" "xpath_element"
+    And the "newcontent" field should match "**Bold text**// Italic text// [[Internal link]]" value
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[8]" "xpath_element"
     And I press "Save"
     And I should see "Bold textItalic textInternal link"
     And I should see "Level 1 Header"
@@ -50,10 +50,10 @@ Feature: There is a choice of formats for editing a wiki page
     And I press "Create page"
     Then "div.wikieditor-toolbar" "css_element" should exists
     # Click on italic, interal link and H1
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[2]" "xpath_element"
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[4]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[2]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[4]" "xpath_element"
     And the "newcontent" field should match "'''Italic text'''[[Internal link]]" value
-    And I click on "//div[@class='wikieditor-toolbar']/descendant::a[8]" "xpath_element"
+    And I click on "// div[@class='wikieditor-toolbar']/descendant::a[8]" "xpath_element"
     And I press "Save"
     And I should see "Italic textInternal link"
     And I should see "Level 1 Header"

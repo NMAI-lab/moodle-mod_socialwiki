@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,11 +32,13 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
-        $wiki = new backup_nested_element('socialwiki', array('id'), array('name', 'intro', 'introformat', 'timecreated', 'timemodified', 'firstpagetitle', 'wikimode', 'defaultformat', 'forceformat', 'editbegin', 'editend'));
+        // Define each element separated.
+        $wiki = new backup_nested_element('socialwiki', array('id'), array('name',
+            'intro', 'introformat', 'timecreated', 'timemodified', 'firstpagetitle',
+            'wikimode', 'defaultformat', 'forceformat', 'editbegin', 'editend'));
 
         $subwikis = new backup_nested_element('subwikis');
 
@@ -45,29 +46,27 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         $pages = new backup_nested_element('pages');
 
-        $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent', 'timecreated', 'timemodified', 'timerendered', 'userid', 'pageviews', 'readonly','parent'));
+        $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent',
+            'timecreated', 'timemodified', 'timerendered', 'userid', 'pageviews', 'readonly', 'parent'));
 
         $likes = new backup_nested_element('likes');
 
         $like = new backup_nested_element('like', array('id'), array('userid', 'pageid'));
 
-        $links = new backup_nested_element('links');
-
-        $link = new backup_nested_element('link', array('id'), array('frompageid', 'topageid', 'tomissingpage'));
-		
-		$follows = new backup_nested_element('follows');
+        $follows = new backup_nested_element('follows');
 
         $follow = new backup_nested_element('follow', array('id'), array('userfromid', 'usertoid'));
-        
-		$versions = new backup_nested_element('versions');
 
-        $version = new backup_nested_element('version', array('id'), array('content', 'contentformat', 'version', 'timecreated', 'userid'));
+        $versions = new backup_nested_element('versions');
+
+        $version = new backup_nested_element('version', array('id'), array('content', 'contentformat',
+            'version', 'timecreated', 'userid'));
 
         $tags = new backup_nested_element('tags');
 
         $tag = new backup_nested_element('tag', array('id'), array('name', 'rawname'));
 
-        // Build the tree
+        // Build the tree.
         $wiki->add_child($subwikis);
         $subwikis->add_child($subwiki);
 
@@ -77,22 +76,19 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $subwiki->add_child($likes);
         $likes->add_child($like);
 
-        $subwiki->add_child($links);
-        $links->add_child($link);
-		
-		$subwiki->add_child($follows);
-		$follows->add_child($follow);
-		
+        $subwiki->add_child($follows);
+        $follows->add_child($follow);
+
         $page->add_child($versions);
         $versions->add_child($version);
 
         $page->add_child($tags);
         $tags->add_child($tag);
 
-        // Define sources
+        // Define sources.
         $wiki->set_source_table('socialwiki', array('id' => backup::VAR_ACTIVITYID));
 
-        // All these source definitions only happen if we are including user info
+        // All these source definitions only happen if we are including user info.
         if ($userinfo) {
             $subwiki->set_source_sql('
                 SELECT *
@@ -103,22 +99,20 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
             $like->set_source_table('socialwiki_likes', array('subwikiid' => backup::VAR_PARENTID));
 
-            $link->set_source_table('socialwiki_links', array('subwikiid' => backup::VAR_PARENTID));
-			
-			$follow->set_source_table('socialwiki_follows', array('subwikiid' => backup::VAR_PARENTID));
-            
-			$version->set_source_table('socialwiki_versions', array('pageid' => backup::VAR_PARENTID));
+            $follow->set_source_table('socialwiki_follows', array('subwikiid' => backup::VAR_PARENTID));
+
+            $version->set_source_table('socialwiki_versions', array('pageid' => backup::VAR_PARENTID));
 
             $tag->set_source_sql('SELECT t.id, t.name, t.rawname
                                     FROM {tag} t
                                     JOIN {tag_instance} ti ON ti.tagid = t.id
                                    WHERE ti.itemtype = ?
                                      AND ti.itemid = ?', array(
-                                         backup_helper::is_sqlparam('socialwiki_pages'),
-                                         backup::VAR_PARENTID));
+                backup_helper::is_sqlparam('socialwiki_pages'),
+                backup::VAR_PARENTID));
         }
 
-        // Define id annotations
+        // Define id annotations.
         $subwiki->annotate_ids('group', 'groupid');
 
         $subwiki->annotate_ids('user', 'userid');
@@ -127,11 +121,10 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         $version->annotate_ids('user', 'userid');
 
-        // Define file annotations
-        $wiki->annotate_files('mod_socialwiki', 'intro', null); // This file area hasn't itemid
-        $page->annotate_files('mod_socialwiki', 'attachments', 'id'); // This file area hasn't itemid
-
-        // Return the root element (wiki), wrapped into standard activity structure
+        // Define file annotations.
+        $wiki->annotate_files('mod_socialwiki', 'intro', null); // This file area hasn't itemid.
+        $page->annotate_files('mod_socialwiki', 'attachments', 'id'); // This file area hasn't itemid.
+        // Return the root element (wiki), wrapped into standard activity structure.
         return $this->prepare_activity_structure($wiki);
     }
 

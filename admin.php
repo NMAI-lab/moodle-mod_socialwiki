@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,17 +26,16 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$pageid = required_param('pageid', PARAM_INT); // Page ID
+$pageid = required_param('pageid', PARAM_INT); // Page ID.
 $delete = optional_param('delete', 0, PARAM_INT); // ID of the page to be deleted.
-$option = optional_param('option', 1, PARAM_INT); // Option ID
-$listall = optional_param('listall', 0, PARAM_INT); // list all pages
-$toversion = optional_param('toversion', 0, PARAM_INT); // max version to be deleted
-$fromversion = optional_param('fromversion', 0, PARAM_INT); // min version to be deleted
+$option = optional_param('option', 1, PARAM_INT); // Option ID.
+$listall = optional_param('listall', 0, PARAM_INT); // List all pages.
+$toversion = optional_param('toversion', 0, PARAM_INT); // Max version to be deleted.
+$fromversion = optional_param('fromversion', 0, PARAM_INT); // Min version to be deleted.
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
@@ -55,38 +53,37 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 
 require_login($course, true, $cm);
 
-
 $context = context_module::instance($cm->id);
 require_capability('mod/socialwiki:managewiki', $context);
 
 add_to_log($course->id, "socialwiki", "admin", "admin.php?pageid=".$page->id, $page->id, $cm->id);
 
-//Delete page if a page ID to delete was supplied
+// Delete page if a page ID to delete was supplied.
 if (!empty($delete) && confirm_sesskey()) {
     socialwiki_delete_pages($context, $delete, $page->subwikiid);
-    //when current wiki page is deleted, then redirect user to create that page, as
-    //current pageid is invalid after deletion.
+    // When current wiki page is deleted, then redirect user to create that page, as
+    // current pageid is invalid after deletion.
     if ($pageid == $delete) {
-        $params = array('swid' => $page->subwikiid, 'title' => $page->title);
-        $url = new moodle_url('/mod/socialwiki/create.php', $params);
+        $params = array('id' => $page->subwikiid);
+        $url = new moodle_url('/mod/socialwiki/home.php', $params);
         redirect($url);
     }
 }
 
-//delete version if toversion and fromversion are set.
+// Delete version if toversion and fromversion are set.
 if (!empty($toversion) && !empty($fromversion) && confirm_sesskey()) {
-    //make sure all versions should not be deleted...
+    // Make sure all versions should not be deleted...
     $versioncount = socialwiki_count_wiki_page_versions($pageid);
-    $versioncount -= 1; //ignore version 0
+    $versioncount -= 1; // Ignore version 0.
     $totalversionstodelete = $toversion - $fromversion;
-    $totalversionstodelete += 1; //added 1 as toversion should be included
+    $totalversionstodelete += 1; // Added 1 as toversion should be included.
 
     if (($totalversionstodelete >= $versioncount) || ($versioncount <= 1)) {
         print_error('incorrectdeleteversions', 'socialwiki');
     } else {
         $versions = array();
         for ($i = $fromversion; $i <= $toversion; $i++) {
-            //Add all version to deletion list which exist
+            // Add all version to deletion list which exist.
             if (socialwiki_get_wiki_page_version($pageid, $i)) {
                 array_push($versions, $i);
             }
@@ -96,12 +93,12 @@ if (!empty($toversion) && !empty($fromversion) && confirm_sesskey()) {
     }
 }
 
-//show actual page
 $wikipage = new page_socialwiki_admin($wiki, $subwiki, $cm);
 
 $wikipage->set_page($page);
 $wikipage->print_header();
-$wikipage->set_view($option, empty($listall)?true:false);
+
+$wikipage->set_view($option, empty($listall) ? false : true);
 $wikipage->print_content();
 
 $wikipage->print_footer();

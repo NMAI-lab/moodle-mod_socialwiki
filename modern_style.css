@@ -7,399 +7,392 @@
 
  Moodle is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Moodle. If not, see <http://www.gnu.org/licenses/>.
- */
+ along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /*Styles for the modern socialwiki look*/
-
 
 #socialwiki-nav
 {
-clear:both;
-width:100%;
-text-align:center;
-border:solid;
+    clear:both;
+    width:100%;
+    text-align:center;
+    border:solid;
 }
 
 #socialwiki_navbuttons
 {
-display:inline-block;
-clear:both;
-position:relative;
+    display:inline-block;
+    clear:both;
+    position:relative;
 }
 
- #socialwiki_bfbuttons
+#socialwiki_bfbuttons
 {
-display:inline-block;
-float:left;
-position:relative;
+    display:inline-block;
+    float:left;
+    position:relative;
 }
-
 
 #socialwiki_search
 {
-display:inline-block;
-clear:both;
-position:relative;
-top:-45%;
+    display:inline-block;
+    clear:both;
+    position:relative;
+    top:-45%;
 
 }
 
 #socialwiki_socialbuttons
 {
-display:inline-block;
-clear:both;
+    display:inline-block;
+    clear:both;
 }
-  
+
 .socialwiki_navlistitem
 {
-  float:left;
-  color:white;
-  margin-left:3px;
-  margin-right:3px;
-  margin-top: 0px;
-  margin-bottom:0px;
+    float:left;
+    color:white;
+    margin-left:3px;
+    margin-right:3px;
+    margin-top: 0px;
+    margin-bottom:0px;
 }
 
 .socialwiki_horizontal_list
 {
-  list-style:none;
-  margin:0px 0px 0px 0px;
+    list-style:none;
+    margin:0px 0px 0px 0px;
 }
-
 
 #socialwiki_container
 {
-width:100%;
-height:50px;
-text-align:center;
-background-image:url(pix/toolbar-bg.png);
-background-repeat:repeat;
+    width:100%;
+    height:50px;
+    text-align:center;
+    background-image:url(pix/toolbar-bg.png);
+    background-repeat:repeat;
 }
-
 
 #socialwiki_searchbox
 {
-height:20px;
-border-radius: 13px 13px 13px 13px;
-outline:0px none;
-background-color:rgba(255,255,255,0.6);
-border:1px solid;
-color:white;
-padding:3px 3px 3px 3px;
+    height:20px;
+    border-radius: 13px 13px 13px 13px;
+    outline:0px none;
+    background-color:rgba(255,255,255,0.6);
+    border:1px solid;
+    color:white;
+    padding:3px 3px 3px 3px;
 }
 
 #socialwiki_searchbox:focus
 {
-height:20px;
-border-radius: 13px 13px 13px 13px;
-outline:0px none;
-background-color:white;
-border:1px solid;
-color:black;
-padding:3px 3px 3px 3px;
+    height:20px;
+    border-radius: 13px 13px 13px 13px;
+    outline:0px none;
+    background-color:white;
+    border:1px solid;
+    color:black;
+    padding:3px 3px 3px 3px;
 }
 
 #socialwiki_likebutton[like="yes"]
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/goodbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/goodbutton.png);
 }
 
 #socialwiki_likebutton[like="yes"]:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/goodbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/goodbutton_hover.png);
 }
 
 #socialwiki_likebutton[like="no"]
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/badbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/badbutton.png);
 }
 
 #socialwiki_likebutton[like="no"]:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/badbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/badbutton_hover.png);
 }
-
 
 #socialwiki_friendbutton[friend="yes"]
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/followbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/followbutton.png);
 }
 
 #socialwiki_friendbutton[friend="yes"]:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/followbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/followbutton_hover.png);
 }
 
 #socialwiki_friendbutton[friend="no"]
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/unfollowbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/unfollowbutton.png);
 }
 
 #socialwiki_friendbutton[friend="no"]:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/unfollowbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/unfollowbutton_hover.png);
 }
 
 #socialwiki_managebutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/managebutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/managebutton.png);
 }
 
 #socialwiki_managebutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/managebutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/managebutton_hover.png);
 }
 
 #socialwiki_viewbutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/viewbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/viewbutton.png);
 }
 
 #socialwiki_viewbutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/viewbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/viewbutton_hover.png);
 }
 
 #socialwiki_commentsbutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/commentsbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/commentsbutton.png);
 }
 
 #socialwiki_commentsbutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/commentsbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/commentsbutton_hover.png);
 }
 
 #socialwiki_homebutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/homebutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/homebutton.png);
 }
 
 #socialwiki_homebutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/homebutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/homebutton_hover.png);
 }
-
 
 #socialwiki_versionbutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/versionbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/versionbutton.png);
 }
 
 #socialwiki_versionbutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/versionbutton_version.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/versionbutton_version.png);
 }
 
 #socialwiki_editbutton
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/editbutton.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/editbutton.png);
 }
 
 #socialwiki_editbutton:hover
 {
-margin-right:5px;
-width:50px;
-height:50px;
-display:inline-block;
-background-repeat:no-repeat;
-background-image:url(pix/editbutton_hover.png);
+    margin-right:5px;
+    width:50px;
+    height:50px;
+    display:inline-block;
+    background-repeat:no-repeat;
+    background-image:url(pix/editbutton_hover.png);
 }
 
 .socialwiki_wikicontent
 {
-text-align:center;
-width:100%;
-max-height:100em;
-background-image:url(pix/background.png);
-padding-top:50px;
-overflow:hidden;
+    text-align:center;
+    width:100%;
+    max-height:100em;
+    background-image:url(pix/background.png);
+    padding-top:50px;
+    overflow:hidden;
 }
 
 .wikipage
 {
-display:inline-block;
-width:85%;
-background-color:rgba(255,255,255,0.9);
-height:900px;
-margin:0 auto;
-margin-bottom:100px;
-border-radius:8px;
-text-align:center;
-box-shadow:0px 0px 10px 3px #000000;
-overflow-y:auto;
-overflow-x:hidden;
+    display:inline-block;
+    width:85%;
+    background-color:rgba(255,255,255,0.9);
+    height:900px;
+    margin:0 auto;
+    margin-bottom:100px;
+    border-radius:8px;
+    text-align:center;
+    box-shadow:0px 0px 10px 3px #000000;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
 .colourtext
 {
-color:white !important;
+    color:white !important;
 }
 
 #manage
 {
-width:100%;
-height:1000px;
-background-image:url(pix/background.png);
-padding-top:50px;
-overflow:auto;
-text-align:left;
-color:white;
-position:relative;
+    width:100%;
+    height:1000px;
+    background-image:url(pix/background.png);
+    padding-top:50px;
+    overflow:auto;
+    text-align:left;
+    color:white;
+    position:relative;
 }
 
 #wikititle
 {
-display:inline-block;
+    display:inline-block;
 }
 
 #socialwiki_wikicontent
 {
-text-align:left;
-padding:5px 25px 5px 25px;
+    text-align:left;
+    padding:5px 25px 5px 25px;
 
 }
 
 #filler
 {
-background-color:orange;
-height:2000px;
+    background-color:orange;
+    height:2000px;
 }
 
 #author
 {
-	display:inline-block;
-	margin-left:25px;
+    display:inline-block;
+    margin-left:25px;
 }
 
 #viewtitle
 {
-	display:inline-block;
+    display:inline-block;
 }
 #socialwiki_title
 {
-display:inline-block;
-text-align:center;
-width:100%;
+    display:inline-block;
+    text-align:center;
+    width:100%;
 }
 
 #socialwiki_followerror
 {
-	text-align:center;
+    text-align:center;
 }
-
 
 .socialwiki_unfollowlink,.socialwiki_unlikelink
 {
-	position:relative;
-	margin-left:50px;
+    position:relative;
+    margin-left:50px;
 }
 
 .socialwiki_link
 {
-text-decoration:underline;
-margin-left:25px;
-font-weight:bold;
-font-style:italic;
+    text-decoration:underline;
+    margin-left:25px;
+    font-weight:bold;
+    font-style:italic;
 }
 
 .socialwiki_link:link
@@ -410,59 +403,57 @@ font-style:italic;
 
 .socialwiki_wikicontent .socialwiki_link:link
 {
-color:white;
+    color:white;
 }
 
 .socialwiki_wikicontent .socialwiki_link:visited
 {
-color:white;
+    color:white;
 }
-
 
 #socialwiki_searchresults_area
 {
-overflow:auto;
+    overflow:auto;
 }
 
 #page-mod-socialwiki-search #socialwiki_content_area
 {
-overflow:auto;
-position:relative;
-text-align:left;
+    overflow:auto;
+    position:relative;
+    text-align:left;
 }
 
 #page-mod-socialwiki-history #socialwiki_content_area
 {
-overflow:auto;
-position:relative;
-text-align:left;
+    overflow:auto;
+    position:relative;
+    text-align:left;
 }
 
 #page-mod-socialwiki-home #socialwiki_content_area
 {
-	overflow:auto;
-}	
+    overflow:auto;
+}
 .wikititle
 {
-text-align:center;
+    text-align:center;
 }
 .socialwiki_treebox
 {
-	border-color:white !important;
+    border-color:white !important;
 }
 .tabtree
 {
-	display:none !important;
+    display:none !important;
 }
 
 .slidecontainer
 {
-	display:inline-block;
-	margin:25px;
-	width:20px;
-	
+    display:inline-block;
+    margin:25px;
+    width:20px;
 }
 .userinfo
 {
-	text-align:left;
+    text-align:left;
 }

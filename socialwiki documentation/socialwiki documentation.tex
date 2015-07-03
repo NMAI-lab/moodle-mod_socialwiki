@@ -10,7 +10,6 @@
 % Duplex: oneside / twoside
 % Base Font Size: 10pt / 11pt / 12pt
 
-
 %% Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[USenglish]{babel} %francais, polish, spanish, ...
 \usepackage[T1]{fontenc}
@@ -27,10 +26,10 @@
 %% Please note:
 %% Images can be included using \includegraphics{Dateiname}
 %% resp. using the dialog in the Insert menu.
-%% 
+%%
 %% The mode "LaTeX => PDF" allows the following formats:
 %%   .jpg  .png  .pdf  .mps
-%% 
+%%
 %% The modes "LaTeX => DVI", "LaTeX => PS" und "LaTeX => PS => PDF"
 %% allow the following formats:
 %%   .eps  .ps  .bmp  .pict  .pntg
@@ -40,14 +39,12 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 %\pagestyle{empty} %No headings for the first pages.
-
 
 %% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ==> Write your text here or include other files.
@@ -67,10 +64,10 @@
  A peer has 6 attributes:
 	\begin{itemize}
 		\item id the userid of the user the peer represents
-		\item	trust a number based on following relations 
+		\item	trust a number based on following relations
 		\item	likesim a percentage of how similar the peers likes are to the user's
 		\item	followsim a percentage of how similar the peers follows are to the user's
-		\item popularity percent popularity  
+		\item popularity percent popularity
 		\item weight an associative array of the weights of each of the 4 scores
 	\end{itemize}
 
@@ -96,8 +93,6 @@ A node is used to describe a page in a tree.
 		\item display: display's the content in an HTML box.
 	\end{itemize}
 
-
-
 \section{Socialwiki\_tree}
 The socialwiki\_tree is used to show the relations between pages on the history and search pages.
 The socialwiki\_tree has 1 attribute an associative array of socialwiki\_nodes.
@@ -116,13 +111,13 @@ The socialwiki\_tree has 1 attribute an associative array of socialwiki\_nodes.
 		\end{itemize}
 
 \section{Peerscore Algorithm}
-	The like and follow similarity for a peer are calculated using: 
+	The like and follow similarity for a peer are calculated using:
 		\[
 		\frac{|likes (p1)\cap likes(user)|}{|likes(p1)\cup likes (user)|}
 	\]
 	The trust of a peer is 1 over the following distance of a peer.
 	\newline
-	\\Peer popularity is calculated by: 
+	\\Peer popularity is calculated by:
 		\[
 		\frac{num\ following}{num\ peers}
 	\]
@@ -150,7 +145,7 @@ The socialwiki\_tree has 1 attribute an associative array of socialwiki\_nodes.
 		\item id
 		\item userid: the userid of the user doing the liking
 		\item pageid: the pageid of the page being liked
-		\item subwikiid: the subwikiid for the activity 
+		\item subwikiid: the subwikiid for the activity
 	\end{itemize}
 	
 	\subsection{socialwiki}
@@ -219,7 +214,7 @@ The socialwiki\_tree has 1 attribute an associative array of socialwiki\_nodes.
 	\item \textbf{install.xml}
 	This file contains all of the XML to create the database for socialwiki.
 	\item \textbf{upgrade.php}
-	This file tells moodle to update the database when a change has been made to the database in a previous version. For more on how upgrade.php works \url{http://docs.moodle.org/dev/Upgrade_API} 
+	This file tells moodle to update the database when a change has been made to the database in a previous version. For more on how upgrade.php works \url{http://docs.moodle.org/dev/Upgrade_API}
 \end{itemize}
 	\subsection{folders /lang/en/}
 \begin{itemize}
@@ -236,14 +231,14 @@ The socialwiki\_tree has 1 attribute an associative array of socialwiki\_nodes.
 	
 	\section{Users}
 	\subsection{Admin User and Teachers}
-	As an admin user when you first create a socialwiki you must give the wiki a name, a description and give a title to the first page. You can also select the format of the wiki (HTML, creole or nwiki) as well as the style for the wiki (classic or modern). Once a socialwiki is created a teacher for the course must create the first page if they wish for the wiki to have a first page other wise every time a teacher views the socialwiki they will be prompted to create the first page. This however doesn't affect the general users for the course they will see the home page and will still be able to create and view pages they just won't have a link to the first page. 
+	As an admin user when you first create a socialwiki you must give the wiki a name, a description and give a title to the first page. You can also select the format of the wiki (HTML, creole or nwiki) as well as the style for the wiki (classic or modern). Once a socialwiki is created a teacher for the course must create the first page if they wish for the wiki to have a first page other wise every time a teacher views the socialwiki they will be prompted to create the first page. This however doesn't affect the general users for the course they will see the home page and will still be able to create and view pages they just won't have a link to the first page.
 	Once a Socialwiki has been created the administrative user have a few extra options that general users don't. They can go to the socialwiki administration block and change the style of the wiki or they can go to the administration tab where they have the ability to delete pages.
 	\subsection{Enrolled Users}
 	When an enrolled user enters a socialwiki they are taken to the home page where the can view: updated pages from the last time they logged in, pages that they created, a list of orphaned pages, a list of all pages, a list of pages recommended for them and a list of all the teacher's pages. In the navigation block there are also links that allow them to view the help page or create a new page.
-	When a user views a page they can see how many likes a page has, they can like the page or follow the user who created the page. They can also click on the author and see pages the author has liked and see the authors peer scores. 
+	When a user views a page they can see how many likes a page has, they can like the page or follow the user who created the page. They can also click on the author and see pages the author has liked and see the authors peer scores.
 	When a user searches for pages they can view a tree that shows the history and family for the pages or they can view a list of pages or a list of pages ordered by which pages have the most likes.
-	The history page allows a user to view the history of a page as well as compare two pages to see the difference between them. 
-	A user can also edit a page. When a user edits a page they create a new page with any changes they made. 
+	The history page allows a user to view the history of a page as well as compare two pages to see the difference between them.
+	A user can also edit a page. When a user edits a page they create a new page with any changes they made.
 	
 \end{document}
 

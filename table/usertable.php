@@ -1,12 +1,20 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-global $CFG;
-
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
-require_once($CFG->dirroot . '/mod/socialwiki/table/table.php');
-
-class UserTable extends socialwiki_table {
+class usertable extends socialwiki_table {
 
     public function __construct($uid, $swid, $ids, $headers) {
         parent::__construct($uid, $swid, $headers);
@@ -15,14 +23,14 @@ class UserTable extends socialwiki_table {
 
     /*
      * Template to create a table using a select/project (select A where B):
-     * 1: use a specific DB access function to retrieve a subset of the users, 
+     * 1: use a specific DB access function to retrieve a subset of the users,
      *    it may be a superset of what we ultimately want.
      *    Examples:
      * 	  - get all users
      * 	  - get followers of some user
-     * 	
+     *
      * 2: refine select condition by applying a filter
-     * 
+     *
      * 3: project by passing a subset of the headers with the make_table method.
      *    Examples:
      *    (all headers)
@@ -34,37 +42,37 @@ class UserTable extends socialwiki_table {
     /**
      * returns all users except 'me'
      */
-    public static function makeAllUsersTable($me, $swid) {
+    public static function all_usertable($me, $swid) {
         $uids = socialwiki_get_active_subwiki_users($swid);
         $ids = array_filter($uids, function($i) use ($me) {
             return ($i != $me);
         });
 
-        return new UserTable($me, $swid, $ids, 'user');
+        return new usertable($me, $swid, $ids, 'user');
     }
 
     /**
-     * returns a UserTable with all users I follow
+     * returns a usertable with all users I follow
      */
-    public static function makeFollowedUsersTable($uid, $swid) {
+    public static function followed_usertable($uid, $swid) {
         $uids = socialwiki_get_follows($uid, $swid);
         $ids = array_keys($uids);
         if (empty($ids)) {
             return null;
         }
 
-        return new UserTable($uid, $swid, $ids, 'user');
+        return new usertable($uid, $swid, $ids, 'user');
     }
 
     /**
-     * returns a UserTable with all my followers
+     * returns a usertable with all my followers
      */
-    public static function makeFollowersTable($uid, $swid) {
+    public static function followers_usertable($uid, $swid) {
         $ids = socialwiki_get_follower_users($uid, $swid);
         if (empty($ids)) {
             return null;
         }
-        return new UserTable($uid, $swid, $ids, 'user');
+        return new usertable($uid, $swid, $ids, 'user');
     }
 
     /**
@@ -83,14 +91,13 @@ class UserTable extends socialwiki_table {
         $swid = $this->swid;
         $www = $CFG->wwwroot;
 
-        //define function to build a row from a user
-        $build_function = function ($id) use ($headers, $me, $swid, $www) { //include headers variable as it indicates which headers are needed
-            //echo "error here:";
-            //var_dump($id);
+        // Define function to build a row from a user.
+        $buildfunction = function ($id) use ($headers, $me, $swid, $www) {
             $user = socialwiki_get_user_info($id);
-            $name = "<a style='margin:0;' class='socialwiki_link' href='" . $www . "/mod/socialwiki/viewuserpages.php?userid=" . $user->id . "&subwikiid=" . $swid . "'>" . fullname($user) . "</a>";
+            $name = "<a style='margin:0;' class='socialwiki_link' href='"
+                    . $www . "/mod/socialwiki/viewuserpages.php?userid="
+                    . $user->id . "&subwikiid=" . $swid . "'>" . fullname($user) . "</a>";
 
-            //echo 'New Peer: '.$id;
             $peer = peer::socialwiki_get_peer($id, $swid, $me);
             switch ($peer->depth) {
                 case 0:
@@ -122,7 +129,7 @@ class UserTable extends socialwiki_table {
             return $row;
         };
 
-        $tabledata = array_map($build_function, $ids); //end array_map
+        $tabledata = array_map($buildfunction, $ids); // End array_map.
 
         return $tabledata;
     }

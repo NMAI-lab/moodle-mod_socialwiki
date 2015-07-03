@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,18 +8,18 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file contains all necessary code to view an old version of a page
  *
  * @package mod-socialwiki-1.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -63,9 +62,10 @@ $wikipage = new page_socialwiki_viewversion($wiki, $subwiki, $cm);
 $wikipage->set_page($page);
 $wikipage->set_versionid($versionid);
 
-add_to_log($course->id, "socialwiki", "history", "viewversion.php?pageid=" . $pageid . "&versionid=" . $versionid, $pageid, $cm->id);
+add_to_log($course->id, "socialwiki", "history", "viewversion.php?pageid="
+        . $pageid . "&versionid=" . $versionid, $pageid, $cm->id);
 
-// Print the page header
+// Print the page header.
 $wikipage->print_header();
 $wikipage->print_content();
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,7 +20,6 @@
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 /**
  * Define all the restore steps that will be used by the restore_wiki_activity_task
  */
@@ -38,23 +36,28 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
 
         $paths[] = new restore_path_element('socialwiki', '/activity/socialwiki');
         if ($userinfo) {
-            $paths[] = new restore_path_element('socialwiki_subwiki', '/activity/socialwiki/subwikis/subwiki');
-            $paths[] = new restore_path_element('socialwiki_page', '/activity/socialwiki/subwikis/subwiki/pages/page');
-            $paths[] = new restore_path_element('socialwiki_version', '/activity/socialwiki/subwikis/subwiki/pages/page/versions/version');
-            $paths[] = new restore_path_element('socialwiki_tag', '/activity/socialwiki/subwikis/subwiki/pages/page/tags/tag');
-            $paths[] = new restore_path_element('socialwiki_like', '/activity/socialwiki/subwikis/subwiki/likes/like');
-            $paths[] = new restore_path_element('socialwiki_link', '/activity/socialwiki/subwikis/subwiki/links/link');
-			$paths[] = new restore_path_element('socialwiki_follow', '/activity/socialwiki/subwikis/subwiki/follows/follow');
+            $paths[] = new restore_path_element('socialwiki_subwiki',
+                    '/activity/socialwiki/subwikis/subwiki');
+            $paths[] = new restore_path_element('socialwiki_page',
+                    '/activity/socialwiki/subwikis/subwiki/pages/page');
+            $paths[] = new restore_path_element('socialwiki_version',
+                    '/activity/socialwiki/subwikis/subwiki/pages/page/versions/version');
+            $paths[] = new restore_path_element('socialwiki_tag',
+                    '/activity/socialwiki/subwikis/subwiki/pages/page/tags/tag');
+            $paths[] = new restore_path_element('socialwiki_like',
+                    '/activity/socialwiki/subwikis/subwiki/likes/like');
+            $paths[] = new restore_path_element('socialwiki_follow',
+                    '/activity/socialwiki/subwikis/subwiki/follows/follow');
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
     protected function process_socialwiki($data) {
         global $DB;
 
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
 
@@ -62,17 +65,15 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $data->editend = $this->apply_date_offset($data->editend);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        // insert the wiki record
+        // Insert the wiki record.
         $newitemid = $DB->insert_record('socialwiki', $data);
-        // immediately after inserting "activity" record, call this
+        // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
     }
 
     protected function process_socialwiki_subwiki($data) {
         global $DB;
-
-
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
         $data->wikiid = $this->get_new_parentid('socialwiki');
         $data->groupid = $this->get_mappingid('group', $data->groupid);
@@ -81,11 +82,10 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $newitemid = $DB->insert_record('socialwiki_subwikis', $data);
         $this->set_mapping('socialwiki_subwiki', $oldid, $newitemid);
     }
+
     protected function process_socialwiki_page($data) {
         global $DB, $USER;
-		
-        $data = (object)$data;
-
+        $data = (object) $data;
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
         $data->userid = $USER->id;
@@ -94,14 +94,13 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $data->timerendered = $this->apply_date_offset($data->timerendered);
         $data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
 
-
         $newitemid = $DB->insert_record('socialwiki_pages', $data);
-        $this->set_mapping('socialwiki_page', $oldid, $newitemid, true); // There are files related to this
+        $this->set_mapping('socialwiki_page', $oldid, $newitemid, true); // There are files related to this.
     }
+
     protected function process_socialwiki_version($data) {
         global $DB;
-
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
         $data->pageid = $this->get_new_parentid('socialwiki_page');
         $data->userid = $this->get_mappingid('user', $data->userid);
@@ -110,52 +109,35 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $newitemid = $DB->insert_record('socialwiki_versions', $data);
         $this->set_mapping('socialwiki_version', $oldid, $newitemid);
     }
+
     protected function process_socialwiki_like($data) {
         global $DB;
-
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
         $data->pageid = $this->get_mappingid('socialwiki_page', $data->pageid);
-		$data->userid = $this->get_mappingid('user', $data->userid);
-		
+        $data->userid = $this->get_mappingid('user', $data->userid);
+
         $newitemid = $DB->insert_record('socialwiki_likes', $data);
-
-    }
-    protected function process_socialwiki_link($data) {
-        global $DB;
-
-        $data = (object)$data;
-        $oldid = $data->id;
-        $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
-        $data->frompageid = $this->get_mappingid('socialwiki_page', $data->frompageid);
-        $data->topageid = $this->get_mappingid('socialwiki_page', $data->topageid);
-
-        $newitemid = $DB->insert_record('socialwiki_links', $data);
-        // No need to save this mapping as far as nothing depend on it
-        // (child paths, file areas nor links decoder)
     }
 
-	protected function process_socialwiki_follow($data) {
+    protected function process_socialwiki_follow($data) {
         global $DB;
-
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
         $data->userfromid = $this->get_mappingid('user', $data->userfromid);
-		$data->usertoid = $this->get_mappingid('user', $data->usertoid);
-		
-        $newitemid = $DB->insert_record('socialwiki_follows', $data);
+        $data->usertoid = $this->get_mappingid('user', $data->usertoid);
 
+        $newitemid = $DB->insert_record('socialwiki_follows', $data);
     }
-	
+
     protected function process_socialwiki_tag($data) {
         global $CFG, $DB;
-
-        $data = (object)$data;
+        $data = (object) $data;
         $oldid = $data->id;
 
-        if (empty($CFG->usetags)) { // tags disabled in server, nothing to process
+        if (empty($CFG->usetags)) { // Tags disabled in server, nothing to process.
             return;
         }
 
@@ -165,8 +147,9 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
     }
 
     protected function after_execute() {
-        // Add wiki related files, no need to match by itemname (just internally handled context)
+        // Add wiki related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_socialwiki', 'intro', null);
         $this->add_related_files('mod_socialwiki', 'attachments', 'socialwiki_page');
     }
+
 }

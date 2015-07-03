@@ -133,7 +133,7 @@ Mobile: abc</p>
 </thead>
 <tbody>
 <tr>
-<td><tt> //not italic text// </tt></td>
+<td><tt> // not italic text// </tt></td>
 <td><tt> **not bold text** </tt></td>
 </tr>
 <tr>

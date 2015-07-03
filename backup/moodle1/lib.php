@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -70,11 +69,11 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
                 array(
                     'newfields' => array(
                         'introformat' => '0',
-                        'defaultformat' => 'html', //1.9 migrations default to html
+                        'defaultformat' => 'html', // 1.9 migrations default to html.
                         'forceformat' => '1',
                         'editbegin' => '0',
                         'editend' => '0',
-                        'timecreated' => time(), //2.x time of creation since theres no 1.9 time of creation
+                        'timecreated' => time(), // 2.x time of creation since theres no 1.9 time of creation.
                     ),
                     'renamefields' => array(
                         'summary' => 'intro',
@@ -90,14 +89,7 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
             ),
             new convert_path(
                 'wiki_entries', '/MOODLE_BACKUP/COURSE/MODULES/MOD/WIKI/ENTRIES',
-                array(
-                    'newfields' => array(
-                        'synonyms' => '0',
-                        'links' => 'collaborative',
-                    ),
-                    'dropfields' => array(
-                        'pagename' ,'timemodified'
-                    )
+                array('dropfields' => array('pagename', 'timemodified')
                 )
             ),
             new convert_path(
@@ -122,7 +114,7 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
                         'hits' => 'pageviews'
                     ),
                     'dropfields' => array(
-                        'version', 'flags', 'author', 'refs', //refs will be reparsed during rendering
+                        'version', 'flags', 'author', 'refs', // Refs will be reparsed during rendering.
                         'meta'
                     )
                 )
@@ -138,7 +130,7 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
         global $CFG;    // We need to check a config setting.
 
         if (!empty($data['initialcontent'])) {
-            //convert file in <INITIALCONTENT>filename</INITIALCONTENT> into a subwiki page if no entry created.
+            // Convert file in <INITIALCONTENT>filename</INITIALCONTENT> into a subwiki page if no entry created.
             $temppath = $this->converter->get_tempdir_path();
             $this->initialcontent = file_get_contents($temppath.'/course_files/'.$data['initialcontent']);
             $this->initialcontentfilename = $data['initialcontent'];
@@ -147,8 +139,8 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
         unset($data['initialcontent']);
         if ($data['wikimode'] !== 'group') {
             $data['wikimode'] = 'individual';
-            //@todo need to create extra subwikis due to individual wikimode?
-            //this would then need to reference the users in the course that is being restored.(some parent class API needed)
+            // TODO: need to create extra subwikis due to individual wikimode?
+            // this would then need to reference the users in the course that is being restored.
         } else {
             $data['wikimode'] = 'collaborative';
         }
@@ -156,27 +148,27 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
         if (empty($data['name'])) {
             $data['name'] = 'Social_Wiki';
         }
-        // get the course module id and context id
+        // Get the course module id and context id.
         $instanceid     = $data['id'];
         $cminfo         = $this->get_cminfo($instanceid);
         $this->moduleid = $cminfo['id'];
         $contextid      = $this->converter->get_contextid(CONTEXT_MODULE, $this->moduleid);
 
-        // get a fresh new file manager for this instance
+        // Get a fresh new file manager for this instance.
         $this->fileman = $this->converter->get_file_manager($contextid, 'mod_wiki');
 
-        // convert course files embedded into the intro
+        // Convert course files embedded into the intro.
         $this->fileman->filearea = 'intro';
         $this->fileman->itemid   = 0;
         $data['intro'] = moodle1_converter::migrate_referenced_files($data['intro'], $this->fileman);
 
-        // convert the introformat if necessary
+        // Convert the introformat if necessary.
         if ($CFG->texteditors !== 'textarea') {
             $data['intro'] = text_to_html($data['intro'], false, false, true);
             $data['introformat'] = FORMAT_HTML;
         }
 
-        // we now have all information needed to start writing into the file
+        // We now have all information needed to start writing into the file.
         $this->open_xml_writer("activities/socialwiki_{$this->moduleid}/socialwiki.xml");
         $this->xmlwriter->begin_tag('activity', array('id' => $instanceid, 'moduleid' => $this->moduleid,
             'modulename' => 'socialwiki', 'contextid' => $contextid));
@@ -193,7 +185,7 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
 
     public function on_socialwiki_entries_start() {
         $this->xmlwriter->begin_tag('subwikis');
-        $this->needinitpage = false; //backup has entries, so the initial_content file has been stored as a page in 1.9.
+        $this->needinitpage = false; // Backup has entries, so the initial_content file has been stored as a page in 1.9.
     }
 
     public function on_socialwiki_entries_end() {
@@ -225,25 +217,25 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
     }
 
     public function process_socialwiki_entry_page($data) {
-        // assimilate data to create later in extra virtual path page/versions/version/
+        // Assimilate data to create later in extra virtual path page/versions/version/.
         $this->databuf['id'] = $this->converter->get_nextid();
         $this->databuf['content'] = $data['content'];
         unset($data['content']);
         $this->databuf['contentformat'] = 'html';
         $this->databuf['version'] = 0;
-        $this->databuf['timecreated'] = $data['timecreated']; //do not unset, is reused
-        $this->databuf['userid'] = $data['userid']; //do not unset, is reused
+        $this->databuf['timecreated'] = $data['timecreated']; // Do not unset, is reused.
+        $this->databuf['userid'] = $data['userid']; // Do not unset, is reused.
 
-        // process page data (user data and also the one that is from <initialcontent>
+        // Process page data (user data and also the one that is from <initialcontent>).
         $this->xmlwriter->begin_tag('page', array('id' => $data['id']));
-        unset($data['id']); // we already write it as attribute, do not repeat it as child element
+        unset($data['id']); // We already write it as attribute, do not repeat it as child element.
         foreach ($data as $field => $value) {
             $this->xmlwriter->full_tag($field, $value);
         }
 
-        // process page content as a version.
+        // Process page content as a version.
         $this->xmlwriter->begin_tag('versions');
-        $this->write_xml('version', $this->databuf, array('/version/id')); //version id from get_nextid()
+        $this->write_xml('version', $this->databuf, array('/version/id')); // Version id from get_nextid().
         $this->xmlwriter->end_tag('versions');
     }
     public function on_wiki_entry_page_end() {
@@ -256,18 +248,16 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
     public function on_socialwiki_end() {
         global $USER;
 
-        //check if the initial content needs to be created (and if a page is already there for it)
+        // Check if the initial content needs to be created (and if a page is already there for it).
         if ($this->initialcontentfilename && $this->needinitpage) {
-            //contruct (synthetic - not for cooking) a full path for creating entries/entry/pages/page
-            $data_entry = array(
-                'id'        => $this->converter->get_nextid(), //creating the first entry
+            // Contruct (synthetic - not for cooking) a full path for creating entries/entry/pages/page.
+            $dataentry = array(
+                'id'        => $this->converter->get_nextid(), // Creating the first entry.
                 'groupid'   => 0,
-                'userid'    => 0,
-                'synonyms'  => '',
-                'links'     => ''
+                'userid'    => 0
             );
-            $data_page = array(
-                'id'            => $this->converter->get_nextid(), //just creating the first page in the wiki
+            $datapage = array(
+                'id'            => $this->converter->get_nextid(), // Just creating the first page in the wiki.
                 'title'         => $this->initialcontentfilename,
                 'content'       => $this->initialcontent,
                 'userid'        => $USER->id,
@@ -279,23 +269,23 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
                 'readonly'      => 0,
                 'tags'          => ''
             );
-            //create xml with constructed page data (from initial_content file).
+            // Create xml with constructed page data (from initial_content file).
             $this->on_socialwiki_entries_start();
-            $this->process_socialwiki_entry($data_entry);
+            $this->process_socialwiki_entry($dataentry);
             $this->on_socialwiki_pages_start();
-            $this->process_socialwiki_entry_page($data_page);
+            $this->process_socialwiki_entry_page($datapage);
             $this->on_socialwiki_entry_page_end();
             $this->on_socialwiki_pages_end();
             $this->on_socialwiki_entry_end();
             $this->on_socialwiki_entries_end();
         }
 
-        //close wiki.xml
+        // Close wiki.xml!
         $this->xmlwriter->end_tag('socialwiki');
         $this->xmlwriter->end_tag('activity');
         $this->close_xml_writer();
 
-        // write inforef.xml
+        // Write inforef.xml!
         $this->open_xml_writer("activities/socialwiki_{$this->moduleid}/inforef.xml");
         $this->xmlwriter->begin_tag('inforef');
         $this->xmlwriter->begin_tag('fileref');

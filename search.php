@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,20 +19,18 @@
  * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/socialwikitree.php');
-
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require($CFG->dirroot . '/mod/socialwiki/peer.php');
 
 $search = optional_param('searchstring', null, PARAM_TEXT);
 $courseid = optional_param('courseid', 0, PARAM_INT);
-$searchcontent = optional_param('searchcontent', 1, PARAM_INT); //search page content
+$searchcontent = optional_param('searchcontent', 1, PARAM_INT); // Search page content.
 $cmid = optional_param('cmid', 0, PARAM_INT);
 $pageid = optional_param('pageid', -1, PARAM_INT);
-$option = optional_param('option', 0, PARAM_INT); // Option ID
-$exact = optional_param('exact', 0, PARAM_INT); // if match should be exact (wikilinks)
+$option = optional_param('option', 0, PARAM_INT); // Option ID.
+$exact = optional_param('exact', 0, PARAM_INT); // If match should be exact (wikilinks).
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     echo $courseid;
@@ -45,7 +42,7 @@ if (!$cm = get_coursemodule_from_id('socialwiki', $cmid)) {
 
 require_login($course, true, $cm);
 
-// @TODO: Fix call to wiki_get_subwiki_by_group
+// TODO: Fix call to wiki_get_subwiki_by_group.
 if (!$gid = groups_get_activity_group($cm)) {
     $gid = 0;
 }
@@ -56,26 +53,20 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
 
-$wikipage = new page_socialwiki_search($wiki, $subwiki, $cm);
+$wikipage = new page_socialwiki_search($wiki, $subwiki, $cm, $option);
 
-//make * a wild-card search
-if ($search == "*")
+// Make * a wild-card search.
+if ($search == "*") {
     $search = "";
+}
 
-if ($exact != 0) { //exact match on page title
+if ($exact != 0) { // Exact match on page title.
     $wikipage->set_search_string($search, 0, true);
 } else {
     $wikipage->set_search_string($search, $searchcontent, false);
 }
 
 $wikipage->set_title(get_string('searchresultsfor', 'socialwiki') . ": " . $search);
-
-//$page = socialwiki_get_page($pageid);
-//if ($pageid != -1)
-//{
-//	$wikipage->set_page($page);
-//}
-$wikipage->set_view($option);
 
 $wikipage->print_header();
 

@@ -97,32 +97,6 @@
         <KEY NAME="pagefk" TYPE="foreign" FIELDS="pageid" REFTABLE="socialwiki_pages" REFFIELDS="id" COMMENT="Foreign key to pages table"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="socialwiki_synonyms" COMMENT="Stores wiki pages synonyms">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="subwikiid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Subwiki instance"/>
-        <FIELD NAME="pageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Original page"/>
-        <FIELD NAME="pagesynonym" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="Pagesynonym" SEQUENCE="false" COMMENT="Page name synonym"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="pageidsyn" TYPE="unique" FIELDS="pageid, pagesynonym"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="socialwiki_links" COMMENT="Page wiki links">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="subwikiid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Subwiki instance"/>
-        <FIELD NAME="frompageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Page id with a link"/>
-        <FIELD NAME="topageid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Page id that recives a link"/>
-        <FIELD NAME="tomissingpage" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="link to a nonexistent page"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="frompageidfk" TYPE="foreign" FIELDS="frompageid" REFTABLE="socialwiki_pages" REFFIELDS="id" COMMENT="Foreig key to socialwiki_pages"/>
-        <KEY NAME="subwikifk" TYPE="foreign" FIELDS="subwikiid" REFTABLE="socialwiki_subwikis" REFFIELDS="id" COMMENT="Foreign key to socialwiki_subwiki table"/>
-      </KEYS>
-    </TABLE>
     <TABLE NAME="socialwiki_user_views" COMMENT="Social wiki user views">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>

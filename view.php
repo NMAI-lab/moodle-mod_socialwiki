@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,18 +8,18 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file contains all necessary code to view a socialwiki page
  *
  * @package mod-socialwiki-1.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -30,26 +29,24 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 
-$pageid = optional_param('pageid', 0, PARAM_INT); // Page ID
+$pageid = optional_param('pageid', 0, PARAM_INT); // Page ID.
 
-$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID
-$title = optional_param('title', '', PARAM_TEXT); // Page Title
-$currentgroup = optional_param('group', 0, PARAM_INT); // Group ID
-$userid = optional_param('uid', 0, PARAM_INT); // User ID
+$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID.
+$title = optional_param('title', '', PARAM_TEXT); // Page Title.
+$currentgroup = optional_param('group', 0, PARAM_INT); // Group ID.
+$userid = optional_param('uid', 0, PARAM_INT); // User ID.
 $groupanduser = optional_param('groupanduser', 0, PARAM_TEXT);
 
 $edit = optional_param('edit', -1, PARAM_BOOL);
 
 $action = optional_param('action', '', PARAM_ALPHA);
-$swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID
-
+$swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID.
 
 /*
  * Case 0:
@@ -71,31 +68,31 @@ if ($id) {
      * URL Params: pageid -> page id
      *
      */
-} elseif ($pageid) {
+} else if ($pageid) {
 
-    // Checking page instance
+    // Checking page instance.
     if (!$page = socialwiki_get_page($pageid)) {
         print_error('incorrectpageid', 'socialwiki');
     }
 
-    // Checking subwiki
+    // Checking subwiki.
     if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
         print_error('incorrectsubwikiid', 'socialwiki');
     }
 
-    // Checking socialwiki instance of that subwiki
+    // Checking socialwiki instance of that subwiki.
     if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
 
-    // Checking course module instance
+    // Checking course module instance.
     if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
         print_error('invalidcoursemodule');
     }
 
     $currentgroup = $subwiki->groupid;
 
-    // Checking course instance
+    // Checking course instance.
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
     require_login($course, true, $cm);
@@ -114,19 +111,19 @@ if ($id) {
      *             uid -> user id (optional)
      *             groupanduser -> (optional)
      */
-} elseif ($wid && $title) {
+} else if ($wid && $title) {
 
-    // Setting wiki instance
+    // Setting wiki instance.
     if (!$wiki = socialwiki_get_wiki($wid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
 
-    // Checking course module
+    // Checking course module.
     if (!$cm = get_coursemodule_from_instance("socialwiki", $wiki->id)) {
         print_error('invalidcoursemodule');
     }
 
-    // Checking course instance
+    // Checking course instance.
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
     require_login($course, true, $cm);
@@ -141,7 +138,7 @@ if ($id) {
         $uid = 0;
     }
 
-    // Getting subwiki instance. If it does not exists, redirect to create page
+    // Getting subwiki instance. If it does not exists, redirect to create page.
     if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $gid, $uid)) {
         $context = context_module::instance($cm->id);
 
@@ -161,10 +158,10 @@ if ($id) {
         redirect($url);
     }
 
-    // Checking is there is a page with this title. If it does not exists, redirect to first page
+    // Checking is there is a page with this title. If it does not exists, redirect to first page.
     if (!$page = socialwiki_get_page_by_title($subwiki->id, $title)) {
         $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $wiki->firstpagetitle);
-        // Check to see if the first page has been created
+        // Check to see if the first page has been created.
         if (!socialwiki_get_page_by_title($subwiki->id, $wiki->firstpagetitle)) {
             $url = new moodle_url('/mod/socialwiki/create.php', $params);
         } else {
@@ -179,7 +176,7 @@ if ($id) {
 $context = context_module::instance($cm->id);
 require_capability('mod/socialwiki:viewpage', $context);
 
-// Update 'viewed' state if required by completion system
+// Update 'viewed' state if required by completion system.
 require_once($CFG->libdir . '/completionlib.php');
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);

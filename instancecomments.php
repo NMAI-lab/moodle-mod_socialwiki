@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,18 +8,18 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * @TODO: Doc this file
  *
  * @package mod-wiki-2.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -61,14 +60,14 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 require_login($course, true, $cm);
 
 if ($action == 'add' || $action == 'edit') {
-    //just check sesskey
+    // Just check sesskey.
     if (!confirm_sesskey()) {
         print_error(get_string('invalidsesskey', 'socialwiki'));
     }
     $comm = new page_socialwiki_handlecomments($wiki, $subwiki, $cm);
     $comm->set_page($page);
 } else {
-    if(!$confirm) {
+    if (!$confirm) {
         $comm = new page_socialwiki_deletecomment($wiki, $subwiki, $cm);
         $comm->set_page($page);
         $comm->set_url();

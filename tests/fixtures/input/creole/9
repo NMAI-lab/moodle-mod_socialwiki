@@ -12,8 +12,7 @@ The ending equal signs should not be displayed:
 ==== Subsub (4) ====
 ===== Subsubsub (5) =====
 
-
-You can make things **bold** or //italic// or **//both//** or //**both**//.
+You can make things **bold** or // italic// or **// both// ** or // **both**// .
 
 Character formatting extends across line breaks: **bold,
 this is still bold. This line deliberately does not end in star-star.
@@ -28,14 +27,13 @@ Here's another sentence: This wisdom is taken from [[Ward Cunningham's]]
 
 Here's a external link without a description: [[http://www.wikicreole.org]]
 
-Be careful that italic links are rendered properly:  //[[http://my.book.example/|My Book Title]]// 
+Be careful that italic links are rendered properly:  // [[http://my.book.example/|My Book Title]]//
 
-Free links without braces should be rendered as well, like http://www.wikicreole.org/ and http://www.wikicreole.org/users/~example. 
+Free links without braces should be rendered as well, like http://www.wikicreole.org/ and http://www.wikicreole.org/users/~example.
 
 Creole1.0 specifies that http://bar and ftp://bar should not render italic, something like foo://bar should render as italic.//
 
 You can use this to draw a line to separate the page:
-
 
 ----
 
@@ -91,7 +89,7 @@ Guitar Chord C:
 You can also use it inline nowiki {{{ in a sentence }}} like this.
 
 = Escapes =
-Normal Link: http://wikicreole.org/ - now same link, but escaped: ~http://wikicreole.org/ 
+Normal Link: http://wikicreole.org/ - now same link, but escaped: ~http://wikicreole.org/
 
 Normal asterisks: ~**not bold~**
 
@@ -109,10 +107,10 @@ This should be a flower with the ALT text "this is a flower" if your wiki suppor
 
 Tables are done like this:
 
-|=header col1|=header col2| 
-|col1|col2| 
-|you         |can         | 
-|also        |align\\ it. | 
+|=header col1|=header col2|
+|col1|col2|
+|you         |can         |
+|also        |align\\ it. |
 
 You can format an address by simply forcing linebreaks:
 
@@ -124,8 +122,8 @@ Mobile: abc
 === Creole 0.5 ===
 
 |= Header title               |= Another header title     |
-| {{{ //not italic text// }}} | {{{ **not bold text** }}} |
-| //italic text//             | **  bold text **          |
+| {{{ // not italic text// }}} | {{{ **not bold text** }}} |
+| // italic text//             | **  bold text **          |
 
 === Creole 1.0 ===
 

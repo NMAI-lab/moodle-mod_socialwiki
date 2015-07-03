@@ -50,7 +50,7 @@ Feature: A history of each wiki page is available
     And I press "Save"
     And I follow "History"
     # Checking that there are 3 history items (the first one is are th)
-    And "//div[@class='region-content']/descendant::table/descendant::tr[4]" "xpath_element" should exists
+    And "// div[@class='region-content']/descendant::table/descendant::tr[4]" "xpath_element" should exists
     And I click on "1" "link" in the "Teacher 1" table row
     And I should see "First edition"
     And I should see "Teacher 1"

@@ -10,14 +10,12 @@
 % Duplex: oneside / twoside
 % Base Font Size: 10pt / 11pt / 12pt
 
-
 %% Language %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[USenglish]{babel} %francais, polish, spanish, ...
 \usepackage[T1]{fontenc}
 \usepackage[ansinew]{inputenc}
 
 \usepackage{lmodern} %Type1-font for non-english texts and characters
-
 
 %% Packages for Graphics & Figures %%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{graphicx} %%For loading graphic files
@@ -27,20 +25,18 @@
 %% Please note:
 %% Images can be included using \includegraphics{Dateiname}
 %% resp. using the dialog in the Insert menu.
-%% 
+%%
 %% The mode "LaTeX => PDF" allows the following formats:
 %%   .jpg  .png  .pdf  .mps
-%% 
+%%
 %% The modes "LaTeX => DVI", "LaTeX => PS" und "LaTeX => PS => PDF"
 %% allow the following formats:
 %%   .eps  .ps  .bmp  .pict  .pntg
-
 
 %% Math Packages %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amsfonts}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DOCUMENT
@@ -48,7 +44,6 @@
 \begin{document}
 
 \pagestyle{empty} %No headings for the first pages.
-
 
 %% Title Page %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ==> Write your text here or include other files.
@@ -68,14 +63,12 @@
 	peers have 6 attributes:
 	\begin{itemize}
 		\item id the userid of the user the peer represents
-		\item	trust a number based on following relations 
+		\item	trust a number based on following relations
 		\item	likesim a percentage of how similar the peers likes are to the users
 		\item	followsim a percentage of how similar the peers follows are to the users
-		\item popularity percent popularity  
+		\item popularity percent popularity
 		\item weight an associative array of the weights of each of the 4 scores
 	\end{itemize}
-
-
 
 \section{socialwiki\_tree}
 				the socialwiki\_tree is used to show the relations between pages on the history and search pages.
@@ -93,13 +86,13 @@
 			\end{itemize}
 
 \section{Peerscore Algorithm}
-	The like and follow simularity for a peer are calculated using: 
+	The like and follow simularity for a peer are calculated using:
 		\[
 		\frac{|likes (p1)\cap likes(user)|}{|likes(p1)\cup likes (user)|}
 	\]
 	The trust of a peer is 1 over the following distance of a peer.
 	\newline
-	\\Peer popularity is calculated by: 
+	\\Peer popularity is calculated by:
 		\[
 		\frac{num\ following}{num\ peers}
 	\]
@@ -112,6 +105,6 @@
 	\section{pagescore}
 	The page score is callculated as $(\sum peerscore)+\frac{time\ created}{current\ time} $
 	
-	 
+	
 \end{document}
 

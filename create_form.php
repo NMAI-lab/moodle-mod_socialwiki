@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file contains all necessary code to define and process an edit form
@@ -23,8 +22,7 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-require_once($CFG->libdir.'/formslib.php');
+require_once($CFG->libdir . '/formslib.php');
 
 class mod_socialwiki_create_form extends moodleform {
 
@@ -39,7 +37,7 @@ class mod_socialwiki_create_form extends moodleform {
 
         $textoptions = array();
         if (!empty($this->_customdata['disable_pagetitle'])) {
-            $textoptions = array('readonly'=>'readonly');
+            $textoptions = array('readonly' => 'readonly');
         }
         $mform->addElement('text', 'pagetitle', get_string('newpagetitle', 'socialwiki'), $textoptions);
         $mform->setType('pagetitle', PARAM_TEXT);
@@ -52,13 +50,13 @@ class mod_socialwiki_create_form extends moodleform {
             $mform->addHelpButton('format', 'format', 'socialwiki');
             foreach ($formats as $format) {
                 if ($format == $defaultformat) {
-                    $attr = array('checked'=>'checked');
-                }else if (!empty($forceformat)){
-                    $attr = array('disabled'=>'disabled');
+                    $attr = array('checked' => 'checked');
+                } else if (!empty($forceformat)) {
+                    $attr = array('disabled' => 'disabled');
                 } else {
                     $attr = array();
                 }
-                $mform->addElement('radio', 'pageformat', '', get_string('format'.$format, 'socialwiki'), $format, $attr);
+                $mform->addElement('radio', 'pageformat', '', get_string('format' . $format, 'socialwiki'), $format, $attr);
             }
         }
         $mform->setType('pageformat', PARAM_ALPHANUMEXT);
@@ -79,11 +77,10 @@ class mod_socialwiki_create_form extends moodleform {
             }
         }
 
-        //hiddens
+        // Hidden elements.
         $mform->addElement('hidden', 'action', 'create');
         $mform->setType('action', PARAM_ALPHA);
         $mform->addElement('submit', 'submitbutton', get_string('createpage', 'socialwiki'));
-
-
     }
+
 }

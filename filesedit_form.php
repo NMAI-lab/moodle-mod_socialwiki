@@ -21,16 +21,16 @@
  * @copyright 2011 Dongsheng Cai <dongsheng@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
 
 class mod_socialwiki_filesedit_form extends moodleform {
+
     protected function definition() {
         $mform = $this->_form;
 
-        $data    = $this->_customdata['data'];
+        $data = $this->_customdata['data'];
         $options = $this->_customdata['options'];
 
         $mform->addElement('filemanager', 'files_filemanager', get_string('files'), null, $options);
@@ -45,4 +45,5 @@ class mod_socialwiki_filesedit_form extends moodleform {
 
         $this->set_data($data);
     }
+
 }

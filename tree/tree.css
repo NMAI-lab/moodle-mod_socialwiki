@@ -1,7 +1,14 @@
 /*Now the CSS*/
 
-.hider, .collapser {
+.btngroup {
+    display: none;
+}
+
+.jsenabled .btngroup {
     cursor: pointer;
+    position: relative;
+    left: 40%;
+    display: inline;
 }
 
 .hider {
@@ -9,9 +16,8 @@
 }
 
 .titletext {
-    padding-bottom: 6px;
+    padding-bottom: 0.3em;
     display: block;
-    clear: right;
 }
 
 .tree {
@@ -19,12 +25,13 @@
     overflow: auto;
 }
 
+.tree ul:first-child {
+    padding-top: 0px;
+}
+
 .tree ul {
     padding-top: 20px; position: relative;
     margin : 0;
-    /*overflow:auto;
-    white-space: no wrap*/
-
     transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
@@ -55,19 +62,17 @@
     border-left: 1px solid #ccc;
 }
 
-/*We need to remove left-right connectors from elements without 
-  any siblings*/
+/*We need to remove left-right connectors from elements without any siblings*/
 .tree li:only-child::after, .tree li:only-child::before {
     display: none;
 }
 
 /*Remove space from the top of single children*/
-.tree li:only-child { 
+.tree li:only-child {
     padding: 0;
 }
 
-/*Remove left connector from first child and 
-  right connector from last child*/
+/*Remove left connector from first child and right connector from last child*/
 .tree li:first-child::before, .tree li:last-child::after {
     border: 0 none;
 }
@@ -111,6 +116,10 @@
 /*Time for some hover effects*/
 .tree li div:hover {
     background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+}
+
+input[type="radio"] {
+    margin: -4px 0 0 2px;
 }
 
 /*Thats all. I hope you enjoyed it.

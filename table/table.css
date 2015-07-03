@@ -1,5 +1,5 @@
 /*
- *  File:         demo_table.css
+ *  File:         table.css
  *  CVS:          $Id$
  *  Description:  CSS descriptions for DataTables demo pages
  *  Author:       Allan Jardine
@@ -66,8 +66,6 @@
     margin-bottom: 0.2em;
 }
 
-
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display
  */
@@ -75,19 +73,6 @@ table.datatable {
     clear: both;
     width: 100%;
     margin-bottom: 0;
-
-    /* Note Firefox 3.5 and before have a bug with border-collapse
-     * ( https://bugzilla.mozilla.org/show%5Fbug.cgi?id=155955 ) 
-     * border-spacing: 0; is one possible option. Conditional-css.com is
-     * useful for this kind of thing
-     *
-     * Further note IE 6/7 has problems when calculating widths with border width.
-     * It subtracts one px relative to the other browsers from the first column, and
-     * adds one to the end...
-     *
-     * If you want that effect I'd suggest setting a border-top/left on th/td's and 
-     * then filling in the gaps with other borders.
-     */
 }
 
 table.datatable thead th {
@@ -102,8 +87,6 @@ table.datatable thead th {
 table.datatable td {
     padding: 3px 10px 2px 6px;
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables sorting
@@ -133,8 +116,6 @@ table.datatable thead td:active {
     outline: none;
 }
 
-
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
@@ -145,8 +126,6 @@ tr.odd {
 tr.even {
     background-color: white;
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Borders
@@ -164,8 +143,6 @@ table.dataTable tbody tr {
 table.dataTable tbody tr:first-child td {
     border-top: none;
 }
-
-
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Sorting classes for columns

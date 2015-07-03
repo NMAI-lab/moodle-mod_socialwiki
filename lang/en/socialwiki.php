@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
  *
  * This file contains en_utf8 translation of Wiki module
@@ -24,12 +38,12 @@ $string['backtomapmenu'] = 'Back to map menu';
 $string['changerate'] = 'Do you wish to change it?';
 $string['cannoteditpage'] = 'You can not edit this page.';
 $string['cannotfollow'] = 'You can not follow yourself';
-$string['connotlike']='You must be an enrolled user to like a page';
-$string['deniedfollow']='You do not have permission to follow people';
+$string['connotlike'] = 'You must be an enrolled user to like a page';
+$string['deniedfollow'] = 'You do not have permission to follow people';
 $string['cannotmanagefiles'] = 'You don\'t have permission to manage the wiki files.';
 $string['cannotviewfiles'] = 'You don\'t have permission to view the wiki files.';
 $string['cannotviewpage'] = 'You can not view this page.';
-$string['classic']='Classic';
+$string['classic'] = 'Classic';
 $string['comparesel'] = 'Compare selected';
 $string['comments'] = 'Comments';
 $string['commentscount'] = 'Comments ({$a})';
@@ -92,7 +106,7 @@ $string['format_help'] = '* HTML - The HTML editor is available
 $string['formathtml'] = 'HTML format';
 $string['formathtml_help'] = 'The HTML editor may be used for formatting content.
 
-To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]]. 
+To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].
 To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatcreole'] = 'Creole format';
 $string['formatcreole_help'] = 'Creole is a common wiki markup language with an edit toolbar for inserting appropriate markup.
@@ -106,7 +120,7 @@ $string['formatnwiki_help'] = 'Nwiki is the Mediawiki-like markup language used 
 To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].
 To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatnwiki_link'] = 'mod/socialwiki/nwiki';
-$string['help']='Help';
+$string['help'] = 'Help';
 $string['history'] = 'Versions';
 $string['history_help'] = 'The history lists links to previous versions of the page.';
 $string['html'] = 'HTML';
@@ -118,21 +132,20 @@ $string['invalidparameters'] = 'Invalid parameters have been given.';
 $string['invalidsection'] = 'Invalid section.';
 $string['invalidsesskey'] = 'The given sesskey is not valid. Please resend data again';
 $string['individualpagedoesnotexist'] = 'Individual wiki page doesn\'t exist';
-$string['links'] = 'Links';
-$string['links_help']='There are 3 diffrent ways to add links: <br/>
+$string['links_help'] = 'There are 3 diffrent ways to add links: <br/>
 * [[page name]] links to a search pageName <br/>
 * [[page name@pageid]] links to a specific version of a page <br/>
 * [[page name@.]] links to the most recent version of that page';
-$string['list']='List View';
+$string['list'] = 'List View';
 $string['listall'] = 'List all';
-$string['listorphan'] = 'List orphan';
-$string['manage']='Manage';
+$string['listrelated'] = 'List related';
+$string['manage'] = 'Manage';
 $string['home'] = 'Home';
 $string['homemenu'] = 'Home menu';
 $string['migrationfinished'] = 'Migration finished successfully';
 $string['migrationfinishednowikis'] = 'Migration finished, no wikis were migrated';
 $string['missingpages'] = 'Pages without content';
-$string ['modern']='Modern';
+$string['modern'] = 'Modern';
 $string['modified'] = 'Modified';
 $string['modulename'] = 'Social Wiki';
 $string['modulename_help'] = 'The Social Wiki activity module enables participants to add and edit a collection of web pages. A new wiki page is created for every edit someone makes to a page. Pages only exist while someone likes it, if a page has 0 likes it is deleted.
@@ -170,16 +183,16 @@ $string['nomanagecommentpermission'] = 'Manage comments permission needed';
 $string['nomanagewikipermission'] = 'Manage wiki permission needed';
 $string['noorphanedpages'] = 'There are no orphaned pages';
 $string['norecentactivity'] = 'No recent activity';
-$string['norated']='This page has not been rated yet, be the first!';
+$string['norated'] = 'This page has not been rated yet, be the first!';
 $string['norating'] = 'No rating';
 $string['nosearchresults'] = 'No results';
 $string['noteditblocks'] = 'Turn edit blocks off';
 $string['notingroup'] = 'Not in group';
 $string['notopages'] = 'This page does not link to other pages';
 $string['notmigrated'] = 'This wiki has not been migrated yet. Please contact your administrator.';
-$string['nonode']= 'The parent node doesn\'t exist';
+$string['nonode'] = 'The parent node doesn\'t exist';
 $string['noupdatedpages'] = 'There are no updated pages';
-$string['nouser']='A pageid or userid must be passed to follow.php';
+$string['nouser'] = 'A pageid or userid must be passed to follow.php';
 $string['noviewcommentpermission'] = 'View comments permission needed';
 $string['noviewpagepermission'] = 'View page permission needed';
 $string['nwiki'] = 'NWiki';
@@ -200,13 +213,13 @@ $string['pagename'] = 'Page name';
 $string['peerreview'] = 'Peer review';
 $string['pluginadministration'] = 'Social Wiki administration';
 $string['pluginname'] = 'Social Wiki';
-$string['popular']='Popular';
+$string['popular'] = 'Popular';
 $string['prettyprint'] = 'Printer-friendly version';
 $string['previewwarning'] = 'This is a preview. Changes have not been saved yet.';
-$string['rated']='You rated this page as a {$a}';
-$string['rating']='Rating';
+$string['rated'] = 'You rated this page as a {$a}';
+$string['rating'] = 'Rating';
 $string['ratingmode'] = 'Rating mode';
-$string['recommended']='Recommended Pages';
+$string['recommended'] = 'Recommended Pages';
 $string['reparsetimeout'] = 'Reparsing default timeout';
 $string['repeatedsection'] = 'Wiki error: Section name cannot be repeated \'{$a}\'';
 $string['restore'] = 'Restore';
@@ -222,25 +235,25 @@ $string['save'] = 'Save';
 $string['saving'] = 'Saving wiki page';
 $string['savingerror'] = 'Saving error';
 $string['searchcontent'] = 'Search in page content';
-$string['search_help']='There are 3 different search views:<br/>
+$string['search_help'] = 'There are 3 different search views:<br/>
         Tree View: displays the search results in a tree view to so the history of the page can easily be seen.<br/>
         List View: shows a list of pages ordered using your likes and the people you are following to order the pages<br/>
         Popular: orders the pages with the pages with more likes appearing at the top';
-$string['searchmenu']='Search views';
+$string['searchmenu'] = 'Search views';
 $string['searchresult'] = 'Search results:';
 $string['searchterms'] = 'Search terms';
 $string['search_socialwikis'] = 'Search Wiki';
 $string['special'] = 'Special';
-$string['style']='Select style for Social wiki activity';
+$string['style'] = 'Select style for Social wiki activity';
 $string['tableofcontents'] = 'Table of contents';
 $string['tableview'] = 'Table View';
 $string['tableview_help'] = 'Table view of all wiki pages';
 $string['tagsdeleted'] = 'Wiki tags have been deleted';
 $string['tagtitle'] = 'See the "{$a}" tag';
 $string['teacherrating'] = 'Teacher rating';
-$string['teacherpages']='Teacher\'s pages';
-$string['timesrating']='This page has been rated  {$a->c} times with an average of: {$a->s}';
-$string['tree']='Tree View';
+$string['teacherpages'] = 'Teacher\'s pages';
+$string['timesrating'] = 'This page has been rated  {$a->c} times with an average of: {$a->s}';
+$string['tree'] = 'Tree View';
 $string['updatedpages'] = "Updated pages";
 $string['updatedpages_help'] = "Recently updated wiki pages";
 $string['updatedwikipages'] = "Updated wiki pages";
@@ -257,7 +270,7 @@ $string['viewallhistory'] = 'View all history';
 $string['viewperpage'] = 'Show {$a} versions per page';
 $string['viewversion'] = 'Viewing page version #{$a}';
 $string['viewcurrent'] = 'Current version';
-$string['viewuserpages']='View User\'s Pages';
+$string['viewuserpages'] = 'View User\'s Pages';
 $string['socialwiki'] = 'Social Wiki';
 $string['wikiattachments'] = 'Wiki attachments';
 $string['wikiboldtext'] = 'Bold text';
@@ -302,28 +315,28 @@ $string['versions'] = 'Versions';
 $string['likes'] = "Likes";
 $string['views'] = "Views";
 $string['networkdistance'] = 'Social Distance';
-$string['contributors'] = 'Contributors'; 
+$string['contributors'] = 'Contributors';
 
 $string['popularity'] = 'Followers';
 $string['trust'] = 'Trust Score';
 $string['likesim'] = 'Like Similarity';
 $string['followsim'] = 'Follow Similarity';
-$string['favorite'] = "Favorited By";
+$string['favourite'] = "Favourited By";
 $string['name'] = "Name";
 $string['distance'] = "Social Distance";
 
-$string['nofollowers']= "You don't have any followers.";
-$string['nofollowedusers']= "You don't follow anybody.";
-$string['nofaves']= "You don't have any favorite pages.";
-$string['noallusers']= "No other users.";
-$string['noallpageversions']= "No page versions.";
-$string['nomypageversions']= "You haven't created any pages.";
-$string['nouserpageversions']= "This user has not created any pages.";
-$string['noalltopics']= "No pages.";
-$string['norecentlikes']= "You don't have any recent likes.";
-$string['nouserfaves']= "This user has no favorite pages.";
-$string['nonewpageversions']= "No new page versions.";
-$string['noversionsfollowed']= "No unseen page versions liked by the users you follow.";
+$string['nofollowers'] = "You don't have any followers.";
+$string['nofollowedusers'] = "You don't follow anybody.";
+$string['nofaves'] = "You don't have any favourite pages.";
+$string['noallusers'] = "No other users.";
+$string['noallpageversions'] = "No page versions.";
+$string['nomypageversions'] = "You haven't created any pages.";
+$string['nouserpageversions'] = "This user has not created any pages.";
+$string['noalltopics'] = "No pages.";
+$string['norecentlikes'] = "You don't have any recent likes.";
+$string['nouserfaves'] = "This user has no favourite pages.";
+$string['nonewpageversions'] = "No new page versions.";
+$string['noversionsfollowed'] = "No unseen page versions liked by the users you follow.";
 
-$string['nopagesfound']= "No Pages Found";
-$string['searchresultsfor']= 'Search results for';
+$string['nopagesfound'] = "No Pages Found";
+$string['searchresultsfor'] = 'Search results for';

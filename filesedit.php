@@ -21,7 +21,6 @@
  * @copyright 2011 Dongsheng Cai <dongsheng@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 require_once(dirname(dirname(dirname(__FILE__))) . '/config.php');
 require_once('lib.php');
 require_once('locallib.php');
@@ -29,25 +28,24 @@ require_once("$CFG->dirroot/mod/socialwiki/filesedit_form.php");
 require_once("$CFG->dirroot/repository/lib.php");
 
 $subwikiid = required_param('subwiki', PARAM_INT);
-// not being used for file management, we use it to generate navbar link
-//$pageid    = optional_param('pageid', 0, PARAM_INT);
+// Not being used for file management, we use it to generate navbar link.
 $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 
 if (!$subwiki = socialwiki_get_subwiki($subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
 
-// Checking wiki instance of that subwiki
+// Checking wiki instance of that subwiki.
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
 
-// Checking course module instance
+// Checking course module instance.
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
     print_error('invalidcoursemodule');
 }
 
-// Checking course instance
+// Checking course instance.
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 $context = context_module::instance($cm->id);
@@ -56,37 +54,41 @@ require_login($course, true, $cm);
 require_capability('mod/socialwiki:managefiles', $context);
 
 if (empty($returnurl)) {
-    if (!empty($_SERVER["HTTP_REFERER"])) {
-        $returnurl = $_SERVER["HTTP_REFERER"];
+    if (!empty(filter_input(INPUT_SERVER, 'HTTP_REFERER'))) {
+        $returnurl = filter_input(INPUT_SERVER, 'HTTP_REFERER');
     } else {
-        $returnurl = new moodle_url('/mod/socialwiki/files.php', array('swid'=>$subwiki->id));
+        $returnurl = new moodle_url('/mod/socialwiki/files.php', array('swid' => $subwiki->id));
     }
 }
 
 $title = get_string('editfiles', 'socialwiki');
 
 $struser = get_string('user');
-$url = new moodle_url('/mod/socialwiki/filesedit.php', array('subwiki'=>$subwiki->id));//, 'pageid'=>$pageid));
+$url = new moodle_url('/mod/socialwiki/filesedit.php', array('subwiki' => $subwiki->id));
 $PAGE->set_url($url);
 $PAGE->set_context($context);
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
-$PAGE->navbar->add(format_string(get_string('wikifiles', 'socialwiki')), $CFG->wwwroot . '/mod/socialwiki/files.php?swid=' . $subwikiid);
+$PAGE->navbar->add(format_string(get_string('wikifiles', 'socialwiki')), $CFG->wwwroot
+        . '/mod/socialwiki/files.php?swid=' . $subwikiid);
 $PAGE->navbar->add(format_string($title));
 
 $data = new stdClass();
 $data->returnurl = $returnurl;
 $data->subwikiid = $subwiki->id;
 $maxbytes = get_max_upload_file_size($CFG->maxbytes, $COURSE->maxbytes);
-$options = array('subdirs'=>0, 'maxbytes'=>$maxbytes, 'maxfiles'=>-1, 'accepted_types'=>'*', 'return_types'=>FILE_INTERNAL | FILE_REFERENCE);
-file_prepare_standard_filemanager($data, 'files', $options, $context, 'mod_socialwiki', 'attachments', $subwiki->id);
+$options = array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => -1,
+    'accepted_types' => '*', 'return_types' => FILE_INTERNAL | FILE_REFERENCE);
+file_prepare_standard_filemanager($data, 'files',
+        $options, $context, 'mod_socialwiki', 'attachments', $subwiki->id);
 
-$mform = new mod_socialwiki_filesedit_form(null, array('data'=>$data, 'options'=>$options));
+$mform = new mod_socialwiki_filesedit_form(null, array('data' => $data, 'options' => $options));
 
 if ($mform->is_cancelled()) {
     redirect($returnurl);
 } else if ($formdata = $mform->get_data()) {
-    $formdata = file_postupdate_standard_filemanager($formdata, 'files', $options, $context, 'mod_socialwiki', 'attachments', $subwiki->id);
+    $formdata = file_postupdate_standard_filemanager($formdata, 'files',
+            $options, $context, 'mod_socialwiki', 'attachments', $subwiki->id);
     redirect($returnurl);
 }
 

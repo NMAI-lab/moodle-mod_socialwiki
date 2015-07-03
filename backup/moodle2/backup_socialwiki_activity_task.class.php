@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -53,20 +52,20 @@ class backup_socialwiki_activity_task extends backup_activity_task {
      * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
      * @return string the content with the URLs encoded
      */
-    static public function encode_content_links($content) {
+    public static function encode_content_links($content) {
         global $CFG;
 
         $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of wikis
+        // Link to the list of wikis.
         $search = "/(" . $base . "\/mod\/socialwiki\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIINDEX*$2@$', $content);
 
-        // Link to wiki view by moduleid
+        // Link to wiki view by moduleid.
         $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIVIEWBYID*$2@$', $content);
 
-        // Link to wiki view by pageid
+        // Link to wiki view by pageid.
         $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?pageid\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIPAGEBYID*$2@$', $content);
 

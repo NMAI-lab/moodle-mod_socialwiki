@@ -8,17 +8,17 @@
 
  Moodle is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
 
  You should have received a copy of the GNU General Public License
- along with Moodle. If not, see <http://www.gnu.org/licenses/>.
-*/ /**
+ along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+*//**
  * Wiki module style sheet
  *
  * @package mod-wiki-2.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -32,7 +32,6 @@
 /*
  *Starting here are the styles included by the regular wiki
  */
-
 
 .socialwiki_contentbox {
     width: 80%;
@@ -348,69 +347,63 @@ a.socialwiki_edit_section {
     color: gray
 }
 
-.socialwikisearchresults{
+.socialwikisearchresults {
     padding-left: 50px;
     padding-top: 20px;
 }
 
-.socialwiki-diff-container {width:95%;margin:10px auto;}
+.socialwiki-diff-container {
+    width: 98%;
+    margin: 10px auto;}
 .socialwiki-diff-container .socialwiki-diff-leftside,
-.socialwiki-diff-container .socialwiki-diff-rightside {width:49.5%;margin:0;padding:0;float:left;}
-.socialwiki-diff-container .socialwiki-diff-rightside {margin-left:1%;}
+.socialwiki-diff-container .socialwiki-diff-rightside {
+    width: 49.5%;
+    margin: 0;
+    padding: 0;
+    float: left;
+}
+.socialwiki-diff-container .socialwiki-diff-rightside {
+    margin-left: 1%;
+}
 .socialwiki-diff-container .socialwiki-diff-heading,
-.socialwiki-diff-container .no-overflow {padding:10px;border:1px solid #DDD;}
-.socialwiki-diff-container .socialwiki-diff-rightside .socialwiki_diffversion {text-align:right;}
+.socialwiki-diff-container .no-overflow {
+    padding: 10px;
+    border: 1px solid #DDD;
+}
+.socialwiki-diff-container .socialwiki-diff-rightside .socialwiki_diffversion {
+    text-align: right;
+}
 
-.socialwikieditor-toolbar img{
+.socialwikieditor-toolbar img {
     width: 22px;
     height: 22px;
     vertical-align: middle;
 }
 
-.socialwiki_username
-{
-    margin-left:10px;
+.socialwiki_username {
+    margin-left: 10px;
 }
 
-.socialwiki_followlist
-{
-    text-align:left;
+.socialwiki_followlist {
+    text-align: left;
 }
 
-.socialwiki_treebox
-{
-    margin-left:5px;
-    display:inline-block;
-    border-color:black;
-    border-width:1px;
-    border-style:solid;
-    margin-bottom:0px;
-    padding:10px;
+.socialwiki_treebox {
+    margin-left: 5px;
+    display: inline-block;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    margin-bottom: 0px;
+    padding: 10px;
 }
 
-#firstpagecontainer{
-    text-align:right;
-    margin-right:10%;
-}
-.socialwiki_diffbutton
-{
-    text-align:center;
+.socialwiki_diffbutton {
+    text-align: center;
 }
 
-.slidecontainer
-{
-    display:inline-block;
-    margin:25px;
-    width:20px;
-}
-
-.peer_table
-{
-    text-align:center;
-    margin: 5px 15px;
-}
-
-.peerinfo
-{
-    display:inline-block;
+.slidecontainer {
+    display: inline-block;
+    margin: 25px;
+    width: 20px;
 }

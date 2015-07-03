@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -9,11 +8,11 @@
 //
 // Moodle is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Library of functions and constants for module wiki
@@ -22,8 +21,8 @@
  * that are mandatory to develop a module.
  *
  * @package mod-wiki-2.0
- * @copyrigth 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyrigth 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
  * @author Jordi Piguillem
  * @author Marc Alier
@@ -47,7 +46,7 @@ function socialwiki_add_instance($wiki) {
     global $DB;
 
     $wiki->timemodified = time();
-    # May have to add extra stuff in here #
+    // May have to add extra stuff in here.
     if (empty($wiki->forceformat)) {
         $wiki->forceformat = 0;
     }
@@ -70,9 +69,7 @@ function socialwiki_update_instance($wiki) {
     if (empty($wiki->forceformat)) {
         $wiki->forceformat = 0;
     }
-
-    # May have to add extra stuff in here #
-
+    // May have to add extra stuff in here.
     return $DB->update_record('socialwiki', $wiki);
 }
 
@@ -93,53 +90,42 @@ function socialwiki_delete_instance($id) {
 
     $result = true;
 
-    # Get subwiki information #
+    // Get subwiki information.
     $subwikis = $DB->get_records('socialwiki_subwikis', array('wikiid' => $wiki->id));
 
     foreach ($subwikis as $subwiki) {
-        # Get existing links, and delete them #
-        if (!$DB->delete_records('socialwiki_links', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
-            $result = false;
-        }
-
-        # Get likes and delete them #
+        // Get likes and delete them.
         if (!$DB->delete_records('socialwiki_likes', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
             $result = false;
         }
 
-        # Get follows and delete them #
+        // Get follows and delete them.
         if (!$DB->delete_records('socialwiki_follows', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
             $result = false;
         }
 
-
-        # Get existing pages #
+        // Get existing pages.
         if ($pages = $DB->get_records('socialwiki_pages', array('subwikiid' => $subwiki->id))) {
             foreach ($pages as $page) {
-                # Get versions, and delete them #
+                // Get versions, and delete them.
                 if (!$DB->delete_records('socialwiki_versions', array('pageid' => $page->id), IGNORE_MISSING)) {
                     $result = false;
                 }
             }
 
-            # Delete pages #
+            // Delete pages.
             if (!$DB->delete_records('socialwiki_pages', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
                 $result = false;
             }
         }
 
-        # Get existing synonyms, and delete them #
-        if (!$DB->delete_records('socialwiki_synonyms', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
-            $result = false;
-        }
-
-        # Delete any subwikis #
+        // Delete any subwikis.
         if (!$DB->delete_records('socialwiki_subwikis', array('id' => $subwiki->id), IGNORE_MISSING)) {
             $result = false;
         }
     }
 
-    # Delete any dependent records here #
+    // Delete any dependent records here.
     if (!$DB->delete_records('socialwiki', array('id' => $wiki->id))) {
         $result = false;
     }
@@ -155,14 +141,14 @@ function socialwiki_reset_userdata($data) {
     $componentstr = get_string('modulenameplural', 'socialwiki');
     $status = array();
 
-    //get the wiki(s) in this course.
+    // Get the wiki(s) in this course.
     if (!$wikis = $DB->get_records('socialwiki', array('course' => $data->courseid))) {
         return false;
     }
     $errors = false;
     foreach ($wikis as $wiki) {
 
-        // remove all comments
+        // Remove all comments.
         if (!empty($data->reset_socialwiki_comments)) {
             if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
                 continue;
@@ -173,7 +159,7 @@ function socialwiki_reset_userdata($data) {
         }
 
         if (!empty($data->reset_wiki_tags)) {
-            # Get subwiki information #
+            // Get subwiki information.
             $subwikis = $DB->get_records('socialwiki_subwikis', array('wikiid' => $wiki->id));
 
             foreach ($subwikis as $subwiki) {
@@ -183,7 +169,8 @@ function socialwiki_reset_userdata($data) {
                         foreach ($tags as $tagid => $tagname) {
                             // Delete the related tag_instances related to the wiki page.
                             $errors = tag_delete_instance('socialwiki_pages', $page->id, $tagid);
-                            $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'socialwiki'), 'error' => $errors);
+                            $status[] = array('component' => $componentstr,
+                                'item' => get_string('tagsdeleted', 'socialwiki'), 'error' => $errors);
                         }
                     }
                 }
@@ -210,7 +197,7 @@ function socialwiki_reset_course_form_definition(&$mform) {
  * @todo Finish documenting this function
  * */
 function socialwiki_user_outline($course, $user, $mod, $wiki) {
-    $return = NULL;
+    $return = null;
     return $return;
 }
 
@@ -261,7 +248,6 @@ function socialwiki_supports($feature) {
             return true;
         case FEATURE_SHOW_DESCRIPTION:
             return true;
-
         default:
             return null;
     }
@@ -301,7 +287,7 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
 
     foreach ($pages as $page) {
         if (!isset($modinfo->instances['socialwiki'][$page->wikiid])) {
-            // not visible
+            // Not visible.
             continue;
         }
         $cm = $modinfo->instances['socialwiki'][$page->wikiid];
@@ -318,14 +304,14 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
 
         if ($groupmode) {
             if ($groupmode == SEPARATEGROUPS and ! has_capability('mod/socialwiki:managewiki', $context)) {
-                // separate mode
+                // Separate mode.
                 if (isguestuser()) {
-                    // shortcut
+                    // Shortcut.
                     continue;
                 }
 
                 if (is_null($modinfo->groups)) {
-                    $modinfo->groups = groups_get_user_groups($course->id); // load all my groups and cache it in modinfo
+                    $modinfo->groups = groups_get_user_groups($course->id); // Load all my groups and cache it in modinfo.
                 }
 
                 if (!in_array($page->groupid, $modinfo->groups[0])) {
@@ -347,7 +333,7 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
         print_recent_activity_note($wiki->timemodified, $wiki, $cm->name, $link, false, $viewfullnames);
     }
 
-    return true; //  True if anything was printed, otherwise false
+    return true; // True if anything was printed, otherwise false.
 }
 
 /**
@@ -360,8 +346,6 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
  * @todo Finish documenting this function
  * */
 function socialwiki_cron() {
-    global $CFG;
-
     return true;
 }
 
@@ -380,48 +364,6 @@ function socialwiki_cron() {
  * */
 function socialwiki_grades($wikiid) {
     return null;
-}
-
-/**
- * This function returns if a scale is being used by one wiki
- * it it has support for grading and scales. Commented code should be
- * modified if necessary. See forum, glossary or journal modules
- * as reference.
- *
- * @param int $wikiid ID of an instance of this module
- * @return mixed
- * @todo Finish documenting this function
- * */
-function socialwiki_scale_used($wikiid, $scaleid) {
-    $return = false;
-
-    //$rec = get_record("wiki","id","$wikiid","scale","-$scaleid");
-    //
-    //if (!empty($rec)  && !empty($scaleid)) {
-    //    $return = true;
-    //}
-
-    return $return;
-}
-
-/**
- * Checks if scale is being used by any instance of wiki.
- * This function was added in 1.9
- *
- * This is used to find out if scale used anywhere
- * @param $scaleid int
- * @return boolean True if the scale is used by any wiki
- */
-function socialwiki_scale_used_anywhere($scaleid) {
-    global $DB;
-
-    //if ($scaleid and $DB->record_exists('socialwiki', array('grade' => -$scaleid))) {
-    //    return true;
-    //} else {
-    //    return false;
-    //}
-
-    return false;
 }
 
 /**
@@ -475,14 +417,15 @@ function socialwiki_pluginfile($course, $cm, $context, $filearea, $args, $forced
 }
 
 function socialwiki_search_form($cm, $search = '') {
-    global $CFG, $OUTPUT;
+    global $CFG;
 
     $output = '<div class="socialwikisearch">';
     $output .= '<form method="post" action="' . $CFG->wwwroot . '/mod/socialwiki/search.php" style="display:inline">';
     $output .= '<fieldset class="invisiblefieldset">';
     $output .= '<legend class="accesshide">' . get_string('search_socialwikis', 'socialwiki') . '</legend>';
     $output .= '<label class="accesshide" for="search_socialwiki">' . get_string("searchterms", "socialwiki") . '</label>';
-    $output .= '<input id="search_socialwiki" name="searchstring" type="text" size="18" value="' . s($search, true) . '" alt="search" />';
+    $output .= '<input id="search_socialwiki" name="searchstring" type="text" size="18" value="';
+    $output .= s($search, true) . '" alt="search" />';
     $output .= '<input name="courseid" type="hidden" value="' . $cm->course . '" />';
     $output .= '<input name="cmid" type="hidden" value="' . $cm->id . '" />';
     $output .= '<input name="search_social_content" type="hidden" value="1" />';
@@ -514,7 +457,7 @@ function socialwiki_get_extra_capabilities() {
  * @package  mod_wiki
  * @category comment
  *
- * @param stdClass $comment_param {
+ * @param stdClass $commentparam {
  *              context  => context the context object
  *              courseid => int course id
  *              cm       => stdClass course module object
@@ -523,14 +466,14 @@ function socialwiki_get_extra_capabilities() {
  * }
  * @return array
  */
-function socialwiki_comment_permissions($comment_param) {
+function socialwiki_comment_permissions($commentparam) {
     return array('post' => true, 'view' => true);
 }
 
 /**
  * Validate comment parameter before perform other comments actions
  *
- * @param stdClass $comment_param {
+ * @param stdClass $commentparam {
  *              context  => context the context object
  *              courseid => int course id
  *              cm       => stdClass course module object
@@ -543,21 +486,21 @@ function socialwiki_comment_permissions($comment_param) {
  *
  * @return boolean
  */
-function socialwiki_comment_validate($comment_param) {
+function socialwiki_comment_validate($commentparam) {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-    // validate comment area
-    if ($comment_param->commentarea != 'socialwiki_page') {
+    // Validate comment area.
+    if ($commentparam->commentarea != 'socialwiki_page') {
         throw new comment_exception('invalidcommentarea');
     }
-    // validate itemid
-    if (!$record = $DB->get_record('socialwiki_pages', array('id' => $comment_param->itemid))) {
+    // Validate itemid.
+    if (!$record = $DB->get_record('socialwiki_pages', array('id' => $commentparam->itemid))) {
         throw new comment_exception('invalidcommentitemid');
     }
     if (!$subwiki = socialwiki_get_subwiki($record->subwikiid)) {
         throw new comment_exception('invalidsubwikiid');
     }
-    if (!$wiki = socialwiki_get_wiki_from_pageid($comment_param->itemid)) {
+    if (!$wiki = socialwiki_get_wiki_from_pageid($commentparam->itemid)) {
         throw new comment_exception('invalidid', 'data');
     }
     if (!$course = $DB->get_record('course', array('id' => $wiki->course))) {
@@ -567,7 +510,7 @@ function socialwiki_comment_validate($comment_param) {
         throw new comment_exception('invalidcoursemodule');
     }
     $context = context_module::instance($cm->id);
-    // group access
+    // Group access.
     if ($subwiki->groupid) {
         $groupmode = groups_get_activity_groupmode($cm, $course);
         if ($groupmode == SEPARATEGROUPS and ! has_capability('moodle/site:accessallgroups', $context)) {
@@ -576,20 +519,20 @@ function socialwiki_comment_validate($comment_param) {
             }
         }
     }
-    // validate context id
-    if ($context->id != $comment_param->context->id) {
+    // Validate context id.
+    if ($context->id != $commentparam->context->id) {
         throw new comment_exception('invalidcontext');
     }
-    // validation for comment deletion
-    if (!empty($comment_param->commentid)) {
-        if ($comment = $DB->get_record('comments', array('id' => $comment_param->commentid))) {
+    // Validation for comment deletion.
+    if (!empty($commentparam->commentid)) {
+        if ($comment = $DB->get_record('comments', array('id' => $commentparam->commentid))) {
             if ($comment->commentarea != 'socialwiki_page') {
                 throw new comment_exception('invalidcommentarea');
             }
             if ($comment->contextid != $context->id) {
                 throw new comment_exception('invalidcontext');
             }
-            if ($comment->itemid != $comment_param->itemid) {
+            if ($comment->itemid != $commentparam->itemid) {
                 throw new comment_exception('invalidcommentitemid');
             }
         } else {
@@ -606,12 +549,12 @@ function socialwiki_comment_validate($comment_param) {
  * @param stdClass $currentcontext Current context of block
  */
 function socialwiki_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array(
+    $modulepagetype = array(
         'mod-socialwiki-*' => get_string('page-mod-socialwiki-x', 'socialwiki'),
         'mod-socialwiki-view' => get_string('page-mod-socialwiki-view', 'socialwiki'),
         'mod-socialwiki-comments' => get_string('page-mod-socialwiki-comments', 'socialwiki'),
         'mod-socialwiki-history' => get_string('page-mod-socialwiki-history', 'socialwiki'),
         'mod-socialwiki-manage' => get_string('page-mod-socialwiki-manage', 'socialwiki')
     );
-    return $module_pagetype;
+    return $modulepagetype;
 }
