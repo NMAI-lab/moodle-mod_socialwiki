@@ -17,7 +17,7 @@
 /**
  * Unit tests for the wiki parser
  *
- * @package   mod_wiki
+ * @package   mod_socialwiki
  * @category  phpunit
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu

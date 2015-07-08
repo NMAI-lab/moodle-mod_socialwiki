@@ -25,7 +25,7 @@
  * to perform all the necessary actions to upgrade
  * your older installation to the current version.
  *
- * @package mod-socialwiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -34,53 +34,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */
+
+/**
+ * SocialWiki upgrade function.
+ *
+ * @param int $oldversion The old version.
+ * @return true
+ */
 function xmldb_socialwiki_upgrade($oldversion) {
     global $DB;
 
     $dbman = $DB->get_manager();
 
-    // Moodle v2.2.0 release upgrade line.
-    // Put any upgrade step following this.
-    // Moodle v2.3.0 release upgrade line.
-    // Put any upgrade step following this.
-    // Moodle v2.4.0 release upgrade line.
-    // Put any upgrade step following this.
-    // Moodle v2.5.0 release upgrade line.
-    // Put any upgrade step following this.
-    if ($oldversion < 2013071001) {
-
-        // Define field subwikiid to be added to socialwiki_likes.
-        $table = new xmldb_table('socialwiki_likes');
-        $field = new xmldb_field('subwikiid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'pageid');
-        $field2 = new xmldb_field('subwikiid', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'usertoid');
-        $table2 = new xmldb_table('socialwiki_follows');
-
-        // Conditionally launch add field subwikiid.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        if (!$dbman->field_exists($table2, $field2)) {
-            $dbman->add_field($table2, $field2);
-        }
-        // Socialwiki savepoint reached.
-        upgrade_mod_savepoint(true, 2013071001, 'socialwiki');
-    }
-    if ($oldversion < 2013071600) {
-
-        // Define field style to be added to socialwiki.
-        $table = new xmldb_table('socialwiki');
-        $field = new xmldb_field('style', XMLDB_TYPE_CHAR, '255', null, null, null, 'classic', 'editend');
-
-        // Conditionally launch add field style.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Socialwiki savepoint reached.
-        upgrade_mod_savepoint(true, 2013071600, 'socialwiki');
-    }
-
+    // Add user views table.
     $revision = 2014021100;
     if ($oldversion < $revision) {
         $table = new xmldb_table('socialwiki_user_views');
@@ -99,8 +65,28 @@ function xmldb_socialwiki_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        // Socialwiki savepoint reached.
-        upgrade_mod_savepoint(true, $revision, 'socialwiki');
+        upgrade_mod_savepoint(true, $revision, 'socialwiki'); // Socialwiki savepoint reached.
+    }
+
+    // Remove locks, synonyms and links tables.
+    $revision = 2015070100;
+    if ($oldversion < 2015070100) {
+        $table = new xmldb_table('socialwiki_locks');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        $table = new xmldb_table('socialwiki_synonyms');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        $table = new xmldb_table('socialwiki_links');
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        upgrade_mod_savepoint(true, 2015070100, 'socialwiki'); // Socialwiki savepoint reached.
     }
 
     return true;

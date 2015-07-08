@@ -20,7 +20,7 @@
  * @author Josep Arús
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package socialwiki
+ * @package mod_socialwiki
  */
 require_once("wikimarkup.php");
 
@@ -171,7 +171,7 @@ class creole_parser extends socialwiki_markup_parser {
      * Escape token when it is "negated"
      */
     private function escapetoken_string(&$text, $token) {
-        $text = str_replace("~" . $token, $this->protect($token), $text);
+        $text = str_replace("~$token", $this->protect($token), $text);
     }
 
     /**

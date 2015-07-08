@@ -21,7 +21,7 @@
  * If user have wiki:managewiki ability then only this page will show delete
  * options
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2011 Rajesh Taneja
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -64,7 +64,7 @@ if (!empty($delete) && confirm_sesskey()) {
     // When current wiki page is deleted, then redirect user to create that page, as
     // current pageid is invalid after deletion.
     if ($pageid == $delete) {
-        $params = array('id' => $page->subwikiid);
+        $params = array('id' => $cm->id);
         $url = new moodle_url('/mod/socialwiki/home.php', $params);
         redirect($url);
     }

@@ -14,33 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The user table for showing the wiki users.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * User Table Class.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class usertable extends socialwiki_table {
 
-    public function __construct($uid, $swid, $ids, $headers) {
-        parent::__construct($uid, $swid, $headers);
+    /**
+     * Create a topic table.
+     * 
+     * @param int $uid The current uid (userid).
+     * @param int $swid The current subwikiid.
+     * @param array $ids The list of user ID's.
+     * @param string $type Table header options.
+     */
+    public function __construct($uid, $swid, $ids, $type) {
+        parent::__construct($uid, $swid, $type);
         $this->userlist = $ids;
     }
 
-    /*
-     * Template to create a table using a select/project (select A where B):
-     * 1: use a specific DB access function to retrieve a subset of the users,
-     *    it may be a superset of what we ultimately want.
-     *    Examples:
-     * 	  - get all users
-     * 	  - get followers of some user
-     *
-     * 2: refine select condition by applying a filter
-     *
-     * 3: project by passing a subset of the headers with the make_table method.
-     *    Examples:
-     *    (all headers)
-     *    $h = array("name", "distance","popularity", "likesim", "followsim");
-     *    (just name and popularity)
-     *    $h = array("name", popularity");
-     */
-
     /**
-     * returns all users except 'me'
+     * Generate a table of all the users other than 'me'.
+     * 
+     * @param int $me The current user's ID.
+     * @param int $swid The current subwiki ID.
+     * @return \usertable
      */
     public static function all_usertable($me, $swid) {
         $uids = socialwiki_get_active_subwiki_users($swid);
@@ -52,7 +61,11 @@ class usertable extends socialwiki_table {
     }
 
     /**
-     * returns a usertable with all users I follow
+     * Generate a table of who the current user follows.
+     * 
+     * @param int $uid The current user's ID.
+     * @param int $swid The current subwiki ID.
+     * @return \usertable
      */
     public static function followed_usertable($uid, $swid) {
         $uids = socialwiki_get_follows($uid, $swid);
@@ -65,7 +78,11 @@ class usertable extends socialwiki_table {
     }
 
     /**
-     * returns a usertable with all my followers
+     * Generate a table of users that follow the current user.
+     * 
+     * @param int $uid The current user's ID.
+     * @param int $swid The current subwiki ID.
+     * @return \usertable
      */
     public static function followers_usertable($uid, $swid) {
         $ids = socialwiki_get_follower_users($uid, $swid);
@@ -76,11 +93,9 @@ class usertable extends socialwiki_table {
     }
 
     /**
-     * build the table data structure as an array of rows, each row being a head=>value pair
-     * the rows are cxonstructed from the given user ids
-     * the heads are taken from the given headers list
-     * @param $ids a list of user ids
-     * @param $headers an array of strings among: "name", "distance", "popularity", "likesim", "followsim"
+     * Build the table data structure.
+     * 
+     * @return array $table Each row being an array of head=>value pairs
      */
     public function get_table_data() {
         Global $CFG;
@@ -96,7 +111,7 @@ class usertable extends socialwiki_table {
             $user = socialwiki_get_user_info($id);
             $name = "<a style='margin:0;' class='socialwiki_link' href='"
                     . $www . "/mod/socialwiki/viewuserpages.php?userid="
-                    . $user->id . "&subwikiid=" . $swid . "'>" . fullname($user) . "</a>";
+                    . $user->id . "&subwikiid=$swid'>" . fullname($user) . "</a>";
 
             $peer = peer::socialwiki_get_peer($id, $swid, $me);
             switch ($peer->depth) {
@@ -115,11 +130,11 @@ class usertable extends socialwiki_table {
             }
 
             $rowdata = array(
-                get_string('name', 'socialwiki') => $name,
-                get_string('popularity', 'socialwiki') => $peer->popularity,
-                get_string('likesim', 'socialwiki') => substr("$peer->likesim", 0, 4),
-                get_string('followsim', 'socialwiki') => substr("$peer->followsim", 0, 4),
-                get_string('networkdistance', 'socialwiki') => $following
+                'name' => $name,
+                'popularity' => $peer->popularity,
+                'likesim' => substr("$peer->likesim", 0, 4),
+                'followsim' => substr("$peer->followsim", 0, 4),
+                'networkdistance' => $following
             );
 
             foreach ($headers as $key) {

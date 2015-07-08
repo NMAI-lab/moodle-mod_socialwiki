@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod-wiki
+ * @package mod_socialwiki
  * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -66,7 +66,7 @@ if ($exact != 0) { // Exact match on page title.
     $wikipage->set_search_string($search, $searchcontent, false);
 }
 
-$wikipage->set_title(get_string('searchresultsfor', 'socialwiki') . ": " . $search);
+$wikipage->set_title(get_string('searchresultsfor', 'socialwiki') . ": $search");
 
 $wikipage->print_header();
 

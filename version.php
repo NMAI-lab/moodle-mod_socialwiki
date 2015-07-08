@@ -18,7 +18,7 @@
  * Code fragment to define the version of socialwiki
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
- * @package    mod-socialwiki-1.0
+ * @package    mod_socialwiki
  * @copyright  2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright  2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -32,7 +32,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$module->version = 2014020800;          // The current module version (Date: YYYYMMDDXX).
-$module->requires = 2010031900;         // Requires this Moodle version.
-$module->component = 'mod_socialwiki';  // Full name of the plugin (used for diagnostics).
-$module->cron = 0;
+$module->version   = 2015070600;       // The current module version (Date: YYYYMMDDXX).
+$module->requires  = 2013100100;       // Requires Moodle version 2.6.
+$module->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
+$plugin->maturity  = MATURITY_STABLE;
+$plugin->release   = '1.0.0';
+$module->cron      = 0;

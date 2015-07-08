@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to get a printable version of a socialwiki page
  *
- * @package mod-socialwiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *

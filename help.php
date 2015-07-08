@@ -44,7 +44,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 
 $url = new moodle_url('/mod/socialwiki/help.php?id=' . $cm->id);
 $PAGE->set_url($url);
-$PAGE->requires->css(new moodle_url("/mod/socialwiki/" . $wiki->style . "_style.css"));
+$PAGE->requires->css(new moodle_url("/mod/socialwiki/{$wiki->style}_style.css"));
 $PAGE->set_context($context);
 $PAGE->set_cm($cm);
 

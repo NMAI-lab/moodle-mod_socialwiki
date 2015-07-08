@@ -17,7 +17,7 @@
 /**
  * This page lists all the instances of wiki in a particular course
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -43,7 +43,7 @@ require_login($course, true);
 $PAGE->set_pagelayout('incourse');
 $context = context_course::instance($course->id);
 
-add_to_log($course->id, 'socialwiki', 'view', "index.php?id=" . $id, "");
+add_to_log($course->id, 'socialwiki', 'view', "index.php?id=$id", "");
 
 // Get all required stringswiki.
 $strwikis = get_string("modulenameplural", "socialwiki");

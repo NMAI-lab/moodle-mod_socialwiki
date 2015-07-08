@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view the navigation tab
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -84,7 +84,7 @@ require_login($course, true, $cm);
 require_capability('mod/socialwiki:viewpage', $context);
 
 $wikipage = new page_socialwiki_home($wiki, $subwiki, $cm);
-add_to_log($course->id, "socialwiki", "home", "home.php?id=" . $cm->id, $cm->id);
+add_to_log($course->id, "socialwiki", "home", "home.php?id=$cm->id", $cm->id);
 
 // Print page header.
 $wikipage->set_tab($tab);

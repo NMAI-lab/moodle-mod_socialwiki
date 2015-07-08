@@ -17,7 +17,7 @@
 /**
  * Defines backup_wiki_activity_task class
  *
- * @package     mod_wiki
+ * @package     mod_socialwiki
  * @category    backup
  * @copyright   2010 Jordi Piguillem <pigui0@hotmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -55,18 +55,18 @@ class backup_socialwiki_activity_task extends backup_activity_task {
     public static function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote($CFG->wwwroot, "/");
+        $base = preg_quote("$CFG->wwwroot/");
 
         // Link to the list of wikis.
-        $search = "/(" . $base . "\/mod\/socialwiki\/index.php\?id\=)([0-9]+)/";
+        $search = "/($base\/mod\/socialwiki\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIINDEX*$2@$', $content);
 
         // Link to wiki view by moduleid.
-        $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?id\=)([0-9]+)/";
+        $search = "/($base\/mod\/socialwiki\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIVIEWBYID*$2@$', $content);
 
         // Link to wiki view by pageid.
-        $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?pageid\=)([0-9]+)/";
+        $search = "/($base\/mod\/socialwiki\/view.php\?pageid\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIPAGEBYID*$2@$', $content);
 
         return $content;

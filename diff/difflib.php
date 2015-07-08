@@ -19,7 +19,7 @@
  * @copyright &copy; 2007 The Open University
  * @author s.marshall@open.ac.uk
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package ouwiki
+ * @package mod_socialwiki
  */
 
 /**

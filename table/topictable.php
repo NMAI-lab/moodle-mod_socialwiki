@@ -14,15 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The topic table for page groups.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * Topic Table Class.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class topictable extends socialwiki_table {
 
+    /**
+     * The list of topics.
+     * 
+     * @var array
+     */
     private $tlist;
 
-    public function __construct($uid, $swid, $list, $headers) {
-        parent::__construct($uid, $swid, $headers);
+    /**
+     * Create a topic table.
+     * 
+     * @param int $uid The current uid (userid).
+     * @param int $swid The current subwikiid.
+     * @param list $list Description
+     * @param string $type Table header options.
+     */
+    public function __construct($uid, $swid, $list, $type) {
+        parent::__construct($uid, $swid, $type);
         $this->tlist = $list;
     }
 
+    /**
+     * Generate an all topics table.
+     * 
+     * @param int $uid The user ID.
+     * @param int $swid The subwiki ID.
+     * @return \topictable
+     */
     public static function all_topictable($uid, $swid) {
         $topics = socialwiki_get_topics($swid);
 
@@ -33,6 +68,11 @@ class topictable extends socialwiki_table {
         return new topictable($uid, $swid, $topics, 'topics');
     }
 
+    /**
+     * Build the table data structure.
+     * 
+     * @return array $table Each row being an array of head=>value pairs
+     */
     protected function get_table_data() {
         Global $COURSE, $PAGE;
 
@@ -44,10 +84,10 @@ class topictable extends socialwiki_table {
                     . '&exact=1&option=1">' . $title . '</a>';
 
             $row = array(
-                get_string('title', 'socialwiki') => $titlelink,
-                get_string('versions', 'socialwiki') => $data["Versions"],
-                get_string('views', 'socialwiki') => $data["Views"],
-                get_string('likes', 'socialwiki') => $data["Likes"],
+                'title' => $titlelink,
+                'versions' => $data["Versions"],
+                'views' => $data["Views"],
+                'likes' => $data["Likes"],
             );
 
             $table[] = $row; // Add row to table.

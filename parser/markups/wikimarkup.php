@@ -20,7 +20,7 @@
  * @author Josep Arús
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package socialwiki
+ * @package mod_socialwiki
  */
 abstract class socialwiki_markup_parser extends socialgeneric_parser {
 
@@ -261,7 +261,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
             $list[] = array(strlen($li[1]), $text, $type);
         }
         $type = $list[0][2];
-        return "<$type>" . "\n" . $this->generate_list($list) . "\n" . "</$type>" . "\n";
+        return "<$type>" . "\n" . $this->generate_list($list) . "\n</$type>\n";
     }
 
     /**
@@ -286,22 +286,22 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
             } else if ($nextdepth > $currentdepth) {
                 $nextdepth = $currentdepth + 1;
 
-                $list .= "<li>" . $text . "\n";
-                $list .= "<" . $nli[2] . ">" . "\n";
+                $list .= "<li>$text\n";
+                $list .= "<$nli[2]>\n";
                 $liststack[] = $nli[2];
             } else {
                 $list .= socialparser_utils::h('li', $text) . "\n";
 
                 for ($lv = $nextdepth; $lv < $currentdepth; $lv++) {
                     $type = array_pop($liststack);
-                    $list .= "</$type>" . "\n" . "</li>" . "\n";
+                    $list .= "</$type>\n</li>\n";
                 }
             }
         }
 
         for ($lv = 1; $lv < $currentdepth; $lv++) {
             $type = array_pop($liststack);
-            $list .= "</$type>" . "\n" . "</li>" . "\n";
+            $list .= "</$type>\n</li>\n";
         }
 
         return $list;
@@ -316,8 +316,8 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
 
     protected function format_image($src, $alt, $caption = "", $align = 'left') {
         $src = $this->real_path($src);
-        return socialparser_utils::h('div', socialparser_utils::h('p', $caption) . '<img src="' . $src . '" alt="' . $alt . '" />',
-                array('class' => 'socialwiki_image_' . $align));
+        return socialparser_utils::h('div', socialparser_utils::h('p', $caption) . "<img src='$src' alt='$alt' />",
+                array('class' => "socialwiki_image_$align"));
     }
 
     protected function real_path($url) {

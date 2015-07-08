@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to define a wiki file table form element
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -106,7 +106,7 @@ class moodlequickform_socialwikifiletable extends HTML_QuickForm_element {
                 // Actions.
                 $icon = file_file_icon($file);
                 $fileurl = file_encode_url($CFG->wwwroot . '/pluginfile.php',
-                        "/{$this->_contextid}/mod_socialwiki/attachments/{$this->_fileareaitemid}/" . $file->get_filename());
+                        "/$this->_contextid/mod_socialwiki/attachments/{$this->_fileareaitemid}/" . $file->get_filename());
 
                 $actionicons = "";
                 if (!empty($tags['attach'])) {

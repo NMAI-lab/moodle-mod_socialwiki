@@ -92,23 +92,23 @@ table.datatable td {
  * DataTables sorting
  */
 .sorting_asc {
-    background: url('../img/sort_asc.png') no-repeat center right;
+    background: url('../pix/table/sort_asc.png') no-repeat center right;
 }
 
 .sorting_desc {
-    background: url('../img/sort_desc.png') no-repeat center right;
+    background: url('../pix/table/sort_desc.png') no-repeat center right;
 }
 
 .sorting {
-    background: url('../img/sort_both.png') no-repeat center right;
+    background: url('../pix/table/sort_both.png') no-repeat center right;
 }
 
 .sorting_asc_disabled {
-    background: url('../img/sort_asc_disabled.png') no-repeat center right;
+    background: url('../pix/table/sort_asc_disabled.png') no-repeat center right;
 }
 
 .sorting_desc_disabled {
-    background: url('../img/sort_desc_disabled.png') no-repeat center right;
+    background: url('../pix/table/sort_desc_disabled.png') no-repeat center right;
 }
 
 table.datatable thead th:active,

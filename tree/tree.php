@@ -14,20 +14,76 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-class socialwiki_node {
+/**
+ * The SocialWiki Tree.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-    // The page ID.
+/**
+ * SocialWiki Node Class.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class socialwiki_node {
+    /**
+     * The page ID.
+     * 
+     * @var int
+     */
     public $id;
+    
+    /**
+     * The subwiki ID.
+     * 
+     * @var int
+     */
     public $swid;
-    // Page title and authors name.
+    
+    /**
+     * Content showing page title and authors name.
+     * 
+     * @var string 
+     */
     public $content;
-    // An array of children nodes.
+    
+    /**
+     * An array of children nodes.
+     * 
+     * @var socialwiki_node[]
+     */
     public $children = array();
-    // The parents ID.
+    
+    /**
+     * The parent nodes ID.
+     * 
+     * @var int
+     */
     public $parent;
-    public $peerlist = array(); // Kludge: should be page property, not node property.
+    
+    /**
+     * A list of the peers that have liked the node's page.
+     * 
+     * @var sdtClass[] 
+     */
+    public $peerlist = array();
+    
+    /**
+     * A count of the number of likes the node's page has.
+     * 
+     * @var int
+     */
     public $trustvalue;
 
+    /**
+     * Create a new node.
+     * 
+     * @param stdClass $page
+     */
     public function __construct($page) {
         $this->id = 'l' . $page->id;
         $this->swid = $page->subwikiid;
@@ -40,30 +96,40 @@ class socialwiki_node {
         $this->set_content($page);
     }
 
+    /**
+     * Compute the trust using likes.
+     * 
+     * @param stdClass $page The node's page.
+     */
     private function compute_trust($page) {
         $this->peerlist = socialwiki_get_page_likes($page->id, $page->subwikiid);
         $this->trustvalue = count($this->peerlist); // Set default trust value to popularity.
     }
 
-    // Requires trust to be already computed (above)!
+    /**
+     * Set the content in the node.
+     * Requires trust to be already computed (above)!
+     * 
+     * @param stdClass $page The node's page.
+     */
     private function set_content($page) {
         Global $PAGE, $CFG, $OUTPUT;
-        $user = socialwiki_get_user_info($page->userid);
         // Buttons to minimize and collapse.
-        $this->content = html_writer::start_tag('span', array('id' => 'bgroup' . $this->id, 'class' => 'btngroup'));
-            $this->content .= html_writer::start_tag('img', array('title' => 'Minimize', 'id' => 'hid' . $this->id,
+        $this->content = html_writer::start_tag('span', array('id' => "bgroup$this->id", 'class' => 'btngroup'));
+            $this->content .= html_writer::start_tag('img', array('title' => 'Minimize', 'id' => "hid$this->id",
                 'src' => $OUTPUT->pix_url('t/less'), 'class' => 'hider', 'value' => $this->id));
             $this->content .= html_writer::end_tag('img');
-            $this->content .= html_writer::start_tag('img', array('title' => 'Collapse', 'id' => 'cop' . $this->id,
+            $this->content .= html_writer::start_tag('img', array('title' => 'Collapse', 'id' => "cop$this->id",
                 'src' => $OUTPUT->pix_url('t/up'), 'class' => 'collapser', 'value' => $this->id));
             $this->content .= html_writer::end_tag('img');
         $this->content .= html_writer::end_tag('span');
 
         // Title, user and date.
+        $user = socialwiki_get_user_info($page->userid);
         $this->content .= html_writer::start_tag('span', array('id' => 'content' . $this->id));
             $this->content .= html_writer::start_tag('span', array('class' => 'titletext'));
-            $this->content .= html_writer::link($CFG->wwwroot . '/mod/socialwiki/view.php?pageid='
-                    . $page->id, $page->title . ' ID: ' . $page->id, array('style' => 'padding:0px;'));
+            $this->content .= html_writer::link("$CFG->wwwroot/mod/socialwiki/view.php?pageid=$page->id",
+                    "$page->title ID: $page->id", array('style' => 'padding:0px;'));
             $this->content .= html_writer::end_tag('span');
             $userlink = mod_socialwiki_renderer::makeuserlink($user->id, $PAGE->cm->id, $page->subwikiid);
             $this->content .= html_writer::link($userlink->out(false), fullname($user))
@@ -71,14 +137,24 @@ class socialwiki_node {
         $this->content .= html_writer::end_tag('span');
     }
 
+    /**
+     * Adds a child node.
+     * 
+     * @param socialwiki_node $child The node to add as a child.
+     */
     public function add_child($child) {
         $this->children[] = $child;
     }
 
+    /**
+     * Print out the node as an HTML list and continue with the children.
+     * 
+     * @return string
+     */
     public function to_html_list() {
-        $branch = '<li><div class="tagcloud" rel="' . $this->trustvalue . '">' . $this->content . '</div>';
+        $branch = "<li><div class='tagcloud' rel='$this->trustvalue'>$this->content</div>";
         if (!empty($this->children)) {
-            $branch .= '<ul id="' . $this->id . '">';
+            $branch .= "<ul id='$this->id'>";
             foreach ($this->children as $child) {
                 $branch .= $child->to_html_list(); // Recursively display children.
             }
@@ -89,6 +165,11 @@ class socialwiki_node {
         return $branch;
     }
 
+    /**
+     * Builds up the peer list from children.
+     * 
+     * @return stdClass[]
+     */
     public function list_peers_rec() {
         $plist = $this->peerlist; // Arrays copied by value (a bit deeper than shallow copy!).
         foreach ($this->children as $child) {
@@ -96,14 +177,35 @@ class socialwiki_node {
         }
         return $plist;
     }
-
 }
 
+/**
+ * SocialWiki Tree Class.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class socialwiki_tree {
-    public $nodes = array(); // An array of socialwiki_nodes.
-    public $roots = array(); // All the nodes with no parent.
+    /**
+     * An array of socialwiki_nodes.
+     * 
+     * @var socialwiki_node[] 
+     */
+    public $nodes = array();
+    
+    /**
+     * All the nodes with no parent.
+     * 
+     * @var socialwiki_node[]
+     */
+    public $roots = array();
 
-    // Build an array of nodes.
+    /**
+     * Build an array of nodes.
+     * 
+     * @param stdClass[] $pages
+     */
     public function build_tree($pages) {
         foreach ($pages as $page) {
             $this->add_node($page);
@@ -111,12 +213,18 @@ class socialwiki_tree {
         $this->add_children();
     }
 
-    // Add a node to the nodes array.
+    /**
+     * Add a node to the nodes array.
+     * 
+     * @param stdClass $page The page to add as a node.
+     */
     public function add_node($page) {
         $this->nodes['l' . $page->id] = new socialwiki_node($page);
     }
 
-    // Add the children arrays to nodes.
+    /**
+     * Add the children arrays to nodes.
+     */
     public function add_children() {
         // If the array has a parent add it to the parents child array.
         foreach ($this->nodes as $node) {
@@ -136,6 +244,9 @@ class socialwiki_tree {
         }
     }
 
+    /**
+     * Display the full tree as an HTML list with a horizontal scroll
+     */
     public function display() {
         Global $USER;
         $treeul = '<div class="tree" id="doublescroll"><ul>'; // Doublescroll puts scrollbar on top and bottom.
@@ -156,7 +267,7 @@ class socialwiki_tree {
             $peerarray = peer::socialwiki_get_peer($p, $swid, $USER->id)->to_array();
             $peerinfo .= '<li>';
             foreach ($peerarray as $k => $v) {
-                $peerinfo .= '<' . $k . '>' . $v . '</' . $k . '>';
+                $peerinfo .= "<$k>$v</$k>";
             }
             $peerinfo .= '</li>';
         }

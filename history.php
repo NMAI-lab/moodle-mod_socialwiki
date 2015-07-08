@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view the history page
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -59,7 +59,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/socialwiki:viewpage', $context);
-add_to_log($course->id, 'socialwiki', 'history', "history.php?pageid=" . $pageid, $pageid, $cm->id);
+add_to_log($course->id, 'socialwiki', 'history', "history.php?pageid=$pageid", $pageid, $cm->id);
 
 // Print the page header.
 $wikipage = new page_socialwiki_history($wiki, $subwiki, $cm);

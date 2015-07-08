@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<libraries>
+    <library>
+        <location>table/jquery.dataTables.js</location>
+        <name>DataTables</name>
+        <version>1.10.8-dev</version>
+        <license>MIT</license>
+        <licenseversion></licenseversion>
+    </library>
+</libraries>

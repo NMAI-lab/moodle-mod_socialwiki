@@ -109,14 +109,14 @@ class wikidiffop_change extends wikidiffop {
  *
  * The algorithm used here is mostly lifted from the perl module
  * Algorithm::Diff (version 1.06) by Ned Konz, which is available at:
- * 	 http://www.perl.com/CPAN/authors/id/N/NE/NEDKONZ/Algorithm-Diff-1.06.zip
+ * http://www.perl.com/CPAN/authors/id/N/NE/NEDKONZ/Algorithm-Diff-1.06.zip
  *
  * More ideas are taken from:
- * 	 http://www.ics.uci.edu/~eppstein/161/960229.html
+ * http://www.ics.uci.edu/~eppstein/161/960229.html
  *
  * Some ideas are (and a bit of code) are from from analyze.c, from GNU
  * diffutils-2.7, which can be found at:
- * 	 ftp://gnudist.gnu.org/pub/gnu/diffutils/diffutils-2.7.tar.gz
+ * ftp://gnudist.gnu.org/pub/gnu/diffutils/diffutils-2.7.tar.gz
  *
  * closingly, some ideas (subdivision by NCHUNKS > 2, and some optimizations)
  * are my own.
@@ -226,7 +226,7 @@ class wikidiffengine {
      * [XOFF, XLIM) and [YOFF, YLIM) into NCHUNKS approximately equally
      * sized segments.
      *
-     * Returns (LCS, PTS).	LCS is the length of the LCS. PTS is an
+     * Returns (LCS, PTS). LCS is the length of the LCS. PTS is an
      * array of NCHUNKS+1 (X, Y) indexes giving the diving points between
      * sub sequences.  The first sub-sequence is contained in [X0, X1),
      * [Y0, Y1), the second in [X1, X2), [Y1, Y2) and so on.  Note
@@ -293,7 +293,7 @@ class wikidiffengine {
                     if ($y > $this->seq[$k - 1]) {
                         USE_ASSERTS_IN_WIKI && assert($y < $this->seq[$k]);
                         // Optimization: this is a common case:
-                        // 	next match is just replacing previous match.
+                        // next match is just replacing previous match.
                         $this->in_seq[$this->seq[$k]] = false;
                         $this->seq[$k] = $y;
                         $this->in_seq[$y] = 1;
@@ -539,7 +539,7 @@ class wikidiff {
      * Computes diff between sequences of strings.
      *
      * @param $fromlines array An array of strings.
-     * 		  (Typically these are lines from a file.)
+     * (Typically these are lines from a file.)
      * @param $tolines array An array of strings.
      */
     public function __construct($fromlines, $tolines) {
@@ -552,10 +552,9 @@ class wikidiff {
      *
      * SYNOPSIS:
      *
-     * 	$diff = new wikidiff($lines1, $lines2);
-     * 	$rev = $diff->reverse();
-     * @return object A wikidiff object representing the inverse of the
-     * 				  original diff.
+     * $diff = new wikidiff($lines1, $lines2);
+     * $rev = $diff->reverse();
+     * @return stdClass A wikidiff object representing the inverse of the original diff.
      */
     public function reverse() {
         $rev = $this;
@@ -685,18 +684,17 @@ class mappedwikidiff extends wikidiff {
      * changes in white-space.
      *
      * @param $fromlines array An array of strings.
-     * 	(Typically these are lines from a file.)
+     * (Typically these are lines from a file.)
      *
      * @param $tolines array An array of strings.
      *
      * @param $mappedfromlines array This array should
-     * 	have the same size number of elements as $fromlines.
-     * 	The elements in $mappedfromlines and
-     * 	$mappedtolines are what is actually compared
-     * 	when computing the diff.
+     * have the same size number of elements as $fromlines.
+     * The elements in $mappedfromlines and $mappedtolines 
+     * are what is actually compared when computing the diff.
      *
-     * @param $mappedtolines array This array should
-     * 	have the same number of elements as $tolines.
+     * @param $mappedtolines array This array should have
+     * the same number of elements as $tolines.
      */
     public function __construct($fromlines, $tolines, $mappedfromlines, $mappedtolines) {
 
@@ -882,8 +880,7 @@ class wikidiffformatter {
 }
 
 /**
- * 	Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
- *
+ * Additions by Axel Boldt follow, partly taken from diff.php, phpwiki-1.3.3
  */
 define('NBSP', '&#160;');   // Non-breaking space.
 
@@ -1058,8 +1055,7 @@ class tablewikidiffformatter extends wikidiffformatter {
 }
 
 /**
- * 	Wikipedia Table style diff formatter.
- *
+ * Wikipedia Table style diff formatter.
  */
 class tablewikidiffformatterold extends wikidiffformatter {
 

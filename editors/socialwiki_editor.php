@@ -21,7 +21,7 @@
  * @author Kenneth Riba
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package wiki
+ * @package mod_socialwiki
  *
  */
 
@@ -94,10 +94,9 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor, $version = -1,
 
     echo $OUTPUT->container_start('mdl-align');
     foreach ($wikieditor as $button) {
-        echo "<a href=\"javascript:insertTags";
-        echo "('" . $button[2] . "','" . $button[3] . "','" . $button[4] . "');\">";
+        echo "<a href=\"javascript:insertTags('$button[2]','$button[3]','$button[4]');\">";
         echo "<img width=\"23\" height=\"22\" src=\"$CFG->wwwroot/mod/socialwiki/editors/wiki/images/"
-        . "$button[0]\" alt=\"" . $button[1] . "\" title=\"" . $button[1] . "\" />";
+        . "$button[0]\" alt=\"$button[1]\" title=\"$button[1]\" />";
         echo "</a>";
     }
     echo $OUTPUT->container_end();

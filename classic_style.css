@@ -13,7 +13,6 @@
  You should have received a copy of the GNU General Public License
  along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 .socialwiki_label {
     display: inline;
     padding: .2em .6em .3em;
@@ -28,8 +27,7 @@
     border-radius: .25em;
 }
 
-.socialwiki_label[href]:hover,
-.socialwiki_label[href]:focus {
+.socialwiki_label[href]:hover, .socialwiki_label[href]:focus {
     background-color: #3071a9;
     text-decoration: none;
     cursor: pointer;
@@ -66,25 +64,24 @@
     list-style: none;
 }
 
-.socialwiki_wikicontent .nav-tabs > li {
+.socialwiki_wikicontent .nav-tabs>li {
     float: left;
     margin-bottom: -1px;
 }
 
-.socialwiki_wikicontent .nav-tabs > li > a {
+.socialwiki_wikicontent .nav-tabs>li>a {
     margin-right: 2px;
     line-height: 1.428571429;
     border: 1px solid transparent;
     border-radius: 4px 4px 0 0;
 }
 
-.socialwiki_wikicontent .nav-tabs > li > a:hover {
+.socialwiki_wikicontent .nav-tabs>li>a:hover {
     border-color: #eeeeee #eeeeee #dddddd;
 }
 
-.socialwiki_wikicontent .nav-tabs > li.active > a,
-.socialwiki_wikicontent .nav-tabs > li.active > a:hover,
-.socialwiki_wikicontent .nav-tabs > li.active > a:focus {
+.socialwiki_wikicontent .nav-tabs>li.active>a, .socialwiki_wikicontent .nav-tabs>li.active>a:hover,
+    .socialwiki_wikicontent .nav-tabs>li.active>a:focus {
     color: #555555;
     background-color: #ffffff;
     border: 1px solid #dddddd;
@@ -114,10 +111,11 @@
 }
 
 .socialwiki_wikicontent .peerinfo {
-    display:inline-block;
+    display: inline-block;
 }
 
-.socialwiki_wikicontent .socialwiki_unfollowlink, .socialwiki_unlikelink {
+.socialwiki_wikicontent .socialwiki_unfollowlink, .socialwiki_unlikelink
+    {
     position: relative;
     margin-left: 50px;
 }

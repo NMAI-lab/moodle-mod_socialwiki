@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to define a wiki editor
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -122,16 +122,14 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
 
         $html = '<div class="socialwikieditor-toolbar">';
         foreach ($wikieditor as $button) {
-            $html .= "<a href=\"javascript:insertTags";
-            $html .= "('" . $button[2] . "','" . $button[3] . "','" . $button[4] . "');\">";
+            $html .= "<a href=\"javascript:insertTags('$button[2]','$button[3]','$button[4]');\">";
             $html .= html_writer::empty_tag('img', array('alt' => $button[1], 'src' => $CFG->wwwroot
                         . '/mod/socialwiki/editors/wiki/images/' . $button[0]));
             $html .= "</a>";
         }
         $html .= "<label class='accesshide' for='addtags'>"
                 . get_string('insertimage', 'socialwiki') . "</label>";
-        $html .= "<select id='addtags' onchange=\"insertTags("
-                . "'{$imagetag[0]}', '{$imagetag[1]}', this.value)\">";
+        $html .= "<select id='addtags' onchange=\"insertTags('$imagetag[0]', '$imagetag[1]', this.value)\">";
         $html .= "<option value='" . s(get_string('wikiimage', 'socialwiki')) . "'>"
                 . get_string('insertimage', 'socialwiki') . '</option>';
         foreach ($this->files as $filename) {

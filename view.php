@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view a socialwiki page
  *
- * @package mod-socialwiki-1.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -200,11 +200,11 @@ $wikipage->set_gid($currentgroup);
 $wikipage->set_page($page);
 
 if ($pageid) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?pageid=" . $pageid, $pageid, $cm->id);
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?pageid=$pageid", $pageid, $cm->id);
 } else if ($id) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?id=" . $id, $id, $cm->id);
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?id=$id", $id, $cm->id);
 } else if ($wid && $title) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?wid=" . $wid . "&title=" . $title, $wid, $cm->id);
+    add_to_log($course->id, 'socialwiki', 'view', "view.php?wid=$wid&title=$title", $wid, $cm->id);
 }
 
 $wikipage->print_header();

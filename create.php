@@ -100,7 +100,7 @@ $wikipage->set_action($action);
 switch ($action) {
     case 'create':
         $newpageid = $wikipage->create_page($title);
-        add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=" . $newpageid, $newpageid, $cm->id);
+        add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=$newpageid", $newpageid, $cm->id);
         // Have the user like the page they are creating.
         $subwikiid = socialwiki_get_page($newpageid)->subwikiid;
         socialwiki_add_like($USER->id, $newpageid, $subwikiid);
@@ -110,7 +110,7 @@ switch ($action) {
         // Go straight to editing if we know the page title and we're in force format mode.
         if ((int) $wiki->forceformat == 1 && $title != get_string('newpage', 'socialwiki')) {
             $newpageid = $wikipage->create_page($title);
-            add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=" . $newpageid, $newpageid, $cm->id);
+            add_to_log($course->id, 'socialwiki', 'add page', "view.php?pageid=$newpageid", $newpageid, $cm->id);
             // Have the user like the page they are creating.
             socialwiki_add_like($USER->id, $newpageid, $subwiki->id);
             redirect($CFG->wwwroot . '/mod/socialwiki/edit.php?pageid=' . $newpageid . "&makenew=1");

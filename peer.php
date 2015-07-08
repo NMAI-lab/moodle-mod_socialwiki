@@ -15,8 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package socialwiki
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_socialwiki
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $CFG;
 
@@ -87,8 +87,8 @@ class peer {
     private function set_follow_sim($userid, $swid) {
         Global $DB;
         $sql = 'SELECT COUNT(usertoid) AS total, COUNT(DISTINCT usertoid) AS different
-		FROM {socialwiki_follows}
-		WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
+            FROM {socialwiki_follows}
+            WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
         $data = $DB->get_record_sql($sql, array($this->id, $userid, $swid));
         if ($data->total > 0) {
 
@@ -100,8 +100,8 @@ class peer {
     private function set_like_sim($userid, $swid) {
         Global $DB;
         $sql = 'SELECT COUNT(pageid) AS total, COUNT(DISTINCT pageid) AS different
-		FROM {socialwiki_likes}
-		WHERE (userid=? OR userid=?) AND subwikiid=?';
+            FROM {socialwiki_likes}
+            WHERE (userid=? OR userid=?) AND subwikiid=?';
         $data = $DB->get_record_sql($sql, array($this->id, $userid, $swid));
 
         // Get the similarity between likes and divide by unique likes.
@@ -134,9 +134,12 @@ class peer {
     }
 
     /**
-     * recalculate peer indicators.
-     * @param updatelikes: boolean: recalculate like similarity (after a like has happened)
-     * @param updatenetwork: boolean: recalculate follow similarity and network distance (after a follow has happened)
+     * Recalculate peer indicators.
+     * 
+     * @param bool $updatelikes Recalculate like similarity (after a like has happened).
+     * @param bool $updatenetwork Recalculate follow similarity and network distance (after a follow has happened).
+     * @param id $swid The subwiki ID.
+     * @param id $thisuser This user ID.
      */
     public static function socialwiki_update_peers($updatelikes, $updatenetwork, $swid, $thisuser = null) {
         Global $USER;

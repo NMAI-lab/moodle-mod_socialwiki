@@ -20,7 +20,7 @@
  * It contains the great majority of functions defined by Moodle
  * that are mandatory to develop a module.
  *
- * @package mod-wiki-2.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -39,7 +39,7 @@
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param object $instance An object from the form in mod.html
+ * @param stdClass $instance An object from the form in mod.html
  * @return int The id of the newly inserted wiki record
  * */
 function socialwiki_add_instance($wiki) {
@@ -58,8 +58,8 @@ function socialwiki_add_instance($wiki) {
  * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
- * @param object $instance An object from the form in mod.html
- * @return boolean Success/Fail
+ * @param stdClass $instance An object from the form in mod.html
+ * @return bool Success/Fail
  * */
 function socialwiki_update_instance($wiki) {
     global $DB;
@@ -79,7 +79,7 @@ function socialwiki_update_instance($wiki) {
  * and any data that depends on it.
  *
  * @param int $id Id of the module instance
- * @return boolean Success/Failure
+ * @return bool Success/Failure
  * */
 function socialwiki_delete_instance($id) {
     global $DB;
@@ -205,7 +205,7 @@ function socialwiki_user_outline($course, $user, $mod, $wiki) {
  * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
- * @return boolean
+ * @return bool
  * @todo Finish documenting this function
  * */
 function socialwiki_user_complete($course, $user, $mod, $wiki) {
@@ -258,14 +258,12 @@ function socialwiki_supports($feature) {
  * that has occurred in wiki activities and print it out.
  * Return true if there was output, or false is there was none.
  *
- * @global $CFG
- * @global $DB
  * @uses CONTEXT_MODULE
  * @uses VISIBLEGROUPS
- * @param object $course
+ * @param stdClass $course
  * @param bool $viewfullnames capability
  * @param int $timestart
- * @return boolean
+ * @return bool
  * */
 function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
     global $CFG, $DB, $OUTPUT;
@@ -342,7 +340,7 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
  * as sending out mail, toggling flags etc ...
  *
  * @uses $CFG
- * @return boolean
+ * @return bool
  * @todo Finish documenting this function
  * */
 function socialwiki_cron() {
@@ -370,7 +368,7 @@ function socialwiki_grades($wikiid) {
  * file serving callback
  *
  * @copyright Josep Arus
- * @package  mod_wiki
+ * @package  mod_socialwiki
  * @category files
  * @param stdClass $course course object
  * @param stdClass $cm course module object
@@ -454,7 +452,7 @@ function socialwiki_get_extra_capabilities() {
  * Capability check has been done in comment->check_permissions(), we
  * don't need to do it again here.
  *
- * @package  mod_wiki
+ * @package  mod_socialwiki
  * @category comment
  *
  * @param stdClass $commentparam {
@@ -481,10 +479,10 @@ function socialwiki_comment_permissions($commentparam) {
  *              itemid      => int itemid
  * }
  *
- * @package  mod_wiki
+ * @package  mod_socialwiki
  * @category comment
  *
- * @return boolean
+ * @return bool
  */
 function socialwiki_comment_validate($commentparam) {
     global $DB, $CFG;
@@ -553,8 +551,7 @@ function socialwiki_page_type_list($pagetype, $parentcontext, $currentcontext) {
         'mod-socialwiki-*' => get_string('page-mod-socialwiki-x', 'socialwiki'),
         'mod-socialwiki-view' => get_string('page-mod-socialwiki-view', 'socialwiki'),
         'mod-socialwiki-comments' => get_string('page-mod-socialwiki-comments', 'socialwiki'),
-        'mod-socialwiki-history' => get_string('page-mod-socialwiki-history', 'socialwiki'),
-        'mod-socialwiki-manage' => get_string('page-mod-socialwiki-manage', 'socialwiki')
+        'mod-socialwiki-history' => get_string('page-mod-socialwiki-history', 'socialwiki')
     );
     return $modulepagetype;
 }

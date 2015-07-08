@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view an old version of a page
  *
- * @package mod-socialwiki-1.0
+ * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -63,7 +63,7 @@ $wikipage->set_page($page);
 $wikipage->set_versionid($versionid);
 
 add_to_log($course->id, "socialwiki", "history", "viewversion.php?pageid="
-        . $pageid . "&versionid=" . $versionid, $pageid, $cm->id);
+        . $pageid . "&versionid=$versionid", $pageid, $cm->id);
 
 // Print the page header.
 $wikipage->print_header();

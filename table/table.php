@@ -14,21 +14,58 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The standard table.
+ *
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 Global $CFG;
 require_once($CFG->dirroot . '/mod/socialwiki/table/usertable.php');
 require_once($CFG->dirroot . '/mod/socialwiki/table/topictable.php');
 require_once($CFG->dirroot . '/mod/socialwiki/table/versiontable.php');
 require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
 
-
+/**
+ * Table Class.
+ *
+ * Never used by itself. Extended by Topic, User and Version Tables.
+ * 
+ * @package    mod_socialwiki
+ * @copyright  NMAI-lab
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class socialwiki_table {
 
-    protected $uid; // UID of user viewing.
+    /**
+     * The user ID.
+     * 
+     * @var int
+     */
+    protected $uid;
+
+    /**
+     * The subwiki ID.
+     * 
+     * @var int
+     */
     protected $swid;
+
+    /**
+     * Array of headers for the table.
+     * 
+     * @var string[]
+     */
     protected $headers;
 
     /**
-     * creates a table with the given headers, current uid (userid), subwikiid
+     * Create a table.
+     * 
+     * @param int $u The current user ID.
+     * @param int $s The current subwiki ID.
+     * @param string $h Table header options.
      */
     public function __construct($u, $s, $h) {
         $this->uid = $u;
@@ -36,26 +73,31 @@ abstract class socialwiki_table {
         $this->headers = self::getheaders($h);
     }
 
+    /**
+     * Used to get the table data.
+     */
     abstract protected function get_table_data();
 
     /**
-     * gets the table in HTML format (string)
+     * Gets the table in HTML format.
+     * 
+     * @param string $tableid The HTML id of the table.
+     * @return string HTML table
      */
     public function get_as_html($tableid = 'a_table') {
-
-        $t = "<table id=" . $tableid . " class='datatable'>";
+        $t = "<table id=$tableid class='datatable'>";
         $tabledata = $this->get_table_data();
         // Headers.
         $t .= "<thead><tr>";
         foreach ($this->headers as $h) {
-            $t .= "<th>" . $h . "</th>";
+            $t .= "<th title='" . get_string($h.'_help', 'socialwiki') . "'>" . get_string($h, 'socialwiki') . "</th>";
         }
         $t .= "</tr></thead><tbody>";
 
         foreach ($tabledata as $row) {
             $t .= "<tr>";
             foreach ($row as $k => $val) {
-                $t .= "<td>" . $val . "</td>";
+                $t .= "<td>$val</td>";
             }
             $t .= "</tr>";
         }
@@ -64,95 +106,110 @@ abstract class socialwiki_table {
         return $t;
     }
 
+    /**
+     * Gets the correct headers for the table.
+     * 
+     * @param string $type The type of table.
+     * @return string array
+     */
     public static function getheaders($type) {
         switch ($type) {
-            case "version":
+            case 'version':
                 return array(
-                    get_string('title', 'socialwiki'),
-                    get_string('contributors', 'socialwiki'),
-                    get_string('updated', 'socialwiki'),
-                    get_string('likes', 'socialwiki'),
-                    get_string('views', 'socialwiki'),
-                    get_string('favourite', 'socialwiki'),
-                    get_string('popularity', 'socialwiki'),
-                    get_string('likesim', 'socialwiki'),
-                    get_string('followsim', 'socialwiki'),
-                    get_string('networkdistance', 'socialwiki')
+                    'title',
+                    'contributors',
+                    'updated',
+                    'likes',
+                    'views',
+                    'favourite',
+                    'popularity',
+                    'likesim',
+                    'followsim',
+                    'networkdistance'
                 );
-            case "mystuff":
+            case 'mystuff':
                 return array(
-                    get_string('title', 'socialwiki'),
-                    get_string('contributors', 'socialwiki'),
-                    get_string('updated', 'socialwiki'),
-                    get_string('likes', 'socialwiki'),
-                    get_string('views', 'socialwiki'),
-                    get_string('favourite', 'socialwiki')
+                    'title',
+                    'contributors',
+                    'updated',
+                    'likes',
+                    'views',
+                    'favourite'
                 );
-            case "topics":
+            case 'topics':
                 return array(
-                    get_string('title', 'socialwiki'),
-                    get_string('versions', 'socialwiki'),
-                    get_string('views', 'socialwiki'),
-                    get_string('likes', 'socialwiki')
+                    'title',
+                    'versions',
+                    'views',
+                    'likes'
                 );
-            case "user":
+            case 'user':
                 return array(
-                    get_string('name', 'socialwiki'),
-                    get_string('popularity', 'socialwiki'),
-                    get_string('likesim', 'socialwiki'),
-                    get_string('followsim', 'socialwiki'),
-                    get_string('networkdistance', 'socialwiki')
+                    'name',
+                    'popularity',
+                    'likesim',
+                    'followsim',
+                    'networkdistance'
                 );
             default:
                 return array('error in getheaders: ' . $type);
         }
     }
 
+    /**
+     * Builds any given table.
+     * 
+     * @param int $userid The user's id.
+     * @param int $swid The current subwikiid.
+     * @param string $tabletype The table type to build.
+     * @return string HTML
+     */
     public static function builder($userid, $swid, $tabletype) {
         $trustcombiner = 'max';  // Default for now, should remove entirely.
 
         $t = null;
         switch ($tabletype) {
-            case "recentlikes":      // User likes.
+            case "mylikes":       // User likes.
                 $t = versiontable::likes_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "faves":            // User favourites.
-            case "userfaves":        // Favourites by another user.
+            case "myfaves":       // User favourites.
+            case "userfaves":     // Favourites by another user.
                 $t = versiontable::favourites_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "mypageversions":   // User pages.
-            case "userpageversions": // Pages by another user.
+            case "mypages":       // User pages.
+            case "userpages":     // Pages by another user.
                 $t = versiontable::user_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "versionsfollowed": // Versions by followed users.
+            case "pagesfollowed": // Versions by followed users.
                 $t = versiontable::followed_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "newpageversions":  // New versions.
+            case "newpages":      // New versions.
                 $t = versiontable::new_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "allpageversions":  // All versions.
+            case "allpages":      // All versions.
                 $t = versiontable::all_versiontable($userid, $swid, $trustcombiner);
                 break;
-            case "followedusers":    // Followed users.
+            case "followedusers": // Followed users.
                 $t = usertable::followed_usertable($userid, $swid);
                 break;
-            case "followers":        // Followers.
+            case "followers":     // Followers.
                 $t = usertable::followers_usertable($userid, $swid);
                 break;
-            case "allusers":         // All users.
+            case "allusers":      // All users.
                 $t = usertable::all_usertable($userid, $swid);
                 break;
-            case "alltopics":        // All pages (grouped versions).
+            case "alltopics":     // All pages (grouped versions).
                 $t = topictable::all_topictable($userid, $swid);
                 break;
             default:
                 $tabletype = 'unknowntabletype ' . $tabletype;
         }
-
+        $output = '<h2>'.get_string($tabletype, 'socialwiki').'</h2>';
         if ($t != null) {
-            return $t->get_as_html();
+            $output .= $t->get_as_html();
         } else {
-            return get_string('no' . $tabletype, 'socialwiki');
+            $output .= get_string($tabletype . '_empty', 'socialwiki');
         }
+        return $output;
     }
 }

@@ -20,7 +20,7 @@
  * @author Josep Arús
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package socialwiki
+ * @package mod_socialwiki
  */
 class socialwiki_parser_proxy {
 
@@ -240,8 +240,8 @@ abstract class socialgeneric_parser {
      * Special nowiki parser index
      */
     private function initialize_nowiki_index() {
-        $token = "\Q" . $this->nowikitoken . "\E";
-        $this->string = preg_replace_callback("/" . $token . "\d+" . $token . "/",
+        $token = "\Q$this->nowikitoken\E";
+        $this->string = preg_replace_callback("/$token\d+$token/",
                 array($this, "initialize_nowiki_index_callback"), $this->string);
     }
 

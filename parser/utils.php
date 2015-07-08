@@ -20,7 +20,7 @@
  * @author Josep Arús
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package socialwiki
+ * @package mod_socialwiki
  */
 
 require_once($CFG->dirroot . "/lib/outputcomponents.php");
