@@ -1,35 +1,57 @@
-/*Now the CSS*/
+/* This file is part of Moodle - http://moodle.org/
 
-.btngroup {
+ Moodle is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Moodle is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * Socialwiki Tree Style Sheet
+ *
+ * @package mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+.socialwiki_wikicontent .btngroup {
     display: none;
 }
 
-.jsenabled .btngroup {
+.socialwiki_wikicontent .jsenabled .btngroup {
     cursor: pointer;
     position: relative;
     left: 40%;
     display: inline;
 }
 
-.hider {
+.socialwiki_wikicontent .hider {
     margin-right: 5px;
 }
 
-.titletext {
+.socialwiki_wikicontent .titletext {
     padding-bottom: 0.3em;
     display: block;
 }
 
-.tree {
+.socialwiki_wikicontent .tree {
     white-space: nowrap;
     overflow: auto;
 }
 
-.tree ul:first-child {
-    padding-top: 0px;
+.socialwiki_wikicontent .tree ul:first-child {
+    padding-top: 0;
 }
 
-.tree ul {
+.socialwiki_wikicontent .tree ul {
     padding-top: 20px; position: relative;
     margin : 0;
     transition: all 0.5s;
@@ -37,7 +59,7 @@
     -moz-transition: all 0.5s;
 }
 
-.tree li {
+.socialwiki_wikicontent .tree li {
     display:inline-block;
     vertical-align:top;
     text-align: center;
@@ -51,54 +73,57 @@
 }
 
 /*We will use ::before and ::after to draw the connectors*/
-.tree li::before, .tree li::after {
+.socialwiki_wikicontent .tree li::before,
+.socialwiki_wikicontent .tree li::after {
     content: '';
     position: absolute; top: 0; right: 50%;
     border-top: 1px solid #ccc;
     width: 50%; height: 20px;
 }
-.tree li::after {
+.socialwiki_wikicontent .tree li::after {
     right: auto; left: 50%;
     border-left: 1px solid #ccc;
 }
 
 /*We need to remove left-right connectors from elements without any siblings*/
-.tree li:only-child::after, .tree li:only-child::before {
+.socialwiki_wikicontent .tree li:only-child::after,
+.socialwiki_wikicontent .tree li:only-child::before {
     display: none;
 }
 
 /*Remove space from the top of single children*/
-.tree li:only-child {
+.socialwiki_wikicontent .tree li:only-child {
     padding: 0;
 }
 
 /*Remove left connector from first child and right connector from last child*/
-.tree li:first-child::before, .tree li:last-child::after {
+.socialwiki_wikicontent .tree li:first-child::before,
+.socialwiki_wikicontent .tree li:last-child::after {
     border: 0 none;
 }
 
 /*Adding back the vertical connector to the last nodes*/
-.tree li:last-child::before {
+.socialwiki_wikicontent .tree li:last-child::before {
     border-right: 1px solid #ccc;
     border-radius: 0 5px 0 0;
     -webkit-border-radius: 0 5px 0 0;
     -moz-border-radius: 0 5px 0 0;
 }
-.tree li:first-child::after {
+.socialwiki_wikicontent .tree li:first-child::after {
     border-radius: 5px 0 0 0;
     -webkit-border-radius: 5px 0 0 0;
     -moz-border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
-.tree ul ul::before {
+.socialwiki_wikicontent .tree ul ul::before {
     content: '';
     position: absolute; top: 0; left: 50%;
     border-left: 1px solid #ccc;
     width: 0; height: 20px;
 }
 
-.tree li div {
+.socialwiki_wikicontent .tree li div {
     border: 1px solid #ccc;
     padding: 5px 10px;
     text-decoration: none;
@@ -114,11 +139,11 @@
 }
 
 /*Time for some hover effects*/
-.tree li div:hover {
+.socialwiki_wikicontent .tree li div:hover {
     background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
 }
 
-input[type="radio"] {
+.socialwiki_wikicontent input[type="radio"] {
     margin: -4px 0 0 2px;
 }
 

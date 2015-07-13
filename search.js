@@ -1,12 +1,33 @@
-// Patterns to determine the view mode.
-var pattern1 = /option=1/;  // Tree.
-var pattern2 = /option=2/; // List.
-var pattern3 = /option/;
-var pattern4 = /option=3/; // Popular.
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Script on the search page.
+ *
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * Runs the tagcloud the resize text.
+ * If popular is selected from the menu dropown then resize to show them better.
+ */
 $(document).ready(function () {
-    if (pattern4.test(document.URL)) { // Only in view 'popular'.
-        $('#doublescroll .tagcloud').tagcloud(); // Doublescroll is the box containing the socialwikitree.
+    if (/option=3/.test(document.URL)) { // Only in view 'popular'.
+        $('.tagcloud').tagcloud();
     }
 });
 
@@ -18,7 +39,6 @@ $(document).ready(function () {
  * created by Adam Groves
  */
 (function ($) {
-    /*global jQuery*/
     "use strict";
 
     var compareWeights = function (a, b) {

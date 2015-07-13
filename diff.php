@@ -65,9 +65,6 @@ $wikipage = new page_socialwiki_diff($wiki, $subwiki, $cm);
 $wikipage->set_page($page);
 $wikipage->set_comparison($compare, $comparewith);
 
-add_to_log($course->id, "socialwiki", "diff",
-        "diff.php?pageid=$pageid&comparewith=$comparewith&compare=$compare", $pageid, $cm->id);
-
 $wikipage->print_header();
 
 $wikipage->print_content();

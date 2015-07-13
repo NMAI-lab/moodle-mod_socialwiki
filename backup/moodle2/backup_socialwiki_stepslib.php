@@ -46,7 +46,7 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $pages = new backup_nested_element('pages');
 
         $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent',
-            'timecreated', 'timemodified', 'timerendered', 'userid', 'pageviews', 'readonly', 'parent'));
+            'timecreated', 'timemodified', 'userid', 'pageviews', 'parent'));
 
         $likes = new backup_nested_element('likes');
 

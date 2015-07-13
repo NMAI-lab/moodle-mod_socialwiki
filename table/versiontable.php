@@ -18,7 +18,7 @@
  * The version table for showing the page versions.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright 2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,35 +26,35 @@
  * Version Table Class.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class versiontable extends socialwiki_table {
 
     /**
      * Maps peerid to peer object for all peers.
-     * 
+     *
      * @var array
      */
     private $allpeers;
 
     /**
      * Maps pageid to page object, with additional field $p->likers containing array of likers (peerids).
-     * 
+     *
      * @var array
      */
     private $allpages;
 
     /**
      * Way of combining user trust indicators.
-     * 
-     * @var string 
+     *
+     * @var string
      */
     private $combiner;
 
     /**
      * Create a version table.
-     * 
+     *
      * @param int $uid The current uid (userid).
      * @param int $swid The current subwikiid.
      * @param list $pages What pages are in the table.
@@ -69,7 +69,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Build the table data structure.
-     * 
+     *
      * @return array $table Each row being an array of head=>value pairs
      */
     protected function get_table_data() {
@@ -133,7 +133,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Make a div containing the contributors.
-     * 
+     *
      * @param array $contributors The relevant contributors.
      * @return string HTML
      */
@@ -167,7 +167,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Combines trust indicators obtained from the peers who like a page.
-     * 
+     *
      * @param array $page Group of all the pages.
      * @param string $reducer How to reduce the peers.
      * @param string $indicator What should be combined.
@@ -224,7 +224,7 @@ class versiontable extends socialwiki_table {
     /**
      * Get list of users that like any of the pages, with all their relevant info
      * add the pages to $this->allpages and the peers to the existing list of peers
-     * 
+     *
      * @param array $pagelist The list of pages.
      */
     private function get_all_likers($pagelist) {
@@ -242,7 +242,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Get peers from user ids, with all relevant info: used by get_all_likers.
-     * 
+     *
      * @param array $ids The ID's of the peers.
      * @return array
      */
@@ -264,7 +264,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a favorited versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -279,7 +279,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a liked versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -300,7 +300,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a followed versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -317,7 +317,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a new versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -334,7 +334,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate an all versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -351,7 +351,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a user's versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param string $combiner How to combine the peers.
@@ -368,7 +368,7 @@ class versiontable extends socialwiki_table {
 
     /**
      * Generate a general versions table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @param array $pages All the pages to show in the table.

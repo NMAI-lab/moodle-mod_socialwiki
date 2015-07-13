@@ -15,24 +15,71 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Peers used for social data.
+ *
  * @package mod_socialwiki
+ * @copyright 2015 NMAI-lab
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $CFG;
 
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
+require_once("$CFG->dirroot/mod/socialwiki/locallib.php");
 
-// Class that describes the similarity between the current user and another student in the activity.
+/**
+ * Class that describes the similarity between the current user and another student in the activity.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class peer {
 
-    public $trust = 0; // Trust indicator value = 1/distance or 0.
-    public $id; // The user id.
-    public $likesim = 0; // The similarity between likes of the peer and user.
-    public $followsim = 0; // The similarity between the people the user and peer are following.
-    public $popularity; // Percent popularity.
-    public $depth; // Social distance: 1 for I'm following this user, 2 for friend of a friend, etc.
+    /**
+     * Trust indicator value = 1/distance or 0.
+     *
+     * @var int
+     */
+    public $trust = 0;
 
+    /**
+     * The user ID.
+     *
+     * @var int
+     */
+    public $id;
+
+    /**
+     * The similarity between likes of the peer and user.
+     *
+     * @var int
+     */
+    public $likesim = 0;
+
+    /**
+     * The similarity between the people the user and peer are following.
+     *
+     * @var int
+     */
+    public $followsim = 0;
+
+    /**
+     * Percent popularity.
+     *
+     * @var int
+     */
+    public $popularity;
+
+    /**
+     * Social distance: 1 for I'm following this user, 2 for friend of a friend, etc.
+     *
+     * @var int
+     */
+    public $depth;
+
+    /**
+     * Creates a new peer.
+     *
+     * @param array $arr Data for the peer.
+     */
     public function __construct($arr) {
         $this->id = $arr['id'];
         $this->likesim = $arr['likesim'];
@@ -42,9 +89,14 @@ class peer {
     }
 
     /**
-     * creates a new peer and computes its trust indicators
+     * Creates a new peer and computes its trust indicators.
+     *
+     * @param int $id A user ID.
+     * @param int $swid The subwiki ID.
+     * @param int $currentuser The current user ID.
+     * @return peer
      */
-    public static function make_with_indicators($id, $swid, $currentuser, $scale = null) {
+    public static function make_with_indicators($id, $swid, $currentuser) {
         $newpeer = new peer(array('id' => $id, 'likesim' => 0, 'followsim' => 0, 'popularity' => 0, 'depth' => 0));
 
         if ($id == $currentuser) {
@@ -66,10 +118,21 @@ class peer {
         return $newpeer;
     }
 
-    private function compute_depth($userid, $swid) {
-        $this->depth = socialwiki_follow_depth($userid, $this->id, $swid);
+    /**
+     * Calculates how far away another user is in your network.
+     *
+     * @param int $uid The user ID.
+     * @param int $swid The subwiki ID.
+     */
+    private function compute_depth($uid, $swid) {
+        $this->depth = socialwiki_follow_depth($uid, $this->id, $swid);
     }
 
+    /**
+     * Returns an array of the peer data.
+     *
+     * @return array
+     */
     public function to_array() {
         return array('id' => $this->id,
             'likesim' => $this->likesim,
@@ -78,18 +141,18 @@ class peer {
             'depth' => $this->depth);
     }
 
-    /*
-     * sets the follow similarity to the
-     * @userid the current users id
-     * @swid the subwikiid
+    /**
+     * Sets the follow similarity.
+     *
+     * @param int $uid The user ID.
+     * @param the $swid The subwiki ID.
      */
-
-    private function set_follow_sim($userid, $swid) {
+    private function set_follow_sim($uid, $swid) {
         Global $DB;
         $sql = 'SELECT COUNT(usertoid) AS total, COUNT(DISTINCT usertoid) AS different
             FROM {socialwiki_follows}
             WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
-        $data = $DB->get_record_sql($sql, array($this->id, $userid, $swid));
+        $data = $DB->get_record_sql($sql, array($this->id, $uid, $swid));
         if ($data->total > 0) {
 
             // Get the similarity between follows and divide by the number of unique likes.
@@ -97,12 +160,18 @@ class peer {
         }
     }
 
-    private function set_like_sim($userid, $swid) {
+    /**
+     * Sets the like similarity.
+     *
+     * @param int $uid The user ID.
+     * @param the $swid The subwiki ID.
+     */
+    private function set_like_sim($uid, $swid) {
         Global $DB;
         $sql = 'SELECT COUNT(pageid) AS total, COUNT(DISTINCT pageid) AS different
             FROM {socialwiki_likes}
             WHERE (userid=? OR userid=?) AND subwikiid=?';
-        $data = $DB->get_record_sql($sql, array($this->id, $userid, $swid));
+        $data = $DB->get_record_sql($sql, array($this->id, $uid, $swid));
 
         // Get the similarity between likes and divide by unique likes.
         if ($data->different != 0) {
@@ -110,7 +179,15 @@ class peer {
         }
     }
 
-    // KEEP PEERS in SESSION variable!
+    /**
+     * Gets a peer.
+     * KEEP PEERS in SESSION variable!
+     *
+     * @param int $id A user ID.
+     * @param int $swid The subwiki ID.
+     * @param int $thisuser The current user ID.
+     * @return peer
+     */
     public static function socialwiki_get_peer($id, $swid, $thisuser = null) {
         Global $USER;
         // Get peer lists from session.
@@ -135,11 +212,11 @@ class peer {
 
     /**
      * Recalculate peer indicators.
-     * 
+     *
      * @param bool $updatelikes Recalculate like similarity (after a like has happened).
      * @param bool $updatenetwork Recalculate follow similarity and network distance (after a follow has happened).
-     * @param id $swid The subwiki ID.
-     * @param id $thisuser This user ID.
+     * @param int $swid The subwiki ID.
+     * @param int $thisuser This user ID.
      */
     public static function socialwiki_update_peers($updatelikes, $updatenetwork, $swid, $thisuser = null) {
         Global $USER;

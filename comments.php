@@ -58,8 +58,6 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 
 require_login($course, true, $cm);
 
-add_to_log($course->id, 'socialwiki', 'comments', "comments.php?pageid=".$pageid, $pageid, $cm->id);
-
 // Print the page header.
 $wikipage = new page_socialwiki_comments($wiki, $subwiki, $cm);
 

@@ -29,13 +29,13 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables features
  */
-.dataTables_wrapper {
+.socialwiki_wikicontent .dataTables_wrapper {
     position: relative;
     clear: both;
     zoom: 1; /* Feeling sorry for IE */
 }
 
-.dataTables_processing {
+.socialwiki_wikicontent .dataTables_processing {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -51,17 +51,17 @@
     background-color: white;
 }
 
-.dataTables_length {
+.socialwiki_wikicontent .dataTables_length {
     width: 40%;
     float: left;
 }
 
-.dataTables_filter {
+.socialwiki_wikicontent .dataTables_filter {
     text-align: right;
     margin-top: -2.6em;
 }
 
-.dataTables_filter input {
+.socialwiki_wikicontent .dataTables_filter input {
     margin-left: 0.5em;
     margin-bottom: 0.2em;
 }
@@ -69,13 +69,13 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display
  */
-table.datatable {
+.socialwiki_wikicontent table.datatable {
     clear: both;
     width: 100%;
     margin-bottom: 0;
 }
 
-table.datatable thead th {
+.socialwiki_wikicontent table.datatable thead th {
     padding: 3px 16px 2px 6px;
     border-bottom: 1px solid black;
     font-weight: bold;
@@ -84,89 +84,89 @@ table.datatable thead th {
     *cursor: hand;
 }
 
-table.datatable td {
+.socialwiki_wikicontent table.datatable td {
     padding: 3px 10px 2px 6px;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables sorting
  */
-.sorting_asc {
+.socialwiki_wikicontent .sorting_asc {
     background: url('../pix/table/sort_asc.png') no-repeat center right;
 }
 
-.sorting_desc {
+.socialwiki_wikicontent .sorting_desc {
     background: url('../pix/table/sort_desc.png') no-repeat center right;
 }
 
-.sorting {
+.socialwiki_wikicontent .sorting {
     background: url('../pix/table/sort_both.png') no-repeat center right;
 }
 
-.sorting_asc_disabled {
+.socialwiki_wikicontent .sorting_asc_disabled {
     background: url('../pix/table/sort_asc_disabled.png') no-repeat center right;
 }
 
-.sorting_desc_disabled {
+.socialwiki_wikicontent .sorting_desc_disabled {
     background: url('../pix/table/sort_desc_disabled.png') no-repeat center right;
 }
 
-table.datatable thead th:active,
-table.datatable thead td:active {
+.socialwiki_wikicontent table.datatable thead th:active,
+.socialwiki_wikicontent table.datatable thead td:active {
     outline: none;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
-tr.odd {
+.socialwiki_wikicontent tr.odd {
     background-color: #E2E4FF;
 }
 
-tr.even {
+.socialwiki_wikicontent tr.even {
     background-color: white;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Borders
  */
-.dataTables_scrollBody {
+.socialwiki_wikicontent .dataTables_scrollBody {
     *margin-top: -1px;
     -webkit-overflow-scrolling: touch;
     max-height: 200px;
 }
 
-table.dataTable tbody tr {
+.socialwiki_wikicontent table.dataTable tbody tr {
     border-top: 1px solid #C9C9C9;
 }
 
-table.dataTable tbody tr:first-child td {
+.socialwiki_wikicontent table.dataTable tbody tr:first-child td {
     border-top: none;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Sorting classes for columns
  */
-tr.odd td.sorting_1 {
+.socialwiki_wikicontent tr.odd td.sorting_1 {
     background-color: #D3D6FF;
 }
 
-tr.odd td.sorting_2 {
+.socialwiki_wikicontent tr.odd td.sorting_2 {
     background-color: #DADCFF;
 }
 
-tr.odd td.sorting_3 {
+.socialwiki_wikicontent tr.odd td.sorting_3 {
     background-color: #E0E2FF;
 }
 
-tr.even td.sorting_1 {
+.socialwiki_wikicontent tr.even td.sorting_1 {
     background-color: #EAEBFF;
 }
 
-tr.even td.sorting_2 {
+.socialwiki_wikicontent tr.even td.sorting_2 {
     background-color: #F2F3FF;
 }
 
-tr.even td.sorting_3 {
+.socialwiki_wikicontent tr.even td.sorting_3 {
     background-color: #F9F9FF;
 }

@@ -84,11 +84,8 @@ require_login($course, true, $cm);
 require_capability('mod/socialwiki:viewpage', $context);
 
 $wikipage = new page_socialwiki_home($wiki, $subwiki, $cm);
-add_to_log($course->id, "socialwiki", "home", "home.php?id=$cm->id", $cm->id);
 
-// Print page header.
 $wikipage->set_tab($tab);
 $wikipage->print_header();
 $wikipage->print_content();
-
 $wikipage->print_footer();

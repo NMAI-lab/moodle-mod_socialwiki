@@ -62,11 +62,6 @@ $wikipage = new page_socialwiki_viewversion($wiki, $subwiki, $cm);
 $wikipage->set_page($page);
 $wikipage->set_versionid($versionid);
 
-add_to_log($course->id, "socialwiki", "history", "viewversion.php?pageid="
-        . $pageid . "&versionid=$versionid", $pageid, $cm->id);
-
-// Print the page header.
 $wikipage->print_header();
 $wikipage->print_content();
-
 $wikipage->print_footer();

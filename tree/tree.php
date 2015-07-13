@@ -18,7 +18,7 @@
  * The SocialWiki Tree.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,62 +26,62 @@
  * SocialWiki Node Class.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class socialwiki_node {
     /**
      * The page ID.
-     * 
+     *
      * @var int
      */
     public $id;
-    
+
     /**
      * The subwiki ID.
-     * 
+     *
      * @var int
      */
     public $swid;
-    
+
     /**
      * Content showing page title and authors name.
-     * 
-     * @var string 
+     *
+     * @var string
      */
     public $content;
-    
+
     /**
      * An array of children nodes.
-     * 
+     *
      * @var socialwiki_node[]
      */
     public $children = array();
-    
+
     /**
      * The parent nodes ID.
-     * 
+     *
      * @var int
      */
     public $parent;
-    
+
     /**
      * A list of the peers that have liked the node's page.
-     * 
-     * @var sdtClass[] 
+     *
+     * @var sdtClass[]
      */
     public $peerlist = array();
-    
+
     /**
      * A count of the number of likes the node's page has.
-     * 
+     *
      * @var int
      */
     public $trustvalue;
 
     /**
      * Create a new node.
-     * 
+     *
      * @param stdClass $page
      */
     public function __construct($page) {
@@ -98,7 +98,7 @@ class socialwiki_node {
 
     /**
      * Compute the trust using likes.
-     * 
+     *
      * @param stdClass $page The node's page.
      */
     private function compute_trust($page) {
@@ -109,7 +109,7 @@ class socialwiki_node {
     /**
      * Set the content in the node.
      * Requires trust to be already computed (above)!
-     * 
+     *
      * @param stdClass $page The node's page.
      */
     private function set_content($page) {
@@ -139,7 +139,7 @@ class socialwiki_node {
 
     /**
      * Adds a child node.
-     * 
+     *
      * @param socialwiki_node $child The node to add as a child.
      */
     public function add_child($child) {
@@ -148,7 +148,7 @@ class socialwiki_node {
 
     /**
      * Print out the node as an HTML list and continue with the children.
-     * 
+     *
      * @return string
      */
     public function to_html_list() {
@@ -167,7 +167,7 @@ class socialwiki_node {
 
     /**
      * Builds up the peer list from children.
-     * 
+     *
      * @return stdClass[]
      */
     public function list_peers_rec() {
@@ -183,27 +183,27 @@ class socialwiki_node {
  * SocialWiki Tree Class.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class socialwiki_tree {
     /**
      * An array of socialwiki_nodes.
-     * 
-     * @var socialwiki_node[] 
+     *
+     * @var socialwiki_node[]
      */
     public $nodes = array();
-    
+
     /**
      * All the nodes with no parent.
-     * 
+     *
      * @var socialwiki_node[]
      */
     public $roots = array();
 
     /**
      * Build an array of nodes.
-     * 
+     *
      * @param stdClass[] $pages
      */
     public function build_tree($pages) {
@@ -215,7 +215,7 @@ class socialwiki_tree {
 
     /**
      * Add a node to the nodes array.
-     * 
+     *
      * @param stdClass $page The page to add as a node.
      */
     public function add_node($page) {

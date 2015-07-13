@@ -39,7 +39,7 @@
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param stdClass $instance An object from the form in mod.html
+ * @param stdClass $wiki The wiki object.
  * @return int The id of the newly inserted wiki record
  * */
 function socialwiki_add_instance($wiki) {
@@ -58,8 +58,8 @@ function socialwiki_add_instance($wiki) {
  * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
- * @param stdClass $instance An object from the form in mod.html
- * @return bool Success/Fail
+ * @param stdClass $wiki The wiki object.
+ * @return bool
  * */
 function socialwiki_update_instance($wiki) {
     global $DB;
@@ -78,9 +78,9 @@ function socialwiki_update_instance($wiki) {
  * this function will permanently delete the instance
  * and any data that depends on it.
  *
- * @param int $id Id of the module instance
- * @return bool Success/Failure
- * */
+ * @param int $id ID of the module instance.
+ * @return bool
+ */
 function socialwiki_delete_instance($id) {
     global $DB;
 

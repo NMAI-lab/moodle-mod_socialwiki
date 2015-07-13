@@ -43,8 +43,6 @@ require_login($course, true);
 $PAGE->set_pagelayout('incourse');
 $context = context_course::instance($course->id);
 
-add_to_log($course->id, 'socialwiki', 'view', "index.php?id=$id", "");
-
 // Get all required stringswiki.
 $strwikis = get_string("modulenameplural", "socialwiki");
 $strwiki = get_string("modulename", "socialwiki");

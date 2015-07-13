@@ -59,7 +59,6 @@ require_capability('mod/socialwiki:viewpage', $context);
 $wikipage = new page_socialwiki_prettyview($wiki, $subwiki, $cm);
 
 $wikipage->set_page($page);
-add_to_log($course->id, "socialwiki", "view", "prettyview.php?pageid=".$pageid, $pageid, $cm->id);
 
 $wikipage->print_header();
 $wikipage->print_content();

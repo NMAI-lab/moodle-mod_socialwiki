@@ -15,15 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * This file contains all en_utf8 translations in alphabetical order.
  *
- * This file contains en_utf8 translation of Wiki module
- *
+ * @package mod_socialwiki
  * @author Jordi Piguillem
  * @author Kenneth Riba
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package mod_socialwiki
  */
+
 $string['addcomment'] = 'Add comment';
 $string['admin'] = 'Administration';
 $string['adminmenu'] = 'Admin menu';
@@ -301,7 +301,7 @@ $string['wrongversionsave'] = 'Another user has created a version while you were
 $string['socialwiki:managewiki'] = 'Manage Social Wiki';
 
 /*
- * All table related strings
+ * All table related strings.
  */
 
 // Headers.
@@ -323,15 +323,15 @@ $string['name'] = 'Name';
 $string['name_help'] = 'The name of the user.';
 
 $string['favourite'] = 'Favourites';
-$string['favourite_help'] = 'A favourite is the most recent like in a topic';
+$string['favourite_help'] = 'A favourite is the most recent like in a topic.';
 $string['popularity'] = 'Followers';
-$string['popularity_help'] = 'How many followers this user has';
+$string['popularity_help'] = 'How many followers this user has.';
 $string['likesim'] = 'Like Similarity';
-$string['likesim_help'] = 'How similar your likes are to the user';
+$string['likesim_help'] = 'How similar your likes are to the user.';
 $string['followsim'] = 'Follow Similarity';
-$string['followsim_help'] = 'How similar your follows are to the user';
+$string['followsim_help'] = 'How similar your follows are to the user.';
 $string['networkdistance'] = 'Social Distance';
-$string['networkdistance_help'] = 'How many steps away the user is in your network of follows';
+$string['networkdistance_help'] = 'How many steps away the user is in your network of follows.';
 
 // Each table type and what is shown when the table is empty.
 $string['pagesfollowed'] = 'From Users You Follow';
@@ -359,6 +359,9 @@ $string['userfaves_empty'] = 'This user has no favourite pages.';
 $string['userpages'] = 'Created Pages';
 $string['userpages_empty'] = 'This user has not created any pages.';
 
+/*
+ * Extras.
+ */
 $string['nopagesfound'] = 'No Pages Found';
 $string['searchresultsfor'] = 'Search results for';
 $string['makepage'] = 'Make a new Page';

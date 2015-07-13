@@ -19,22 +19,14 @@
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
  * @package    mod_socialwiki
- * @copyright  2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyright  2009 Universitat Politecnica de Catalunya http://www.upc.edu
- *
- * @author Jordi Piguillem
- * @author Marc Alier
- * @author David Jimenez
- * @author Josep Arus
- * @author Kenneth Riba
- *
+ * @copyright  2015 NMAI-lab
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2015070600;       // The current module version (Date: YYYYMMDDXX).
-$module->requires  = 2013100100;       // Requires Moodle version 2.6.
-$module->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
+$plugin->version   = 2015070900;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires  = 2013101800;       // Requires Moodle version 2.6.
+$plugin->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.0';
-$module->cron      = 0;
+$plugin->release   = '1.0.1';
+$plugin->cron      = 0;

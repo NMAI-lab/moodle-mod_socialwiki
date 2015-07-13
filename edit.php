@@ -105,7 +105,6 @@ if ($option == get_string('save', 'socialwiki')) {
     $wikipage->set_newcontent($newcontent);
 
     $wikipage->set_upload(true);
-    add_to_log($course->id, 'socialwiki', 'edit', "view.php?pageid=$pageid", $pageid, $cm->id);
 } else {
     if ($option == get_string('preview')) {
         if (!confirm_sesskey()) {

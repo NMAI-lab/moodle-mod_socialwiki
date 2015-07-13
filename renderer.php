@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Moodle socialwiki Renderer
+ * Moodle socialwiki Renderer.
  *
  * @package   mod_socialwiki
  * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
@@ -34,7 +34,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Compares two pages.
-     * 
+     *
      * @param int $pageid
      * @param stdClass $old The first page to compare against.
      * @param stdClass $new The second page to compare against.
@@ -43,18 +43,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     public function diff($pageid, $old, $new) {
         global $CFG;
         $page = socialwiki_get_page($pageid);
-        if (!empty($options['total'])) {
-            $total = $options['total'];
-        } else {
-            $total = 0;
-        }
-        
         $strdatetime = get_string('strftimedatetime', 'langconfig');
 
         // View old version link.
-        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->pageid));
         $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php',
                 array('userid' => $old->user->id, 'subwikiid' => $page->subwikiid));
+        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->pageid));
 
         // Userinfo container.
         $oldheading = $this->output->container_start('socialwiki_diffright');
@@ -71,10 +65,10 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $oldheading .= $this->output->container_end();
 
         // View new version link.
-        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->pageid));
         $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php',
                 array('userid' => $new->user->id, 'subwikiid' => $page->subwikiid));
-        
+        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->pageid));
+
         // New user info.
         $newheading = $this->output->container_start('socialwiki_diffleft');
         $newheading .= $this->output->user_picture($new->user, array('popup' => true)); // User picture.
@@ -89,34 +83,33 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $newheading .= userdate($new->timecreated, $strdatetime);
         $newheading .= $this->output->container_end();
 
-        $oldheading = html_writer::tag('div', $oldheading, array('class' => 'socialwiki_diffheading'));
-        $newheading = html_writer::tag('div', $newheading, array('class' => 'socialwiki_diffheading'));
+        $oldheading = $this->output->container($oldheading, array('class' => 'socialwiki_diffheading'));
+        $newheading = $this->output->container($newheading, array('class' => 'socialwiki_diffheading'));
 
-        $olddiff = html_writer::tag('div', $old->diff, array('class' => 'socialwiki_diffcontent'));
-        $newdiff= html_writer::tag('div', $new->diff, array('class' => 'socialwiki_diffcontent'));
-        
-        $html = html_writer::start_tag('div', array('class' => 'socialwiki_clear'));
-        $html .= html_writer::tag('div', $oldheading . $olddiff, array('class' => 'socialwiki_diff'));
-        $html .= html_writer::tag('div', $newheading . $newdiff, array('class' => 'socialwiki_diff'));
-        $html .= html_writer::end_tag('div');
+        $olddiff = $this->output->container($old->diff, array('class' => 'socialwiki_diffcontent'));
+        $newdiff = $this->output->container($new->diff, array('class' => 'socialwiki_diffcontent'));
+
+        $html = $this->output->container_start('socialwiki_clear');
+        $html .= $this->output->container($oldheading . $olddiff, array('class' => 'socialwiki_diff'));
+        $html .= $this->output->container($newheading . $newdiff, array('class' => 'socialwiki_diff'));
+        $html .= $this->output->container_end();
 
         // Add the paging bars.
-        $html .= html_writer::start_tag('div', array('class' => 'socialwiki_clear'));
+        $html .= $this->output->container_start('socialwiki_clear');
         $html .= $this->output->container($this->diff_paging_bar($old->pageid, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
                 . "$pageid&amp;comparewith=$new->pageid&amp;compare="), 'socialwiki_diffpaging');
         $html .= $this->output->container($this->diff_paging_bar($new->pageid, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
                 . "$pageid&amp;compare=$old->pageid&amp;comparewith="), 'socialwiki_diffpaging');
-        $html .= html_writer::end_tag('div');
-        
+        $html .= $this->output->container_end();
+
         return $html;
     }
-    
+
     /**
      * Prints a single paging bar to provide access to other versions.
-     * 
-     * @param int $pageid The ID of the page to compare against.
+     *
+     * @param int $pageid The ID of the page being compared.
      * @param string $url The url for the diff.
-     * @param bool $old Whether this is the old version (new is false).
      * @return string
      */
     public function diff_paging_bar($pageid, $url) {
@@ -125,11 +118,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         // Get the index of the current page id in the array.
         $pageindex = socialwiki_indexof_page($pageid, $relations);
         $totalcount = count($relations) - 1;
-        
+
         if ($pageindex == -1) {
             print_error('invalidparameters', 'socialwiki');
         }
-        
+
         // If there is more than one page create html for paging bar.
         $html = '';
         if ($totalcount > 1) {
@@ -164,8 +157,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Information.
-     * 
-     * @return type
+     *
+     * @return string HTML
      */
     public function socialwiki_info() {
         global $PAGE;
@@ -175,11 +168,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Build the tabs for the pages.
-     * 
+     *
      * @param stdClass $page The current page.
      * @param string[] $tabitems The items in the tab.
      * @param array $options Includes the active tab and which are inactive.
-     * @return type
+     * @return string HTML
      */
     public function tabs($page, $tabitems, $options) {
         global $PAGE;
@@ -233,8 +226,8 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Link to the printer friendly version.
-     * 
-     * @param stdClass $page
+     *
+     * @param stdClass $page The current page.
      * @return string HTML
      */
     public function prettyview_link($page) {
@@ -247,7 +240,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Print the subwiki selector.
-     * 
+     *
      * @param stdClass $wiki The current wiki.
      * @param stdClass $subwiki The current subwiki.
      * @param stdClass $page The current page.
@@ -417,12 +410,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Builds the menu shown on the search page.
-     * 
-     * @param int $cmid
-     * @param int $currentselect
-     * @param string $searchstring
-     * @param int $exact
+     * Builds the menu for the search page.
+     *
+     * @param int $cmid The course module ID.
+     * @param int $currentselect The currently selected item.
+     * @param string $searchstring The string being searched.
+     * @param int $exact If exact then only an exact title will return.
      * @return string HTML
      */
     public function menu_search($cmid, $currentselect, $searchstring, $exact = 0) {
@@ -442,10 +435,24 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $this->output->container($this->output->render($select), 'midpad colourtext');
     }
 
+    /**
+     * Makes a new files tree.
+     *
+     * @param stdClass $context The current context.
+     * @param stdClass $subwiki The current subwiki.
+     * @return socialwiki_files_tree
+     */
     public function socialwiki_files_tree($context, $subwiki) {
         return $this->render(new socialwiki_files_tree($context, $subwiki));
     }
 
+    /**
+     * Builds the menu for the admin page.
+     *
+     * @param int $pageid The page ID.
+     * @param int $currentselect The current seleted option.
+     * @return string HTML
+     */
     public function menu_admin($pageid, $currentselect) {
         $options = array('removepages', 'deleteversions');
         $items = array();
@@ -464,7 +471,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Opens a content area.
-     * 
+     *
      * @return string HTML
      */
     public function content_area_begin() {
@@ -475,7 +482,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
     /**
      * Closes a content area.
-     * 
+     *
      * @return string HTML
      */
     public function content_area_end() {
@@ -484,9 +491,16 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $html;
     }
 
-    // Outputs the main socialwiki view area, under the toolbar.
-    public function viewing_area($pagetitle, $pagecontent, $page) {
-        global $PAGE, $USER;
+    /**
+     * Outputs the main socialwiki view area, under the toolbar.
+     *
+     * @param string $pagetitle The page title.
+     * @param string $pagecontent The page content.
+     * @param stdClass $page The page itself.
+     * @return string HTML
+     */
+    public function viewing_area($pagecontent, $page) {
+        global $PAGE;
 
         $html = html_writer::start_div('wikipage');
         $html .= $pagecontent;
@@ -501,7 +515,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         foreach (array_reverse($contributors) as $contrib) {
             $user = socialwiki_get_user_info($contrib);
             $userlink = self::makeuserlink($user->id, $PAGE->cm->id, $page->subwikiid);
-            // Prepend to list (to get them in chronological order).
+            // Pretend to list (to get them in chronological order).
             $contriblinks .= '<br/>' . html_writer::link($userlink->out(false), fullname($user));
         }
 
@@ -511,6 +525,14 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $html;
     }
 
+    /**
+     * Build a moodle_url to the user's profile.
+     *
+     * @param int $uid The user ID.
+     * @param int $cmid The course module ID.
+     * @param int $swid The subwiki ID.
+     * @return moodle_url
+     */
     public static function makeuserlink($uid, $cmid, $swid) {
         global $USER;
         if ($USER->id == $uid) {
@@ -520,6 +542,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         }
     }
 
+    /**
+     * Opens the help area.
+     *
+     * @return string HTML
+     */
     public function help_area_start() {
         $html = '';
         $html .= $this->content_area_begin();
@@ -527,6 +554,13 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $html;
     }
 
+    /**
+     * The help area content.
+     *
+     * @param string $heading The section heading.
+     * @param string $content The section content.
+     * @return string HTML
+     */
     public function help_content($heading, $content) {
         $html = '';
         $html .= html_writer::tag('h2', $heading);
@@ -536,6 +570,11 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         return $html;
     }
 
+    /**
+     * Closes the help area.
+     *
+     * @return string HTML
+     */
     public function help_area_end() {
         $html = '';
         $html .= html_writer::end_div();
@@ -553,10 +592,33 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
  */
 class socialwiki_files_tree implements renderable {
 
+    /**
+     * The current context.
+     *
+     * @var stdClass
+     */
     public $context;
+
+    /**
+     * The file tree data.
+     *
+     * @var string
+     */
     public $dir;
+
+    /**
+     * The current subwiki.
+     *
+     * @var stdClass
+     */
     public $subwiki;
 
+    /**
+     * Creates a new file tree.
+     *
+     * @param stdClass $context The current context.
+     * @param stdClass $subwiki The current subwiki
+     */
     public function __construct($context, $subwiki) {
         $fs = get_file_storage();
         $this->context = $context;

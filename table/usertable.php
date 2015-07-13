@@ -18,7 +18,7 @@
  * The user table for showing the wiki users.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,14 +26,14 @@
  * User Table Class.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright  2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class usertable extends socialwiki_table {
 
     /**
      * Create a topic table.
-     * 
+     *
      * @param int $uid The current uid (userid).
      * @param int $swid The current subwikiid.
      * @param array $ids The list of user ID's.
@@ -46,7 +46,7 @@ class usertable extends socialwiki_table {
 
     /**
      * Generate a table of all the users other than 'me'.
-     * 
+     *
      * @param int $me The current user's ID.
      * @param int $swid The current subwiki ID.
      * @return \usertable
@@ -62,7 +62,7 @@ class usertable extends socialwiki_table {
 
     /**
      * Generate a table of who the current user follows.
-     * 
+     *
      * @param int $uid The current user's ID.
      * @param int $swid The current subwiki ID.
      * @return \usertable
@@ -79,7 +79,7 @@ class usertable extends socialwiki_table {
 
     /**
      * Generate a table of users that follow the current user.
-     * 
+     *
      * @param int $uid The current user's ID.
      * @param int $swid The current subwiki ID.
      * @return \usertable
@@ -94,7 +94,7 @@ class usertable extends socialwiki_table {
 
     /**
      * Build the table data structure.
-     * 
+     *
      * @return array $table Each row being an array of head=>value pairs
      */
     public function get_table_data() {

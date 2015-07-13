@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains several classes uses to render the diferent pages
- * of the socialwiki module
+ * This file contains several classes uses to render the different pages of the socialwiki module.
  *
  * @package mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
@@ -35,66 +34,98 @@ require_once($CFG->dirroot . '/mod/socialwiki/edit_form.php');
 require_once($CFG->dirroot . '/tag/lib.php');
 
 /**
- * Class page_socialwiki contains the common code between all pages
+ * The standard overriden socialwiki page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class page_socialwiki {
 
     /**
-     * @var object Current subwiki
+     * Current subwiki.
+     *
+     * @var stdClass
      */
     protected $subwiki;
 
     /**
-     * @var object Current wiki
+     * Current wiki.
+     *
+     * @var stdClass
      */
     protected $wiki;
 
     /**
-     * @var int Current page
+     * Current page.
+     *
+     * @var int
      */
     protected $page;
 
     /**
-     * @var string Current page title
+     * Current page title.
+     *
+     * @var string
      */
     protected $title;
 
     /**
-     * @var int Current group ID
+     * Current group ID.
+     *
+     * @var int
      */
     protected $gid;
 
     /**
-     * @var object module context object
+     * Module context object.
+     *
+     * @var stdClass
      */
     protected $modcontext;
 
     /**
-     * @var int Current user ID
+     * Current user ID.
+     *
+     * @var int
      */
     protected $uid;
 
     /**
-     * @var array The tabs set used in social wiki module
+     * The tabs set used in social wiki module.
      * Refers to terms listed in file socialwiki.php under lang/en folder.
+     *
+     * @var array
      */
     protected $tabs = array('view' => 'view', 'edit' => 'edit', 'history' => 'versions', 'admin' => 'admin');
     // All tabs are: array('home'=>'home', 'view' => 'view', 'edit' => 'edit', 'comments' => 'comments',
     // 'history' => 'versions', 'admin' => 'admin').
 
     /**
-     * @var array tabs options
+     * The tab options.
+     *
+     * @var array
      */
     protected $taboptions = array();
 
     /**
-     * @var object wiki renderer
+     * Wiki renderer.
+     *
+     * @var stdClass
      */
     protected $wikioutput;
+
+    /**
+     * The CSS style.
+     *
+     * @var string
+     */
     protected $style;
 
+    /**
+     * Makes a form to chose the combine method for peer data.
+     *
+     * @return string HTML
+     */
     public static function get_combine_form() {
         return '<form class="combineform" action="">'
             . 'For each page version show: <select class="combiner">'
@@ -104,11 +135,11 @@ abstract class page_socialwiki {
     }
 
     /**
-     * page_socialwiki constructor
+     * Creates the standard socialwiki page.
      *
-     * @param $wiki : Current wiki
-     * @param $subwiki : Current subwiki.
-     * @param $cm Current : course_module.
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
      */
     public function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $USER;
@@ -129,7 +160,7 @@ abstract class page_socialwiki {
     }
 
     /**
-     * This method prints the top of the page.
+     * Prints out the header at the top of the page.
      */
     public function print_header() {
         global $OUTPUT, $PAGE;
@@ -151,20 +182,45 @@ abstract class page_socialwiki {
     }
 
     /**
-     * print page title.
+     * Sets the URL of the page.
+     * This method must be overwritten by every type of page.
+     */
+    protected function set_url() {
+        throw new coding_exception('Page socialwiki class does not implement method set_url()');
+    }
+
+    /**
+     * Sets the session url for the current session.
+     */
+    protected function set_session_url() {
+        global $SESSION;
+        unset($SESSION->wikipreviousurl);
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+        $PAGE->navbar->add(format_string($this->title), $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $this->page->id);
+    }
+
+    /**
+     * Prints the page title.
      */
     protected function print_pagetitle() {
         global $OUTPUT;
         $html = '';
         $html .= $OUTPUT->container_start();
-        $html .= $OUTPUT->heading(format_string($this->title), 1, 'socialwiki_headingtitle');
+        $html .= $OUTPUT->heading(format_string($this->title), 1, 'socialwiki_title');
         $html .= $OUTPUT->container_end();
         echo $html;
     }
 
     /**
-     * Setup page tabs, if options is empty, will set up active tab automatically
-     * @param array $options : tabs options
+     * Setup page tabs, if options is empty, will set up active tab automatically.
+     *
+     * @param array $options The tab options.
      */
     protected function setup_tabs($options = array()) {
         global $PAGE;
@@ -191,6 +247,7 @@ abstract class page_socialwiki {
     }
 
     /**
+     * Prints the page content.
      * This method must be overwritten to print the page content.
      */
     public function print_content() {
@@ -200,7 +257,7 @@ abstract class page_socialwiki {
     /**
      * Method to set the current page.
      *
-     * @param stdClass $page Current page
+     * @param stdClass $page Current page.
      */
     public function set_page($page) {
         global $PAGE;
@@ -210,9 +267,10 @@ abstract class page_socialwiki {
     }
 
     /**
-     * Method to set the current page title.
+     * Sets the current page title.
      * This method must be called when the current page is not created yet.
-     * @param string $title : Current page title.
+     *
+     * @param string $title Current page title.
      */
     public function set_title($title) {
         global $PAGE;
@@ -222,65 +280,51 @@ abstract class page_socialwiki {
     }
 
     /**
-     * Method to set current group id
-     * @param int $gid : Current group id
+     * Sets current group ID.
+     *
+     * @param int $gid Current group ID.
      */
     public function set_gid($gid) {
         $this->gid = $gid;
     }
 
     /**
-     * Method to set current user id
-     * @param int $uid Current user id
+     * Sets current user ID.
+     *
+     * @param int $uid Current user ID.
      */
     public function set_uid($uid) {
         $this->uid = $uid;
     }
 
     /**
-     * Method to set the URL of the page.
-     * This method must be overwritten by every type of page.
-     */
-    protected function set_url() {
-        throw new coding_exception('Page socialwiki class does not implement method set_url()');
-    }
-
-    /**
-     * Protected method to create the common items of the navbar in every page type.
-     */
-    protected function create_navbar() {
-        global $PAGE, $CFG;
-        $PAGE->navbar->add(format_string($this->title), $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $this->page->id);
-    }
-
-    /**
-     * This method print the footer of the page.
+     * Prints out the footer at the bottom of the page.
      */
     public function print_footer() {
         global $OUTPUT;
         echo $this->wikioutput->content_area_end();
         echo $OUTPUT->footer();
     }
-
-    protected function set_session_url() {
-        global $SESSION;
-        unset($SESSION->wikipreviousurl);
-    }
-
 }
 
 /**
- * View a socialwiki page
+ * The socialwiki view page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_view extends page_socialwiki {
 
     /**
-     * @var int the coursemodule id
+     * The course module id.
+     *
+     * @var int
      */
     private $coursemodule;
 
+    /**
+     * Prints out the header at the top of the page.
+     */
     public function print_header() {
         global $PAGE;
         parent::print_header();
@@ -289,6 +333,43 @@ class page_socialwiki_view extends page_socialwiki {
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
     }
 
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $params = array();
+
+        if (isset($this->coursemodule)) {
+            $params['id'] = $this->coursemodule;
+        } else if (!empty($this->page) and $this->page != null) {
+            $params['pageid'] = $this->page->id;
+        } else if (!empty($this->gid)) {
+            $params['wid'] = $PAGE->cm->instance;
+            $params['group'] = $this->gid;
+        } else if (!empty($this->title)) {
+            $params['swid'] = $this->subwiki->id;
+            $params['title'] = $this->title;
+        } else {
+            print_error(get_string('invalidparameters', 'socialwiki'));
+        }
+
+        $PAGE->set_url(new moodle_url($CFG->wwwroot . '/mod/socialwiki/view.php', $params));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+
+        $PAGE->navbar->add(format_string($this->title));
+        $PAGE->navbar->add(get_string('view', 'socialwiki'));
+    }
+
+    /**
+     * Prints the page title.
+     */
     protected function print_pagetitle() {
         global $OUTPUT;
         $html = '';
@@ -336,6 +417,9 @@ class page_socialwiki_view extends page_socialwiki {
         echo $html;
     }
 
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         if (socialwiki_user_can_view($this->subwiki)) {
 
@@ -355,59 +439,66 @@ class page_socialwiki_view extends page_socialwiki {
         }
     }
 
-    public function set_url() {
-        global $PAGE, $CFG;
-        $params = array();
-
-        if (isset($this->coursemodule)) {
-            $params['id'] = $this->coursemodule;
-        } else if (!empty($this->page) and $this->page != null) {
-            $params['pageid'] = $this->page->id;
-        } else if (!empty($this->gid)) {
-            $params['wid'] = $PAGE->cm->instance;
-            $params['group'] = $this->gid;
-        } else if (!empty($this->title)) {
-            $params['swid'] = $this->subwiki->id;
-            $params['title'] = $this->title;
-        } else {
-            print_error(get_string('invalidparameters', 'socialwiki'));
-        }
-
-        $PAGE->set_url(new moodle_url($CFG->wwwroot . '/mod/socialwiki/view.php', $params));
-    }
-
+    /**
+     * Sets the current course module.
+     *
+     * @param int $id
+     */
     public function set_coursemodule($id) {
         $this->coursemodule = $id;
     }
-
-    protected function create_navbar() {
-        global $PAGE;
-
-        $PAGE->navbar->add(format_string($this->title));
-        $PAGE->navbar->add(get_string('view', 'socialwiki'));
-    }
-
 }
 
 /**
- * Wiki page editing page
+ * The socialwiki edit page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_edit extends page_socialwiki {
 
+    /**
+     * The options available for attachments.
+     *
+     * @var array
+     */
     public static $attachmentoptions;
+
+    /**
+     * The section name.
+     *
+     * @var string
+     */
+    protected $section;
+
+    /**
+     * The section content.
+     *
+     * @var string
+     */
     protected $sectioncontent;
 
-    /** @var string the section name needed to be edited */
-    protected $section;
+    /**
+     * The current version number.
+     *
+     * @var int
+     */
     protected $versionnumber = -1;
+
     protected $upload = false;
     protected $attachments = 0;
     protected $deleteuploads = array();
     protected $format;
     protected $makenew;
 
+    /**
+     * Creates a new edit page.
+     *
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
+     * @param bool $makenew Whether to make a new topic from this page (no parent).
+     */
     public function __construct($wiki, $subwiki, $cm, $makenew) {
         global $CFG;
         parent::__construct($wiki, $subwiki, $cm);
@@ -416,26 +507,9 @@ class page_socialwiki_edit extends page_socialwiki {
             'maxfiles' => - 1, 'maxbytes' => $CFG->maxbytes, 'accepted_types' => '*');
     }
 
-    protected function print_pagetitle() {
-        global $OUTPUT;
-
-        $title = $this->page->title;
-        if (isset($this->section)) {
-            $title .= ' : ' . $this->section;
-        }
-        echo $OUTPUT->container_start('socialwiki_clear');
-        echo $OUTPUT->heading(format_string($title), 1, 'socialwiki_headingtitle');
-        echo $OUTPUT->container_end();
-    }
-
-    public function print_content() {
-        if (socialwiki_user_can_edit($this->subwiki)) {
-            $this->print_edit();
-        } else {
-            echo get_string('cannoteditpage', 'socialwiki');
-        }
-    }
-
+    /**
+     * Sets the URL of the page.
+     */
     protected function set_url() {
         global $PAGE, $CFG;
 
@@ -448,6 +522,9 @@ class page_socialwiki_edit extends page_socialwiki {
         $PAGE->set_url("$CFG->wwwroot/mod/socialwiki/edit.php?makenew=$this->makenew", $params);
     }
 
+    /**
+     * Sets the session URL of the page.
+     */
     protected function set_session_url() {
         global $SESSION;
 
@@ -455,15 +532,64 @@ class page_socialwiki_edit extends page_socialwiki {
             'params' => array('pageid' => $this->page->id, 'section' => $this->section));
     }
 
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('edit', 'socialwiki'));
+    }
+
+    /**
+     * Prints out the header at the top of the page.
+     */
+    protected function print_pagetitle() {
+        global $OUTPUT;
+
+        $title = $this->page->title;
+        if (isset($this->section)) {
+            $title .= ' : ' . $this->section;
+        }
+        echo $OUTPUT->heading(format_string($title), 1, 'socialwiki_title');
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        if (socialwiki_user_can_edit($this->subwiki)) {
+            $this->print_edit();
+        } else {
+            echo get_string('cannoteditpage', 'socialwiki');
+        }
+    }
+
+    /**
+     * Sets section information.
+     *
+     * @param string $sectioncontent The section content.
+     * @param string $section The section name.
+     */
     public function set_section($sectioncontent, $section) {
         $this->sectioncontent = $sectioncontent;
         $this->section = $section;
     }
 
+    /**
+     * Sets the version number for this edit.
+     *
+     * @param int $versionnumber
+     */
     public function set_versionnumber($versionnumber) {
         $this->versionnumber = $versionnumber;
     }
 
+    /**
+     * Sets the page formatting style.
+     *
+     * @param string $format The formatting style.
+     */
     public function set_format($format) {
         $this->format = $format;
     }
@@ -480,12 +606,11 @@ class page_socialwiki_edit extends page_socialwiki {
         $this->deleteuploads = $deleteuploads;
     }
 
-    protected function create_navbar() {
-        global $PAGE;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('edit', 'socialwiki'));
-    }
-
+    /**
+     * Prints the editing content pane.
+     *
+     * @param string $content The current content from the previous version.
+     */
     protected function print_edit($content = null) {
         global $CFG;
 
@@ -546,16 +671,36 @@ class page_socialwiki_edit extends page_socialwiki {
         $form->set_data($data);
         $form->display();
     }
-
 }
 
 /**
- * Class that models the behavior of wiki's view comments page
+ * The socialwiki comments page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_comments extends page_socialwiki {
 
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('comments', 'socialwiki'));
+    }
+
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $CFG, $OUTPUT, $USER;
         require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
@@ -646,23 +791,12 @@ class page_socialwiki_comments extends page_socialwiki {
             echo html_writer::tag('div', html_writer::table($t), array('class' => 'no-overflow'));
         }
     }
-
-    public function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
-    }
-
-    protected function create_navbar() {
-        global $PAGE;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('comments', 'socialwiki'));
-    }
-
 }
 
 /**
- * Class that models the behavior of wiki's edit comment
+ * The socialwiki edit comment page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_editcomment extends page_socialwiki {
@@ -672,16 +806,40 @@ class page_socialwiki_editcomment extends page_socialwiki {
     private $form;
     private $format;
 
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE, $CFG;
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
     }
 
-    public function print_header() {
-        parent::print_header();
-        $this->print_pagetitle();
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+
+        $PAGE->navbar->add(get_string('comments', 'socialwiki'), $CFG->wwwroot
+                . '/mod/socialwiki/comments.php?pageid=' . $this->page->id);
+
+        if ($this->action == 'add') {
+            $PAGE->navbar->add(get_string('insertcomment', 'socialwiki'));
+        } else {
+            $PAGE->navbar->add(get_string('editcomment', 'socialwiki'));
+        }
     }
 
+    /**
+     * Setup page tabs.
+     */
+    protected function setup_tabs($options = array()) {
+        parent::setup_tabs(array('linkedwhenactive' => 'comments', 'activetab' => 'comments'));
+    }
+
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         require_capability('mod/socialwiki:editcomment', $this->modcontext, null, true, 'noeditcommentpermission', 'socialwiki');
 
@@ -705,23 +863,6 @@ class page_socialwiki_editcomment extends page_socialwiki {
             $destination = $CFG->wwwroot . '/mod/socialwiki/instancecomments.php?pageid=' . $this->page->id;
             $this->form = new mod_socialwiki_comments_form($destination);
         }
-    }
-
-    protected function create_navbar() {
-        global $PAGE, $CFG;
-
-        $PAGE->navbar->add(get_string('comments', 'socialwiki'), $CFG->wwwroot
-                . '/mod/socialwiki/comments.php?pageid=' . $this->page->id);
-
-        if ($this->action == 'add') {
-            $PAGE->navbar->add(get_string('insertcomment', 'socialwiki'));
-        } else {
-            $PAGE->navbar->add(get_string('editcomment', 'socialwiki'));
-        }
-    }
-
-    protected function setup_tabs($options = array()) {
-        parent::setup_tabs(array('linkedwhenactive' => 'comments', 'activetab' => 'comments'));
     }
 
     private function add_comment_form() {
@@ -760,21 +901,40 @@ class page_socialwiki_editcomment extends page_socialwiki {
 }
 
 /**
- * Wiki page search page
+ * The socialwiki search page class.
  *
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_search extends page_socialwiki {
 
+    /**
+     * Array of search result pages.
+     *
+     * @var stdClass[]
+     */
     private $searchresult;
-    private $searchstring;
-    private $view; // The view mode for viewing results.
-    private $exact; // 1 for an exact search type.
 
-    protected function create_navbar() {
-        global $PAGE;
-        $PAGE->navbar->add(format_string($this->title));
-    }
+    /**
+     * The search string.
+     *
+     * @var string
+     */
+    private $searchstring;
+
+    /**
+     * The view mode for viewing results.
+     *
+     * @var int
+     */
+    private $view;
+
+    /**
+     * 1 for an exact search type.
+     *
+     * @var int
+     */
+    private $exact;
 
     public function __construct($wiki, $subwiki, $cm, $option) {
         global $PAGE;
@@ -793,6 +953,34 @@ class page_socialwiki_search extends page_socialwiki {
         }
     }
 
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG, $COURSE;
+        if (isset($this->page)) {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='
+                    . $this->page->id . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id);
+        } else {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
+        }
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        $PAGE->navbar->add(format_string($this->title));
+    }
+
+    /**
+     * Sets all search data.
+     *
+     * @param string $search The string that is searched.
+     * @param bool $searchcontent Whether to search the page content as well.
+     * @param int $exactmatch An exact match will only return pages with the exact title.
+     */
     public function set_search_string($search, $searchcontent, $exactmatch = false) {
         $swid = $this->subwiki->id;
         $this->searchstring = $search;
@@ -804,16 +992,9 @@ class page_socialwiki_search extends page_socialwiki {
         }
     }
 
-    public function set_url() {
-        global $PAGE, $CFG, $COURSE;
-        if (isset($this->page)) {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='
-                    . $this->page->id . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id);
-        } else {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
-        }
-    }
-
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $PAGE;
         require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
@@ -825,7 +1006,9 @@ class page_socialwiki_search extends page_socialwiki {
         }
     }
 
-    // Print the table view.
+    /**
+     * Print the table view.
+     */
     private function print_table() {
         global $USER, $CFG;
         require($CFG->dirroot . '/mod/socialwiki/table/table.php');
@@ -833,7 +1016,9 @@ class page_socialwiki_search extends page_socialwiki {
         echo versionTable::html_versiontable($USER->id, $this->subwiki->id, $pages, 'version');
     }
 
-    // Print the tree view.
+    /**
+     * Print the tree view.
+     */
     private function print_tree() {
         global $CFG;
         require($CFG->dirroot . '/mod/socialwiki/tree/tree.php');
@@ -842,14 +1027,13 @@ class page_socialwiki_search extends page_socialwiki {
         $tree->build_tree($pages);
         $tree->display();
     }
-
 }
 
 /**
+ * The socialwiki create page class.
  *
- * Class that models the behavior of wiki's
- * create page
- *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_create extends page_socialwiki {
 
@@ -860,6 +1044,9 @@ class page_socialwiki_create extends page_socialwiki {
     private $mform;
     private $groups;
 
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE;
 
@@ -875,6 +1062,15 @@ class page_socialwiki_create extends page_socialwiki {
             $params['action'] = 'create';
         }
         $PAGE->set_url(new moodle_url('/mod/socialwiki/create.php', $params));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        // The navigation_node::get_content formats this before printing.
+        $PAGE->navbar->add($this->title);
     }
 
     public function set_format($format) {
@@ -909,12 +1105,11 @@ class page_socialwiki_create extends page_socialwiki {
         $this->mform = new mod_socialwiki_create_form($url->out(false), $options);
     }
 
-    protected function create_navbar() {
-        global $PAGE;
-        // The navigation_node::get_content formats this before printing.
-        $PAGE->navbar->add($this->title);
-    }
-
+    /**
+     * Prints the page content.
+     *
+     * @param string $pagetitle The page title.
+     */
     public function print_content($pagetitle = '') {
         global $PAGE;
 
@@ -958,13 +1153,25 @@ class page_socialwiki_create extends page_socialwiki {
         $this->page = $id;
         return $id;
     }
-
 }
 
+/**
+ * The socialwiki preview page class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class page_socialwiki_preview extends page_socialwiki_edit {
 
     private $newcontent;
 
+    /**
+     * Creates a new preview page.
+     *
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
+     */
     public function __construct($wiki, $subwiki, $cm) {
         global $PAGE, $OUTPUT;
         parent::__construct($wiki, $subwiki, $cm, 0);
@@ -972,15 +1179,9 @@ class page_socialwiki_preview extends page_socialwiki_edit {
         $PAGE->set_button($buttons);
     }
 
-    public function print_content() {
-        require_capability('mod/socialwiki:editpage', $this->modcontext, null, true, 'noeditpermission', 'socialwiki');
-        $this->print_preview();
-    }
-
-    public function set_newcontent($newcontent) {
-        $this->newcontent = $newcontent;
-    }
-
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE, $CFG;
 
@@ -992,8 +1193,23 @@ class page_socialwiki_preview extends page_socialwiki_edit {
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/edit.php', $params);
     }
 
+    /**
+     * Setup page tabs.
+     */
     protected function setup_tabs($options = array()) {
         parent::setup_tabs(array('linkedwhenactive' => 'view', 'activetab' => 'view'));
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        require_capability('mod/socialwiki:editpage', $this->modcontext, null, true, 'noeditpermission', 'socialwiki');
+        $this->print_preview();
+    }
+
+    public function set_newcontent($newcontent) {
+        $this->newcontent = $newcontent;
     }
 
     protected function print_preview() {
@@ -1028,7 +1244,7 @@ class page_socialwiki_preview extends page_socialwiki_edit {
                 // Wiki format.
                 $text = $data->newcontent;
             } else {
-                // Html format.
+                // HTML format.
                 $text = $data->newcontent_editor['text'];
             }
             $parseroutput = socialwiki_parse_content($data->contentformat, $text, $options);
@@ -1041,20 +1257,22 @@ class page_socialwiki_preview extends page_socialwiki_edit {
 
         $this->print_edit($content);
     }
-
 }
 
 /**
+ * The socialwiki difference page class.
  *
- * Class that models the behavior of wiki's
- * view differences
- *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_diff extends page_socialwiki {
 
     private $compare;
     private $comparewith;
 
+    /**
+     * Prints out the header at the top of the page.
+     */
     public function print_header() {
         parent::print_header();
 
@@ -1065,14 +1283,8 @@ class page_socialwiki_diff extends page_socialwiki {
     }
 
     /**
-     * Print the diff view
+     * Sets the URL of the page.
      */
-    public function print_content() {
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
-
-        $this->print_diff_content();
-    }
-
     public function set_url() {
         global $PAGE, $CFG;
 
@@ -1080,11 +1292,9 @@ class page_socialwiki_diff extends page_socialwiki {
                 array('pageid' => $this->page->id, 'comparewith' => $this->comparewith, 'compare' => $this->compare));
     }
 
-    public function set_comparison($compare, $comparewith) {
-        $this->compare = $compare;
-        $this->comparewith = $comparewith;
-    }
-
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
     protected function create_navbar() {
         global $PAGE, $CFG;
 
@@ -1092,6 +1302,20 @@ class page_socialwiki_diff extends page_socialwiki {
         $PAGE->navbar->add(get_string('history', 'socialwiki'), $CFG->wwwroot
                 . '/mod/socialwiki/history.php?pageid=' . $this->page->id);
         $PAGE->navbar->add(get_string('diff', 'socialwiki'));
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
+
+        $this->print_diff_content();
+    }
+
+    public function set_comparison($compare, $comparewith) {
+        $this->compare = $compare;
+        $this->comparewith = $comparewith;
     }
 
     /**
@@ -1120,21 +1344,30 @@ class page_socialwiki_diff extends page_socialwiki {
             print_error('versionerror', 'socialwiki');
         }
     }
-
 }
 
 /**
+ * The socialwiki history (version) page class.
  *
- * Class that models the behavior of wiki's history page
- *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_history extends page_socialwiki {
 
     /**
-     * @var int $allversion if $allversion != 0, all versions will be printed in a signle table
+     * If != 0, all versions will be printed in a signle table.
+     *
+     * @var int
      */
     private $allversion;
 
+    /**
+     * Creates a new history page.
+     *
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
+     */
     public function __construct($wiki, $subwiki, $cm) {
         global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
@@ -1143,8 +1376,32 @@ class page_socialwiki_history extends page_socialwiki {
     }
 
     /**
-     * Prints the history for a given wiki page
-     *
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/history.php', array('pageid' => $this->page->id));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('history', 'socialwiki'));
+    }
+
+    /**
+     * Setup page tabs.
+     */
+    protected function setup_tabs($options = array()) {
+        parent::setup_tabs(array('linkedwhenactive' => 'versions', 'activetab' => 'versions'));
+    }
+
+    /**
+     * Prints the page content.
      */
     public function print_content() {
         global $OUTPUT;
@@ -1186,24 +1443,8 @@ class page_socialwiki_history extends page_socialwiki {
         echo html_writer::end_tag('form');
     }
 
-    public function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/history.php', array('pageid' => $this->page->id));
-    }
-
     public function set_allversion($allversion) {
         $this->allversion = $allversion;
-    }
-
-    protected function create_navbar() {
-        global $PAGE;
-
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('history', 'socialwiki'));
-    }
-
-    protected function setup_tabs($options = array()) {
-        parent::setup_tabs(array('linkedwhenactive' => 'versions', 'activetab' => 'versions'));
     }
 
     /**
@@ -1214,8 +1455,7 @@ class page_socialwiki_history extends page_socialwiki {
      * @param string $onclick  Function to be executed when the radios are clicked.
      * @param string $checked  The value that is already checked.
      * @param bool   $return   If true, return the HTML as a string, otherwise print it.
-     *
-     * @return mixed If $return is false, returns nothing, otherwise returns a string of HTML.
+     * @return string
      */
     private function choose_from_radio($options, $name, $onclick = '', $checked = '', $return = false) {
 
@@ -1260,15 +1500,25 @@ class page_socialwiki_history extends page_socialwiki {
 }
 
 /**
- * Class that models the behavior of wiki's home page
+ * The socialwiki home page class.
  *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_home extends page_socialwiki {
 
     /**
-     * @var int wiki view option
+     * Wiki view option.
+     *
+     * @var int
      */
     private $view;
+
+    /**
+     * Which tab is selected.
+     *
+     * @var int
+     */
     private $tab;
 
     const EXPLORE_TAB = 0;
@@ -1276,6 +1526,14 @@ class page_socialwiki_home extends page_socialwiki {
     const REVIEW_TAB  = 2;
     const PEOPLE_TAB  = 3;
 
+    /**
+     * Creates a new home page.
+     *
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
+     * @param int $t The tab to view.
+     */
     public function __construct($wiki, $subwiki, $cm, $t = 0) {
         Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
@@ -1287,9 +1545,26 @@ class page_socialwiki_home extends page_socialwiki {
     }
 
     /**
+     * Sets the URL of the page.
+     */
+    protected function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/home.php', array('id' => $PAGE->cm->id));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+        $PAGE->navbar->add(get_string('home', 'socialwiki'),
+                $CFG->wwwroot . '/mod/socialwiki/home.php?id=' . $PAGE->cm->id);
+    }
+
+    /**
+     * Checks the tab ID and then sets it.
      *
-     * @param int $tab_id   0 - Review Tab
-     *                      1 - Explore Tab
+     * @param int $tabid The tab ID to print.
      */
     public function set_tab($tabid) {
         if ($tabid === self::REVIEW_TAB  ||
@@ -1300,6 +1575,9 @@ class page_socialwiki_home extends page_socialwiki {
         }
     }
 
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $USER, $OUTPUT;
 
@@ -1308,7 +1586,7 @@ class page_socialwiki_home extends page_socialwiki {
         );
 
         // Print the home page heading.
-        echo $OUTPUT->heading(get_string('hometitle', 'socialwiki'), 1, "socialwiki_headingtitle colourtext");
+        echo $OUTPUT->heading(get_string('hometitle', 'socialwiki'), 1, "socialwiki_title colourtext");
 
         $userheader = "<div class='home_picture'>";
         $userheader .= $OUTPUT->user_picture(socialwiki_get_user_info($USER->id), array('size' => 65));
@@ -1339,7 +1617,7 @@ class page_socialwiki_home extends page_socialwiki {
 
         $followdata = html_writer::start_tag('h3', array('class' => 'home_user'));
         $followdata .= html_writer::tag('span', get_string('followers', 'socialwiki') . ": $followers | "
-                . get_string('followedusers', 'socialwiki') . ": $following", array('class' => 'socialwiki_label'));
+                . get_string('followedusers', 'socialwiki') . ": $following", array('class' => 's_label'));
         $followdata .= html_writer::end_tag('h3');
         return $followdata;
     }
@@ -1365,65 +1643,52 @@ class page_socialwiki_home extends page_socialwiki {
         return $this->wikioutput->tabtree($tabs, $selected, null);
     }
 
+    /**
+     * Prints the explore tab.
+     */
     public function print_explore_tab() {
         global $USER;
-        // Versions from Following Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'pagesfollowed');
-        // New Versions Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'newpages');
-        // All Versions Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'allpages');
+        socialwiki_table::builder($USER->id, $this->subwiki->id, 'pagesfollowed'); // Versions from Following Table.
+        socialwiki_table::builder($USER->id, $this->subwiki->id, 'newpages'); // New Versions Table.
+        socialwiki_table::builder($USER->id, $this->subwiki->id, 'allpages'); // All Versions Table.
     }
 
+    /**
+     * Prints the topics tab.
+     */
     public function print_topics_tab() {
         global $USER;
         // Make a new Page button.
-        echo "<h2><a style='float:right' class='socialwiki_label' href='create.php?action=new"
+        echo "<h2><a style='float:right' class='s_label' href='create.php?action=new"
         . "&swid={$this->subwiki->id}'>" . get_string('makepage', 'socialwiki') . "</a></h2>";
-        // All Pages Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'alltopics');
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'alltopics'); // All Pages Table.
     }
 
+    /**
+     * Prints the review tab.
+     */
     public function print_review_tab() {
         Global $USER;
-        // Favourites Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'myfaves');
-        // Likes Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mylikes');
-        // My Versions Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mypages');
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'myfaves'); // Favourites Table.
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mylikes'); // Likes Table.
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mypages'); // My Versions Table.
     }
 
+    /**
+     * Prints the people tab.
+     */
     public function print_people_tab() {
         global $USER;
-        // Followers Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'followers');
-        // Following Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'followedusers');
-        // All Users Table.
-        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'allusers');
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'followers'); // Followers Table.
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'followedusers'); // Following Table.
+        echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'allusers'); // All Users Table.
     }
 
     public function set_view($option) {
         $this->view = $option;
     }
 
-    protected function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/home.php', array('id' => $PAGE->cm->id));
-    }
-
-    protected function create_navbar() {
-        global $PAGE, $CFG;
-
-        $PAGE->navbar->add(
-                get_string('home', 'socialwiki'),
-                $CFG->wwwroot . '/mod/socialwiki/home.php?id=' . $PAGE->cm->id
-        );
-    }
-
     protected function render_navigation_node($items, $attrs = array(), $expansionlimit = null, $depth = 1) {
-
         // Exit if empty, we don't want an empty ul element.
         if (count($items) == 0) {
             return '';
@@ -1519,20 +1784,44 @@ class page_socialwiki_home extends page_socialwiki {
 }
 
 /**
- * Class that models the behavior of wiki's delete comment confirmation page
+ * The socialwiki delete comment page class.
  *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_deletecomment extends page_socialwiki {
 
     private $commentid;
 
-    public function print_content() {
-        $this->printconfirmdelete();
-    }
-
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE;
         $PAGE->set_url('/mod/socialwiki/instancecomments.php', array('pageid' => $this->page->id, 'commentid' => $this->commentid));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('deletecommentcheck', 'socialwiki'));
+    }
+
+    /**
+     * Setup page tabs.
+     */
+    protected function setup_tabs($options = array()) {
+        parent::setup_tabs(array('linkedwhenactive' => 'comments', 'activetab' => 'comments'));
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        $this->printconfirmdelete();
     }
 
     public function set_action($action, $commentid, $content) {
@@ -1541,24 +1830,8 @@ class page_socialwiki_deletecomment extends page_socialwiki {
         $this->content = $content;
     }
 
-    protected function create_navbar() {
-        global $PAGE;
-
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('deletecommentcheck', 'socialwiki'));
-    }
-
-    protected function setup_tabs($options = array()) {
-        parent::setup_tabs(array('linkedwhenactive' => 'comments', 'activetab' => 'comments'));
-    }
-
     /**
-     * Prints the comment deletion confirmation form
-     *
-     * @param page $page The page whose version will be restored
-     * @param int  $versionid The version to be restored
-     * @param bool $confirm If false, shows a yes/no confirmation page.
-     *     If true, restores the old version and redirects the user to the 'view' tab.
+     * Prints the comment deletion confirmation form.
      */
     private function printconfirmdelete() {
         global $OUTPUT;
@@ -1586,18 +1859,25 @@ class page_socialwiki_deletecomment extends page_socialwiki {
 }
 
 /**
- * Class that models the behavior of socialwiki's
- * save page
+ * The sociawiki save page class.
  *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_save extends page_socialwiki_edit {
 
     private $newcontent;
 
+    /**
+     * Prints out the header at the top of the page.
+     */
     public function print_header() {
 
     }
 
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $PAGE;
 
@@ -1609,10 +1889,6 @@ class page_socialwiki_save extends page_socialwiki_edit {
 
     public function set_newcontent($newcontent) {
         $this->newcontent = $newcontent;
-    }
-
-    protected function set_session_url() {
-
     }
 
     protected function print_save() {
@@ -1686,29 +1962,27 @@ class page_socialwiki_save extends page_socialwiki_edit {
 }
 
 /**
- * Class that models the behavior of wiki's view an old version of a page
+ * The socialwiki view version class.
  *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_viewversion extends page_socialwiki {
 
     private $version;
 
-    public function print_content() {
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
-
-        $this->print_version_view();
-    }
-
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE, $CFG;
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewversion.php',
                        array('pageid' => $this->page->id, 'versionid' => $this->version->id));
     }
 
-    public function set_versionid($versionid) {
-        $this->version = socialwiki_get_version($versionid);
-    }
-
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
     protected function create_navbar() {
         global $PAGE, $CFG;
 
@@ -1718,8 +1992,24 @@ class page_socialwiki_viewversion extends page_socialwiki {
         $PAGE->navbar->add(get_string('versionnum', 'socialwiki', $this->version->version));
     }
 
+    /**
+     * Setup page tabs.
+     */
     protected function setup_tabs($options = array()) {
         parent::setup_tabs(array('linkedwhenactive' => 'history', 'activetab' => 'history', 'inactivetabs' => array('edit')));
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
+
+        $this->print_version_view();
+    }
+
+    public function set_versionid($versionid) {
+        $this->version = socialwiki_get_version($versionid);
     }
 
     /**
@@ -1763,16 +2053,28 @@ class page_socialwiki_viewversion extends page_socialwiki {
 
 }
 
+/**
+ * The socialwiki confirm restore page class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class page_socialwiki_confirmrestore extends page_socialwiki_save {
 
     private $version;
 
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE, $CFG;
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewversion.php',
                        array('pageid' => $this->page->id, 'versionid' => $this->version->id));
     }
 
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $CFG;
 
@@ -1793,8 +2095,17 @@ class page_socialwiki_confirmrestore extends page_socialwiki_save {
 
 }
 
+/**
+ * The socialwiki pretty view page (for printing) class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class page_socialwiki_prettyview extends page_socialwiki {
 
+    /**
+     * Prints out the header at the top of the page.
+     */
     public function print_header() {
         global $PAGE, $OUTPUT;
         $PAGE->set_pagelayout('embedded');
@@ -1803,18 +2114,27 @@ class page_socialwiki_prettyview extends page_socialwiki {
         echo '<h1 id="socialwiki_printable_title">' . format_string($this->title) . '</h1>';
     }
 
-    public function print_content() {
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
-
-        $this->print_pretty_view();
-    }
-
+    /**
+     * Sets the URL of the page.
+     */
     public function set_url() {
         global $PAGE, $CFG;
 
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/prettyview.php', array('pageid' => $this->page->id));
     }
 
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
+
+        $this->print_pretty_view();
+    }
+
+    /**
+     * Prints out the pretty view content.
+     */
     private function print_pretty_view() {
         $version = socialwiki_get_current_version($this->page->id);
 
@@ -1829,6 +2149,12 @@ class page_socialwiki_prettyview extends page_socialwiki {
 
 }
 
+/**
+ * The socialwiki page for handling comments class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class page_socialwiki_handlecomments extends page_socialwiki {
 
     private $action;
@@ -1836,10 +2162,25 @@ class page_socialwiki_handlecomments extends page_socialwiki {
     private $commentid;
     private $format;
 
+
+    /**
+     * Prints out the header at the top of the page.
+     */
     public function print_header() {
         $this->set_url();
     }
 
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
+    }
+
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         global $CFG, $USER;
 
@@ -1864,11 +2205,6 @@ class page_socialwiki_handlecomments extends page_socialwiki {
                          $this->page->id, get_string('deletecomment', 'socialwiki'), 2);
             }
         }
-    }
-
-    public function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
     }
 
     public function set_action($action, $commentid, $content) {
@@ -1908,8 +2244,10 @@ class page_socialwiki_handlecomments extends page_socialwiki {
 }
 
 /**
- * This class will let user to delete wiki pages and page versions.
+ * The socialwiki administration page class.
  *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_admin extends page_socialwiki {
 
@@ -1917,7 +2255,24 @@ class page_socialwiki_admin extends page_socialwiki {
     public $listall = false;
 
     /**
-     * This function will display administration view to users with managewiki capability.
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/admin.php', array('pageid' => $this->page->id));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        parent::create_navbar();
+        $PAGE->navbar->add(get_string('admin', 'socialwiki'));
+    }
+
+    /**
+     * Prints the page content.
      */
     public function print_content() {
         global $OUTPUT;
@@ -1947,29 +2302,12 @@ class page_socialwiki_admin extends page_socialwiki {
     /**
      * Sets admin view option
      *
-     * @param int $view page view id
-     * @param bool $listall is only valid for view 1.
+     * @param int $view Page view ID.
+     * @param bool $listall Is only valid for view 1.
      */
     public function set_view($view, $listall = true) {
         $this->view = $view;
         $this->listall = $listall;
-    }
-
-    /**
-     * Sets page url.
-     */
-    public function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/admin.php', array('pageid' => $this->page->id));
-    }
-
-    /**
-     * Sets navigation bar for the page.
-     */
-    protected function create_navbar() {
-        global $PAGE;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('admin', 'socialwiki'));
     }
 
     /**
@@ -2025,11 +2363,10 @@ class page_socialwiki_admin extends page_socialwiki {
     }
 
     /**
-     * helper function for print_delete_content. This will add data to the table.
-     * 
-     * @param array $pages objects of wiki pages in subwiki
-     * @param int $swid id of subwiki
-     * @param stdClass $table reference to the table in which data needs to be added
+     * Helper function for print_delete_content. This will add data to the table.
+     *
+     * @param array $pages Set of pages to show.
+     * @param stdClass $table Reference to the table in which data needs to be added.
      */
     protected function add_page_delete_options($pages, &$table) {
         global $OUTPUT;
@@ -2054,10 +2391,21 @@ class page_socialwiki_admin extends page_socialwiki {
 }
 
 /**
- * page that allows a user to view all the pages another user has liked
+ * The socialwiki user profile page class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_socialwiki_viewuserpages extends page_socialwiki {
 
+    /**
+     * Creates a new profile page.
+     *
+     * @param stdClass $wiki The current wiki.
+     * @param stdClass $subwiki The current subwiki.
+     * @param stdClass $cm The current course module.
+     * @param int $targetuser The target user ID.
+     */
     public function __construct($wiki, $subwiki, $cm, $targetuser) {
         Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
@@ -2068,6 +2416,28 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/table.css"));
     }
 
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+
+        $params = array('userid' => $this->uid, 'subwikiid' => $this->subwiki->id);
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE, $CFG;
+        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot .
+            '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid . '&subwikiid=' . $this->subwiki->id);
+    }
+
+    /**
+     * Prints the page content.
+     */
     public function print_content() {
         Global $OUTPUT, $CFG, $USER, $PAGE;
         require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
@@ -2141,18 +2511,4 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
         $html .= socialwiki_table::builder($USER->id, $this->subwiki->id, 'userpages');
         echo $html;
     }
-
-    public function set_url() {
-        global $PAGE, $CFG;
-
-        $params = array('userid' => $this->uid, 'subwikiid' => $this->subwiki->id);
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/viewuserpages.php', $params);
-    }
-
-    protected function create_navbar() {
-        global $PAGE, $CFG;
-        $PAGE->navbar->add(get_string('viewuserpages', 'socialwiki'), $CFG->wwwroot .
-            '/mod/socialwiki/viewuserpages.php?userid=' . $this->uid . '&subwikiid=' . $this->subwiki->id);
-    }
-
 }

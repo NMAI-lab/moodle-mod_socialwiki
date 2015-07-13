@@ -66,17 +66,12 @@ if ($confirm) {
     $wikipage = new page_socialwiki_confirmrestore($wiki, $subwiki, $cm);
     $wikipage->set_page($page);
     $wikipage->set_versionid($versionid);
-
 } else {
-
     $wikipage = new page_socialwiki_restoreversion($wiki, $subwiki, $cm);
     $wikipage->set_page($page);
     $wikipage->set_versionid($versionid);
-
 }
-add_to_log($course->id, "socialwiki", "restore", "view.php?pageid=".$pageid, $pageid, $cm->id);
 
 $wikipage->print_header();
 $wikipage->print_content();
-
 $wikipage->print_footer();

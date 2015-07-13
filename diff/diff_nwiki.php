@@ -690,7 +690,7 @@ class mappedwikidiff extends wikidiff {
      *
      * @param $mappedfromlines array This array should
      * have the same size number of elements as $fromlines.
-     * The elements in $mappedfromlines and $mappedtolines 
+     * The elements in $mappedfromlines and $mappedtolines
      * are what is actually compared when computing the diff.
      *
      * @param $mappedtolines array This array should have

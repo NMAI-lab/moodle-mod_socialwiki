@@ -49,10 +49,8 @@
         <FIELD NAME="cachedcontent" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Cache wiki content"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Wiki page creation timestamp"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="page edition timestamp"/>
-        <FIELD NAME="timerendered" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Last render timestamp"/>
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Edition author"/>
         <FIELD NAME="pageviews" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Number of page views"/>
-        <FIELD NAME="readonly" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Read only flag"/>
         <FIELD NAME="parent" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="This page's parent's id"/>
       </FIELDS>
       <KEYS>

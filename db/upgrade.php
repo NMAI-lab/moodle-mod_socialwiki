@@ -47,8 +47,7 @@ function xmldb_socialwiki_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     // Add user views table.
-    $revision = 2014021100;
-    if ($oldversion < $revision) {
+    if ($oldversion < 2014021100) {
         $table = new xmldb_table('socialwiki_user_views');
 
         $table->add_field("id", XMLDB_TYPE_INTEGER, "10", null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
@@ -65,11 +64,10 @@ function xmldb_socialwiki_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
-        upgrade_mod_savepoint(true, $revision, 'socialwiki'); // Socialwiki savepoint reached.
+        upgrade_mod_savepoint(true, 2014021100, 'socialwiki'); // Socialwiki savepoint reached.
     }
 
     // Remove locks, synonyms and links tables.
-    $revision = 2015070100;
     if ($oldversion < 2015070100) {
         $table = new xmldb_table('socialwiki_locks');
         if ($dbman->table_exists($table)) {
@@ -87,6 +85,25 @@ function xmldb_socialwiki_upgrade($oldversion) {
         }
 
         upgrade_mod_savepoint(true, 2015070100, 'socialwiki'); // Socialwiki savepoint reached.
+    }
+
+    // Remove locks, synonyms and links tables.
+    if ($oldversion < 2015070900) {
+        $table = new xmldb_table('socialwiki_pages');
+        if ($dbman->table_exists($table)) {
+
+            $timerendered = new xmldb_field('timerendered');
+            if ($dbman->field_exists($table, $timerendered)) {
+                $dbman->drop_field($table, $timerendered);
+            }
+
+            $readonly = new xmldb_field('readonly');
+            if ($dbman->field_exists($table, $readonly)) {
+                $dbman->drop_field($table, $readonly);
+            }
+        }
+
+        upgrade_mod_savepoint(true, 2015070900, 'socialwiki'); // Socialwiki savepoint reached.
     }
 
     return true;

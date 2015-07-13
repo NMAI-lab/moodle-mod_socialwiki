@@ -199,16 +199,6 @@ if ($id) {
 $wikipage->set_gid($currentgroup);
 $wikipage->set_page($page);
 
-if ($pageid) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?pageid=$pageid", $pageid, $cm->id);
-} else if ($id) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?id=$id", $id, $cm->id);
-} else if ($wid && $title) {
-    add_to_log($course->id, 'socialwiki', 'view', "view.php?wid=$wid&title=$title", $wid, $cm->id);
-}
-
 $wikipage->print_header();
-
 $wikipage->print_content();
-
 $wikipage->print_footer();

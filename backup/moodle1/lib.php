@@ -102,8 +102,6 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
                 array(
                     'newfields' => array(
                         'cachedcontent' => '**reparse needed**',
-                        'timerendered' => '0',
-                        'readonly' => '0',
                         'tags' => ''
                     ),
                     'renamefields' => array(
@@ -264,8 +262,6 @@ class moodle1_mod_socialwiki_handler extends moodle1_mod_handler {
                 'timemodified'  => 0,
                 'pageviews'     => 0,
                 'cachedcontent' => '**reparse needed**',
-                'timerendered'  => 0,
-                'readonly'      => 0,
                 'tags'          => ''
             );
             // Create xml with constructed page data (from initial_content file).

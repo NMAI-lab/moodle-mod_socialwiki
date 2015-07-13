@@ -18,7 +18,7 @@
  * The topic table for page groups.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright 2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,21 +26,21 @@
  * Topic Table Class.
  *
  * @package    mod_socialwiki
- * @copyright  NMAI-lab
+ * @copyright 2015 NMAI-lab
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class topictable extends socialwiki_table {
 
     /**
      * The list of topics.
-     * 
+     *
      * @var array
      */
     private $tlist;
 
     /**
      * Create a topic table.
-     * 
+     *
      * @param int $uid The current uid (userid).
      * @param int $swid The current subwikiid.
      * @param list $list Description
@@ -53,7 +53,7 @@ class topictable extends socialwiki_table {
 
     /**
      * Generate an all topics table.
-     * 
+     *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
      * @return \topictable
@@ -70,7 +70,7 @@ class topictable extends socialwiki_table {
 
     /**
      * Build the table data structure.
-     * 
+     *
      * @return array $table Each row being an array of head=>value pairs
      */
     protected function get_table_data() {

@@ -36,9 +36,6 @@ class mod_socialwiki_create_form extends moodleform {
         $mform->addElement('header', 'general', get_string('newpagehdr', 'socialwiki'));
 
         $textoptions = array();
-        if (!empty($this->_customdata['disable_pagetitle'])) {
-            $textoptions = array('readonly' => 'readonly');
-        }
         $mform->addElement('text', 'pagetitle', get_string('newpagetitle', 'socialwiki'), $textoptions);
         $mform->setType('pagetitle', PARAM_TEXT);
         $mform->addRule('pagetitle', get_string('required'), 'required', null, 'client');
