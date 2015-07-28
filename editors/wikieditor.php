@@ -51,9 +51,7 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
     }
 
     public function tohtml() {
-        $textarea = parent::tohtml();
-
-        return $this->{$this->wikiformat . "Editor"}($textarea);
+        return $this->{$this->wikiformat . "Editor"}(parent::tohtml());
     }
 
     public function creoleeditor($textarea) {
@@ -65,13 +63,7 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
     }
 
     private function printwikieditor($textarea) {
-        global $OUTPUT;
-
-        $textarea = $OUTPUT->container_start() . $textarea . $OUTPUT->container_end();
-
-        $buttons = $this->getbuttons();
-
-        return $buttons . $textarea;
+        return $this->getbuttons() . $textarea;
     }
 
     private function getbuttons() {

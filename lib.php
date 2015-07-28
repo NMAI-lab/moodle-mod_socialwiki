@@ -20,7 +20,7 @@
  * It contains the great majority of functions defined by Moodle
  * that are mandatory to develop a module.
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -104,19 +104,9 @@ function socialwiki_delete_instance($id) {
             $result = false;
         }
 
-        // Get existing pages.
-        if ($pages = $DB->get_records('socialwiki_pages', array('subwikiid' => $subwiki->id))) {
-            foreach ($pages as $page) {
-                // Get versions, and delete them.
-                if (!$DB->delete_records('socialwiki_versions', array('pageid' => $page->id), IGNORE_MISSING)) {
-                    $result = false;
-                }
-            }
-
-            // Delete pages.
-            if (!$DB->delete_records('socialwiki_pages', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
-                $result = false;
-            }
+        // Delete pages.
+        if (!$DB->delete_records('socialwiki_pages', array('subwikiid' => $subwiki->id), IGNORE_MISSING)) {
+            $result = false;
         }
 
         // Delete any subwikis.
@@ -272,8 +262,8 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
             FROM {socialwiki_pages} p
                 JOIN {socialwiki_subwikis} sw ON sw.id = p.subwikiid
                 JOIN {socialwiki} w ON w.id = sw.wikiid
-            WHERE p.timemodified > ? AND w.course = ?
-            ORDER BY p.timemodified ASC";
+            WHERE p.timecreated > ? AND w.course = ?
+            ORDER BY p.timecreated ASC";
     if (!$pages = $DB->get_records_sql($sql, array($timestart, $course->id))) {
         return false;
     }
@@ -328,7 +318,7 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
     foreach ($wikis as $wiki) {
         $cm = $modinfo->instances['socialwiki'][$wiki->wikiid];
         $link = $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $wiki->id;
-        print_recent_activity_note($wiki->timemodified, $wiki, $cm->name, $link, false, $viewfullnames);
+        print_recent_activity_note($wiki->timecreated, $wiki, $cm->name, $link, false, $viewfullnames);
     }
 
     return true; // True if anything was printed, otherwise false.
@@ -342,7 +332,7 @@ function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
  * @uses $CFG
  * @return bool
  * @todo Finish documenting this function
- * */
+ */
 function socialwiki_cron() {
     return true;
 }
@@ -359,13 +349,13 @@ function socialwiki_cron() {
  *
  * @param int $wikiid ID of an instance of this module
  * @return mixed Null or object with an array of grades and with the maximum grade
- * */
+ */
 function socialwiki_grades($wikiid) {
     return null;
 }
 
 /**
- * file serving callback
+ * File serving callback.
  *
  * @copyright Josep Arus
  * @package  mod_socialwiki
@@ -469,7 +459,7 @@ function socialwiki_comment_permissions($commentparam) {
 }
 
 /**
- * Validate comment parameter before perform other comments actions
+ * Validate comment parameter before perform other comments actions.
  *
  * @param stdClass $commentparam {
  *              context  => context the context object
@@ -541,7 +531,8 @@ function socialwiki_comment_validate($commentparam) {
 }
 
 /**
- * Return a list of page types
+ * Return a list of page types.
+ * 
  * @param string $pagetype current page type
  * @param stdClass $parentcontext Block's parent context
  * @param stdClass $currentcontext Current context of block

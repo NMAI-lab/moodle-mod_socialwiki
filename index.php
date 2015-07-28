@@ -17,7 +17,7 @@
 /**
  * This page lists all the instances of wiki in a particular course
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -29,8 +29,9 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('../../config.php');
-require_once('lib.php');
+
+require('../../config.php');
+require('lib.php');
 
 $id = required_param('id', PARAM_INT); // Course ID.
 $PAGE->set_url('/mod/socialwiki/index.php', array('id' => $id));

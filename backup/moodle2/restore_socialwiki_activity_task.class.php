@@ -53,8 +53,9 @@ class restore_socialwiki_activity_task extends restore_activity_task {
         $contents = array();
 
         $contents[] = new restore_decode_content('socialwiki', array('intro'), 'socialwiki');
-        $contents[] = new restore_decode_content('socialwiki_versions', array('content'), 'socialwiki_version');
-        $contents[] = new restore_decode_content('socialwiki_pages', array('cachedcontent'), 'socialwiki_page');
+        $contents[] = new restore_decode_content('socialwiki_pages', array('format'), 'socialwiki_page');
+        $contents[] = new restore_decode_content('socialwiki_pages', array('content'), 'socialwiki_page');
+
         return $contents;
     }
 

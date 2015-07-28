@@ -17,19 +17,20 @@
 /**
  * Socialwiki Tree Style Sheet
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2015 NMAI-lab
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 .socialwiki_wikicontent .btngroup {
     display: none;
 }
 
-.socialwiki_wikicontent .jsenabled .btngroup {
+.jsenabled .socialwiki_wikicontent .btngroup {
     cursor: pointer;
     position: relative;
-    left: 40%;
+    left: 50%;
+    margin-right: 29px;
     display: inline;
 }
 
@@ -44,6 +45,7 @@
 
 .socialwiki_wikicontent .tree {
     white-space: nowrap;
+    padding-bottom: 15px;
     overflow: auto;
 }
 

@@ -13,6 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * View a user profile.
+ *
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
@@ -38,8 +47,6 @@ require_login($course, true, $cm);
 $viewuserpage = new page_socialwiki_viewuserpages($wiki, $subwiki, $cm, $userid);
 
 $viewuserpage->print_header();
-
 $viewuserpage->print_content();
-
 $viewuserpage->print_footer();
 

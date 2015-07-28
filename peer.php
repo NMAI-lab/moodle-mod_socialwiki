@@ -17,12 +17,11 @@
 /**
  * Peers used for social data.
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2015 NMAI-lab
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 global $CFG;
-
 require_once("$CFG->dirroot/mod/socialwiki/locallib.php");
 
 /**
@@ -31,7 +30,7 @@ require_once("$CFG->dirroot/mod/socialwiki/locallib.php");
  * @copyright 2015 NMAI-lab
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class peer {
+class socialwiki_peer {
 
     /**
      * Trust indicator value = 1/distance or 0.
@@ -97,7 +96,7 @@ class peer {
      * @return peer
      */
     public static function make_with_indicators($id, $swid, $currentuser) {
-        $newpeer = new peer(array('id' => $id, 'likesim' => 0, 'followsim' => 0, 'popularity' => 0, 'depth' => 0));
+        $newpeer = new socialwiki_peer(array('id' => $id, 'likesim' => 0, 'followsim' => 0, 'popularity' => 0, 'depth' => 0));
 
         if ($id == $currentuser) {
             $newpeer->depth = -1;
@@ -207,7 +206,7 @@ class peer {
             $_SESSION['socialwiki_session_peers'] = $sessionpeers;
         }
 
-        return new peer($sessionpeers[$id]);
+        return new socialwiki_peer($sessionpeers[$id]);
     }
 
     /**
@@ -231,7 +230,7 @@ class peer {
 
         $sessionpeers = $_SESSION['socialwiki_session_peers'];
         foreach ($sessionpeers as $peerinfo) {
-            $peer = new peer($peerinfo);  // Get peer from session var.
+            $peer = new socialwiki_peer($peerinfo);  // Get peer from session var.
             if ($updatelikes) {
                 $peer->set_like_sim($thisuser, $swid);
             }

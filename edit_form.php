@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to define and process an edit form
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -25,22 +25,21 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
 }
 
-require_once($CFG->dirroot . '/mod/socialwiki/editors/wikieditor.php');
+require($CFG->dirroot . '/mod/socialwiki/editors/wikieditor.php');
 
 class mod_socialwiki_edit_form extends moodleform {
 
     protected function definition() {
-        global $CFG;
         $mform = $this->_form;
         // BEWARE HACK: In order for things to work we need to override the form id and set it to mform1.
         // The first form to be instantiated never gets displayed so this should be safe.
         $mform->updateAttributes(array('id' => 'mform1'));
 
-        $version = $this->_customdata['version'];
         $format = $this->_customdata['format'];
 
         if (empty($this->_customdata['contextid'])) {
@@ -95,11 +94,6 @@ class mod_socialwiki_edit_form extends moodleform {
             $mform->addElement('editor', 'newcontent_editor', $fieldname, null, page_socialwiki_edit::$attachmentoptions);
             $mform->addHelpButton('newcontent_editor', 'formathtml', 'socialwiki');
             $mform->setType('newcontent_editor', PARAM_RAW); // Processed by trust text or cleaned before the display.
-        }
-        // Hidden elements.
-        if ($version >= 0) {
-            $mform->addElement('hidden', 'version', $version);
-            $mform->setType('version', PARAM_FLOAT);
         }
         // Ends here.
 

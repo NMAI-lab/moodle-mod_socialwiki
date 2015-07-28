@@ -23,6 +23,10 @@ $pageid = optional_param('pageid', -1, PARAM_INT);
 $user2 = optional_param('user2', -1, PARAM_INT);
 $swid = optional_param('swid', -1, PARAM_INT);
 
+if (!confirm_sesskey()) {
+    print_error(get_string('invalidsesskey', 'socialwiki'));
+}
+
 if ($swid != -1) {
     $subwiki = socialwiki_get_subwiki($swid);
 }
@@ -51,7 +55,7 @@ if ($pageid > -1) {
     }
 
     // Get the author of the current page.
-    $page = socialwiki_get_wiki_page_version($pageid, 0);
+    $page = socialwiki_get_page($pageid, 0);
     $user2 = $page->userid;
     // Check if the user is following themselves.
     if ($USER->id == $user2) {
@@ -95,7 +99,7 @@ if ($pageid > -1) {
         $record->subwikiid = $subwiki->id;
         $DB->insert_record('socialwiki_follows', $record);
     }
-    peer::socialwiki_update_peers(false, true, $swid, $USER->id); // Update peer info in session vars.
+    socialwiki_peer::socialwiki_update_peers(false, true, $swid, $USER->id); // Update peer info in session vars.
     // Go back to the page you came from.
     redirect($from);
 } else {

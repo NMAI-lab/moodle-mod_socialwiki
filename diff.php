@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view a diff page
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -32,9 +32,7 @@
 require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
-
-require($CFG->dirroot . '/mod/socialwiki/diff/difflib.php');
-require($CFG->dirroot . '/mod/socialwiki/diff/diff_nwiki.php');
+require($CFG->dirroot . '/mod/socialwiki/difflib.php');
 
 $pageid = required_param('pageid', PARAM_TEXT);
 $compare = required_param('compare', PARAM_INT);
@@ -66,7 +64,5 @@ $wikipage->set_page($page);
 $wikipage->set_comparison($compare, $comparewith);
 
 $wikipage->print_header();
-
 $wikipage->print_content();
-
 $wikipage->print_footer();

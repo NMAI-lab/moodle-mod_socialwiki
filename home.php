@@ -38,7 +38,7 @@ $id = optional_param('id', 0, PARAM_INT); // Course module ID.
 $tab = optional_param('tabid', 0, PARAM_INT); // Option ID.
 // Case 1 User that comes from a course.
 if ($id) {
-    // Cheacking course module instance.
+    // Checking course module instance.
     if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
         print_error('invalidcoursemodule');
     }

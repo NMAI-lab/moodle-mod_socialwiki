@@ -48,58 +48,58 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         // View old version link.
         $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php',
                 array('userid' => $old->user->id, 'subwikiid' => $page->subwikiid));
-        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->pageid));
+        $pagelink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $old->id));
 
         // Userinfo container.
-        $oldheading = $this->output->container_start('socialwiki_diffright');
+        $oldheading = $this->output->container_start('socialwiki-diffright');
         $oldheading .= html_writer::link($userlink->out(false), fullname($old->user)) . ' '; // Username.
         $oldheading .= $this->output->user_picture($old->user, array('popup' => true)); // User picture.
         $oldheading .= $this->output->container_end();
         // Version number container.
-        $oldheading .= $this->output->container_start('socialwiki_diffleft');
-        $oldheading .= html_writer::link($versionlink->out(false), get_string('page') . ' ' . $old->pageid);
+        $oldheading .= $this->output->container_start('socialwiki-diffleft');
+        $oldheading .= html_writer::link($pagelink->out(false), get_string('page') . ' ' . $old->id);
         $oldheading .= $this->output->container_end();
         // Userdate container.
-        $oldheading .= $this->output->container_start('socialwiki_difftime');
+        $oldheading .= $this->output->container_start('socialwiki-difftime');
         $oldheading .= userdate($old->timecreated, $strdatetime);
         $oldheading .= $this->output->container_end();
 
         // View new version link.
         $userlink = new moodle_url('/mod/socialwiki/viewuserpages.php',
                 array('userid' => $new->user->id, 'subwikiid' => $page->subwikiid));
-        $versionlink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->pageid));
+        $pagelink = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $new->id));
 
         // New user info.
-        $newheading = $this->output->container_start('socialwiki_diffleft');
+        $newheading = $this->output->container_start('socialwiki-diffleft');
         $newheading .= $this->output->user_picture($new->user, array('popup' => true)); // User picture.
         $newheading .= ' ' . html_writer::link($userlink->out(false), fullname($new->user)); // Username.
         $newheading .= $this->output->container_end();
         // Version.
-        $newheading .= $this->output->container_start('socialwiki_diffright');
-        $newheading .= html_writer::link($versionlink->out(false), get_string('page') . ' ' . $new->pageid);
+        $newheading .= $this->output->container_start('socialwiki-diffright');
+        $newheading .= html_writer::link($pagelink->out(false), get_string('page') . ' ' . $new->id);
         $newheading .= $this->output->container_end();
         // Userdate.
-        $newheading .= $this->output->container_start('socialwiki_difftime');
+        $newheading .= $this->output->container_start('socialwiki-difftime');
         $newheading .= userdate($new->timecreated, $strdatetime);
         $newheading .= $this->output->container_end();
 
-        $oldheading = $this->output->container($oldheading, array('class' => 'socialwiki_diffheading'));
-        $newheading = $this->output->container($newheading, array('class' => 'socialwiki_diffheading'));
+        $oldheading = $this->output->container($oldheading, array('class' => 'socialwiki-diffheading'));
+        $newheading = $this->output->container($newheading, array('class' => 'socialwiki-diffheading'));
 
-        $olddiff = $this->output->container($old->diff, array('class' => 'socialwiki_diffcontent'));
-        $newdiff = $this->output->container($new->diff, array('class' => 'socialwiki_diffcontent'));
+        $olddiff = $this->output->container($old->diff, array('class' => 'socialwiki-diffcontent'));
+        $newdiff = $this->output->container($new->diff, array('class' => 'socialwiki-diffcontent'));
 
-        $html = $this->output->container_start('socialwiki_clear');
-        $html .= $this->output->container($oldheading . $olddiff, array('class' => 'socialwiki_diff'));
-        $html .= $this->output->container($newheading . $newdiff, array('class' => 'socialwiki_diff'));
+        $html = $this->output->container_start('socialwiki-clear');
+        $html .= $this->output->container($oldheading . $olddiff, array('class' => 'socialwiki-diff'));
+        $html .= $this->output->container($newheading . $newdiff, array('class' => 'socialwiki-diff'));
         $html .= $this->output->container_end();
 
         // Add the paging bars.
-        $html .= $this->output->container_start('socialwiki_clear');
-        $html .= $this->output->container($this->diff_paging_bar($old->pageid, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
-                . "$pageid&amp;comparewith=$new->pageid&amp;compare="), 'socialwiki_diffpaging');
-        $html .= $this->output->container($this->diff_paging_bar($new->pageid, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
-                . "$pageid&amp;compare=$old->pageid&amp;comparewith="), 'socialwiki_diffpaging');
+        $html .= $this->output->container_start('socialwiki-clear');
+        $html .= $this->output->container($this->diff_paging_bar($old->id, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
+                . "$pageid&amp;comparewith=$new->id&amp;compare="), 'socialwiki-diffpaging');
+        $html .= $this->output->container($this->diff_paging_bar($new->id, "$CFG->wwwroot/mod/socialwiki/diff.php?pageid="
+                . "$pageid&amp;compare=$old->id&amp;comparewith="), 'socialwiki-diffpaging');
         $html .= $this->output->container_end();
 
         return $html;
@@ -232,7 +232,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      */
     public function prettyview_link($page) {
         $link = new moodle_url('/mod/socialwiki/prettyview.php', array('pageid' => $page->id));
-        $html = $this->output->container_start('socialwiki_right');
+        $html = $this->output->container_start('socialwiki-right');
         $html .= $this->output->action_link($link, get_string('prettyprint', 'socialwiki'), new popup_action('click', $link));
         $html .= $this->output->container_end();
         return $html;
@@ -283,7 +283,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                             $options[$user->id] = fullname($user);
                         }
 
-                        echo $this->output->container_start('socialwiki_right');
+                        echo $this->output->container_start('socialwiki-right');
                         $params = array('wid' => $wiki->id, 'title' => $page->title);
                         if ($pagetype == 'files') {
                             $params['pageid'] = $page->id;
@@ -308,7 +308,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                     }
                     $baseurl->params($params);
 
-                    echo $this->output->container_start('socialwiki_right');
+                    echo $this->output->container_start('socialwiki-right');
                     groups_print_activity_menu($cm, $baseurl);
                     echo $this->output->container_end();
                     return;
@@ -342,7 +342,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                             $options[$group->id][$group->name][$group->id . '-' . $user->id] = fullname($user);
                         }
                     }
-                    echo $this->output->container_start('socialwiki_right');
+                    echo $this->output->container_start('socialwiki-right');
                     $params = array('wid' => $wiki->id, 'title' => $page->title);
                     if ($pagetype == 'files') {
                         $params['pageid'] = $page->id;
@@ -368,7 +368,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                     }
                     $baseurl->params($params);
 
-                    echo $this->output->container_start('socialwiki_right');
+                    echo $this->output->container_start('socialwiki-right');
                     groups_print_activity_menu($cm, $baseurl);
                     echo $this->output->container_end();
                     return;
@@ -387,7 +387,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
                         }
                     }
 
-                    echo $this->output->container_start('socialwiki_right');
+                    echo $this->output->container_start('socialwiki-right');
                     $params = array('wid' => $wiki->id, 'title' => $page->title);
                     if ($pagetype == 'files') {
                         $params['pageid'] = $page->id;
@@ -444,6 +444,20 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      */
     public function socialwiki_files_tree($context, $subwiki) {
         return $this->render(new socialwiki_files_tree($context, $subwiki));
+    }
+
+    public function render_socialwiki_files_tree(socialwiki_files_tree $tree) {
+        if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
+            $html = $this->output->box(get_string('nofilesavailable', 'repository'));
+        } else {
+            $htmlid = 'socialwiki_files_tree_'.uniqid();
+            $module = array('name' => 'mod_socialwiki', 'fullpath' => '/mod/socialwiki/module.js');
+            $this->page->requires->js_init_call('M.mod_socialwiki.init_tree', array(false, $htmlid), false, $module);
+            $html = '<div id="'.$htmlid.'">';
+            $html .= $this->htmllize_tree($tree, $tree->dir);
+            $html .= '</div>';
+        }
+        return $html;
     }
 
     /**
@@ -506,7 +520,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $html .= $pagecontent;
         $html .= html_writer::end_div();
 
-        $html .= html_writer::start_div('socialwiki_contributors');
+        $html .= html_writer::start_div('socialwiki-contributors');
         $html .= 'Contributors to this page:';
         $contributors = socialwiki_get_contributors($page->id);
 

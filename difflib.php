@@ -16,10 +16,11 @@
 
 /**
  * Standard diff function plus some extras for handling XHTML diffs.
- * @copyright &copy; 2007 The Open University
- * @author s.marshall@open.ac.uk
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package mod_socialwiki
+ * 
+ * @copyright 2007 The Open University
+ * @author    s.marshall@open.ac.uk
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package   mod_socialwiki
  */
 
 /**
@@ -36,7 +37,7 @@
  * @return array An array with one entry (again 1-based) for each line in
  *   file 1, with its corresponding position in file 2 or 0 if it isn't there.
  */
-function ouwiki_diff_internal($file1, $file2) {
+function socialwiki_diff_internal($file1, $file2) {
     // Basic publiciables.
     $n = count($file2);
     $m = count($file1);
@@ -61,7 +62,7 @@ function ouwiki_diff_internal($file1, $file2) {
 
     // Step 2: Sort by hash, serial.
 
-    usort($v, "ouwiki_diff_sort_v");
+    usort($v, "socialwiki_diff_sort_v");
 
     // Make it start from 1 again.
     array_unshift($v, 'bogus');
@@ -88,7 +89,7 @@ function ouwiki_diff_internal($file1, $file2) {
     $p = array();
     for ($i = 1; $i <= $m; $i++) {
         // Find matching last entry from equivalence list.
-        $p[$i] = ouwiki_diff_find_last($v, $e, crc32($file1[$i]));
+        $p[$i] = socialwiki_diff_find_last($v, $e, crc32($file1[$i]));
     }
 
     // P is now an array that finds the index (within $v) of the *first*
@@ -98,7 +99,6 @@ function ouwiki_diff_internal($file1, $file2) {
     // would find all the lines from file 2 that are equal to the given line
     // from file 1.
     // Step 5: Initialise vector of candidates.
-
     // I do not trust PHP references further than I can throw them (preferably
     // at the idiot who came up with the idea) so I am using a separate array
     // to store candidates and all references are integers into that.
@@ -122,7 +122,7 @@ function ouwiki_diff_internal($file1, $file2) {
 
     for ($i = 1; $i <= $m; $i++) {
         if ($p[$i] !== 0) {
-            ouwiki_diff_merge($k, $t, $i, $e, $p[$i], $candidates);
+            socialwiki_diff_merge($k, $t, $i, $e, $p[$i], $candidates);
         }
     }
 
@@ -156,10 +156,18 @@ function ouwiki_diff_internal($file1, $file2) {
     return $w;
 }
 
-// Functions needed by parts of the algorithm.
-
-// Merge, from step 7 (Appendix A.3).
-function ouwiki_diff_merge(&$k, &$t, $i, &$e, $p, &$candidates) {
+/**
+ * Functions needed by parts of the algorithm.
+ * Merge, from step 7 (Appendix A.3).
+ *
+ * @param array $k
+ * @param int $t
+ * @param int $i
+ * @param array $e
+ * @param int $p
+ * @param stdClass $candidates
+ */
+function socialwiki_diff_merge(&$k, &$t, $i, &$e, $p, &$candidates) {
     $r = 0;
     $c = $k[0];
 
@@ -215,7 +223,7 @@ function ouwiki_diff_merge(&$k, &$t, $i, &$e, $p, &$candidates) {
 }
 
 // From Step 2.
-function ouwiki_diff_sort_v($a, $b) {
+function socialwiki_diff_sort_v($a, $b) {
     if ($a->hash < $b->hash) {
         return -1;
     } else if ($a->hash > $b->hash) {
@@ -230,7 +238,7 @@ function ouwiki_diff_sort_v($a, $b) {
 }
 
 // From Step 4.
-function ouwiki_diff_find_last(&$v, &$e, $hash) {
+function socialwiki_diff_find_last(&$v, &$e, $hash) {
     // Binary search in $v until we find something with $hash.
     // Min = 1, array is 1-indexed.
     $min = 1;
@@ -260,16 +268,16 @@ function ouwiki_diff_find_last(&$v, &$e, $hash) {
 }
 
 /**
- * Class representing one 'line' of HTML content for the purpose of
- * text comparison.
+ * Class representing one 'line' of HTML content for the purpose of text comparison.
  */
-class ouwiki_line {
+class socialwiki_diffcontent_line {
 
-    // Array of ouwiki_words.
+    // Array of socialwiki_diffcontent_words.
     public $words = array();
 
     /**
      * Construct line object based on a chunk of text.
+     *
      * @param string $data Text data that makes up this 'line'. (May include line breaks etc.)
      * @param int $linepos Position number for first character in text
      */
@@ -306,10 +314,10 @@ class ouwiki_line {
             $space2 = strpos($data, ' ', $pos);
             if ($space2 === false) {
                 // No more spaces? Everything left must be a word.
-                $this->words[] = new ouwiki_word(substr($data, $pos), $pos + $linepos);
+                $this->words[] = new socialwiki_diffcontent_word(substr($data, $pos), $pos + $linepos);
                 break;
             } else {
-                $this->words[] = new ouwiki_word(substr($data, $pos, $space2 - $pos), $pos + $linepos);
+                $this->words[] = new socialwiki_diffcontent_word(substr($data, $pos, $space2 - $pos), $pos + $linepos);
                 $pos = $space2;
             }
         }
@@ -331,8 +339,9 @@ class ouwiki_line {
 
     /**
      * Static function converts lines to strings.
-     * @param array $lines Array of ouwiki_line
-     * @return array Array of strings
+     *
+     * @param array $lines Array of socialwiki_diffcontent_line
+     * @return string[]
      */
     public static function get_as_strings($lines) {
         $strings = array();
@@ -356,9 +365,8 @@ class ouwiki_line {
  * they could include punctuation or (if there was e.g. a span
  * in the middle of something) even be part-words.
  */
-class ouwiki_word {
+class socialwiki_diffcontent_word {
     public $word; // Word as plain string.
-
     public $start; // Start position in original xhtml.
 
     public function __construct($word, $start) {
@@ -369,10 +377,11 @@ class ouwiki_word {
 
 /**
  * Prepares XHTML content for text difference comparison.
+ *
  * @param string $content XHTML content [NO SLASHES]
- * @return array Array of ouwiki_line objects
+ * @return array Array of socialwiki_diffcontent_line objects
  */
-function ouwiki_diff_html_to_lines($content) {
+function socialwiki_diff_html_to_lines($content) {
     // These functions are a pain mostly because PHP preg_* don't provide
     // proper information as to the start/end position of matches. As a
     // consequence there is a lot of hackery going down. At every point we
@@ -384,9 +393,6 @@ function ouwiki_diff_html_to_lines($content) {
             '^(<script .*?</script>)|(<object .*?</object>)|(<style .*?</style>)^i', create_function(
                     '$matches', 'return preg_replace("/./"," ",$matches[0]);'), $content);
 
-    // Get rid of all ` symbols as we are going to use these for a marker later.
-    $content = preg_replace('/[`]/', ' ', $content);
-
     // Put line breaks on block tags. Mark each line break with ` symbol.
     $blocktags = array('p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'td', 'li');
     $taglist = '';
@@ -396,22 +402,16 @@ function ouwiki_diff_html_to_lines($content) {
         }
         $taglist .= "<$blocktag>|<\\/$blocktag>";
     }
-    $content = preg_replace_callback('/((' . $taglist . ')\s*)+/i', create_function(
-                    '$matches', 'return "`".preg_replace("/./"," ",substr($matches[0],1));'), $content);
 
     // Now go through splitting each line.
     $lines = array();
     $index = 1;
     $pos = 0;
     while ($pos < strlen($content)) {
-        $nextline = strpos($content, '`', $pos);
-        if ($nextline === false) {
-            // No more line breaks? Take content to end.
-            $nextline = strlen($content);
-        }
+        $nextline = strlen($content);
 
         $linestr = substr($content, $pos, $nextline - $pos);
-        $line = new ouwiki_line($linestr, $pos);
+        $line = new socialwiki_diffcontent_line($linestr, $pos);
         if (!$line->is_empty()) {
             $lines[$index++] = $line;
         }
@@ -421,18 +421,9 @@ function ouwiki_diff_html_to_lines($content) {
 }
 
 /**
- * Represents a changed area of file and where it is located in the
- * two source files.
+ * A more logical representation of the results from socialwiki_internal_diff().
  */
-class ouwiki_change_range {
-    public $file1start, $file1count;
-    public $file2start, $file2count;
-}
-
-/**
- * A more logical representation of the results from ouwiki_internal_diff()
- */
-class ouwiki_changes {
+class socialwiki_diffcontent_changes {
     public $adds; // Array of indexes (in file 2) of added lines.
     public $deletes; // Array of indexes (in file 1) of deleted lines.
     public $changes; // Array of changed ranges.
@@ -448,7 +439,7 @@ class ouwiki_changes {
 
         // Added lines work the same way after the comparison is reversed.
         $this->adds = self::internal_find_deletes(
-                        ouwiki_diff_internal_flip($diff, $count2), count($diff));
+                        socialwiki_diff_internal_flip($diff, $count2), count($diff));
 
         // Changed ranges are all the other lines from file 1 that
         // weren't found in file 2 but aren't deleted, and the
@@ -459,13 +450,12 @@ class ouwiki_changes {
         $inrange = -1;
         $lastrange = -1;
         foreach ($diff as $index1 => $index2) {
-            // Changed line if this isn't in 'deleted' section and
-            // doesn't have a match in file2.
+            // Changed line if this isn't in 'deleted' section and doesn't have a match in file2.
             if ($index2 === 0 && !in_array($index1, $this->deletes)) {
                 if ($inrange === -1) {
                     // Not already in a range, start a new one at array end.
                     $inrange = count($this->changes);
-                    $this->changes[$inrange] = new ouwiki_change_range;
+                    $this->changes[$inrange] = new stdClass();
                     $this->changes[$inrange]->file1start = $index1;
                     $this->changes[$inrange]->file1count = 1;
                     $this->changes[$inrange]->file2start = $matchbefore + 1; // Last valid from file2.
@@ -497,10 +487,9 @@ class ouwiki_changes {
     }
 
     /**
-     * Find deleted lines. These are lines in file1 that
-     * cannot be present even in modified form in file2
-     * because we have matching lines around them.
-     * O(n) algorithm.
+     * Find deleted lines. These are lines in file1 that cannot be present even in modified form in file2
+     * because we have matching lines around them. O(n) algorithm.
+     *
      * @param array $diff Array of file1->file2 indexes
      * @param int $count2 Count of lines in file2
      */
@@ -539,17 +528,16 @@ class ouwiki_changes {
         }
         return $deletes;
     }
-
 }
 
 /**
- * Flips around the array returned by ouwiki_diff_internal
- * so that it refers to lines from the other file.
+ * Flips around the array returned by socialwiki_diff_internal so that it refers to lines from the other file.
+ *
  * @param array $diff Array of index1=>index2
  * @param int $count2 Count of lines in file 2
  * @return array Flipped version
  */
-function ouwiki_diff_internal_flip($diff, $count2) {
+function socialwiki_diff_internal_flip($diff, $count2) {
     $flip = array();
     for ($i = 1; $i <= $count2; $i++) {
         $flip[$i] = 0;
@@ -563,20 +551,20 @@ function ouwiki_diff_internal_flip($diff, $count2) {
 }
 
 /**
- * Compares two files based initially on lines and then on words within the lines that
- * differ.
- * @param array $lines1 Array of ouwiki_line
- * @param array $lines2 Array of ouwiki_line
- * @return array (deleted,added); deleted and added are arrays of ouwiki_word with
+ * Compares two pages based initially on lines and then on words within the lines that differ.
+ *
+ * @param array $lines1 Array of socialwiki_diffcontent_line
+ * @param array $lines2 Array of socialwiki_diffcontent_line
+ * @return array (deleted,added); deleted and added are arrays of socialwiki_diffcontent_word with
  *   position numbers from $lines1 and $lines2 respectively
  */
-function ouwiki_diff_words($lines1, $lines2) {
+function socialwiki_diff_words($lines1, $lines2) {
     // Prepare arrays.
     $deleted = array();
     $added = array();
     // Get line difference.
-    $linediff = ouwiki_diff(
-            ouwiki_line::get_as_strings($lines1), ouwiki_line::get_as_strings($lines2));
+    $linediff = socialwiki_diff(
+            socialwiki_diffcontent_line::get_as_strings($lines1), socialwiki_diffcontent_line::get_as_strings($lines2));
 
     // Handle lines that were entirely deleted.
     foreach ($linediff->deletes as $deletedline) {
@@ -620,7 +608,7 @@ function ouwiki_diff_words($lines1, $lines2) {
         }
 
         // Run diff on strings.
-        $worddiff = ouwiki_diff($file1strings, $file2strings);
+        $worddiff = socialwiki_diff($file1strings, $file2strings);
         foreach ($worddiff->adds as $index) {
             $added[] = $file2words[$index];
         }
@@ -641,37 +629,37 @@ function ouwiki_diff_words($lines1, $lines2) {
 }
 
 /**
- * Runs diff and interprets results into ouwiki_changes object.
+ * Runs diff and interprets results into socialwiki_diffcontent_changes object.
  * @param array $file1 Array of lines in file 1. The first line in the file
  *   MUST BE INDEX 1 NOT ZERO!!
  * @param array $file2 Array of lines in file 2, again starting from 1.
- * @return ouwiki_changes Object describing changes
+ * @return socialwiki_diffcontent_changes Object describing changes
  */
-function ouwiki_diff($file1, $file2) {
-    return new ouwiki_changes(ouwiki_diff_internal($file1, $file2), count($file2));
+function socialwiki_diff($file1, $file2) {
+    return new socialwiki_diffcontent_changes(socialwiki_diff_internal($file1, $file2), count($file2));
 }
 
 /**
  * Adds HTML span elements to $html around the words listed in $words.
  * @param string $html HTML content
- * @param array $words Array of ouwiki_word to mark
+ * @param array $words Array of socialwiki_diffcontent_word to mark
  * @param string $markerclass Name of class for span element
  * @return HTML with markup added
  */
-function ouwiki_diff_add_markers($html, $words, $markerclass, $beforetext, $aftertext) {
+function socialwiki_diff_add_markers($html, $words, $markerclass, $beforetext, $aftertext) {
     // Sort words by start position.
     usort($words, create_function('$a,$b', 'return $a->start-$b->start;'));
 
     // Add marker for each word. We use an odd tag name which will
     // be replaced by span later, this for ease of replacing.
-    $spanstart = "<ouwiki_diff_add_markers>";
+    $spanstart = "<socialwiki_diff_add_markers>";
     $pos = 0;
     $result = '';
     foreach ($words as $word) {
         // Add everything up to the word.
         $result .= substr($html, $pos, $word->start - $pos);
         // Add word.
-        $result .= $spanstart . $word->word . '</ouwiki_diff_add_markers>';
+        $result .= $spanstart . $word->word . '</socialwiki_diff_add_markers>';
         // Update position.
         $pos = $word->start + strlen($word->word);
     }
@@ -680,30 +668,30 @@ function ouwiki_diff_add_markers($html, $words, $markerclass, $beforetext, $afte
     $result .= substr($html, $pos);
 
     // If we end a marker then immediately start one, get rid of both the end and start.
-    $result = preg_replace('^</ouwiki_diff_add_markers>(\s*)<ouwiki_diff_add_markers>^', '$1', $result);
+    $result = preg_replace('^</socialwiki_diff_add_markers>(\s*)<socialwiki_diff_add_markers>^', '$1', $result);
 
     // Turn markers into proper span.
-    $result = preg_replace('^<ouwiki_diff_add_markers>^', $beforetext . '<span class="' . $markerclass . '">', $result);
-    $result = preg_replace('^</ouwiki_diff_add_markers>^', '</span>' . $aftertext, $result);
+    $result = preg_replace('^<socialwiki_diff_add_markers>^', $beforetext . '<span class="' . $markerclass . '">', $result);
+    $result = preg_replace('^</socialwiki_diff_add_markers>^', '</span>' . $aftertext, $result);
 
     return $result;
 }
 
 /**
- * Compares two HTML files. (This is the main function that everything else supports.)
+ * Compares two HTML pages. (This is the main function that everything else supports.)
  * @param string $html1 XHTML for file 1
  * @param string $html2 XHTML for file 2
  * @return array ($result1,$result2) to be displayed indicating the differences
  */
-function ouwiki_diff_html($html1, $html2) {
-    $lines1 = ouwiki_diff_html_to_lines($html1);
-    $lines2 = ouwiki_diff_html_to_lines($html2);
-    list($deleted, $added) = ouwiki_diff_words($lines1, $lines2);
-    $result1 = ouwiki_diff_add_markers($html1, $deleted, 'ouw_deleted', '<strong class="accesshide">'
-            . get_string('deletedbegins', 'socialwiki') . '</strong>', '<strong class="accesshide">'
-            . get_string('deletedends', 'socialwiki') . '</strong>');
-    $result2 = ouwiki_diff_add_markers($html2, $added, 'ouw_added', '<strong class="accesshide">'
-            . get_string('addedbegins', 'socialwiki') . '</strong>', '<strong class="accesshide">'
-            . get_string('addedends', 'socialwiki') . '</strong>');
+function socialwiki_diff_html($html1, $html2) {
+    $lines1 = socialwiki_diff_html_to_lines($html1);
+    $lines2 = socialwiki_diff_html_to_lines($html2);
+    list($deleted, $added) = socialwiki_diff_words($lines1, $lines2);
+    $result1 = socialwiki_diff_add_markers($html1, $deleted, 'socialwiki-diff-deleted',
+            '<strong class="accesshide">' . get_string('deletedbegins', 'socialwiki') . '</strong>',
+            '<strong class="accesshide">' . get_string('deletedends', 'socialwiki') . '</strong>');
+    $result2 = socialwiki_diff_add_markers($html2, $added, 'socialwiki-diff-added',
+            '<strong class="accesshide">' . get_string('addedbegins', 'socialwiki') . '</strong>',
+            '<strong class="accesshide">' . get_string('addedends', 'socialwiki') . '</strong>');
     return array($result1, $result2);
 }

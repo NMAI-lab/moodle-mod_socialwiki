@@ -17,12 +17,12 @@
 /**
  * This file contains all necessary code to define and process an edit form
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once($CFG->libdir . '/formslib.php');
+
+require($CFG->libdir . '/formslib.php');
 
 class mod_socialwiki_create_form extends moodleform {
 

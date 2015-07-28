@@ -33,14 +33,14 @@
 /*
  * Starting here are the styles included by the regular wiki
  */
-.socialwiki_wikicontent .socialwiki_contentbox {
+.socialwiki_wikicontent .socialwiki-contentbox {
     width: 80%;
     margin: auto;
     min-width: 200px;
     min-height: 100px;
 }
 
-.socialwiki_wikicontent .socialwiki_editor {
+.socialwiki_wikicontent .socialwiki-editor {
     width: 50%;
     margin: auto;
     margin-top: 10px;
@@ -48,23 +48,38 @@
     text-align: center;
 }
 
-.socialwiki_wikicontent .socialwiki_previewbox {
+.socialwiki_wikicontent .socialwiki-previewbox {
     width: 50%;
     margin: auto;
     border: thin solid blue;
 }
 
-.socialwiki_wikicontent .socialwiki_info {
+.socialwiki_wikicontent .socialwiki-info {
     color: darkred;
     text-decoration: underline;
 }
 
-.socialwiki_wikicontent .socialwiki_button {
+.socialwiki_wikicontent .socialwiki-button {
     margin: 5px;
 }
 
-.socialwiki_wikicontent .socialwiki_warning {
+.socialwiki_wikicontent .socialwiki-warning {
     color: red;
+}
+
+.socialwiki_wikicontent #fitem_id_newcontent_editor .feditor,
+.socialwiki_wikicontent #fitem_id_newcontent .ftextarea {
+    margin-left: 0;
+}
+
+.socialwiki_wikicontent #fitem_id_newcontent_editor .fitemtitle,
+.socialwiki_wikicontent #fitem_id_newcontent .fitemtitle {
+    float: none;
+    text-align: initial;
+}
+
+.socialwiki_wikicontent #fgroup_id_buttonar .fgroup {
+    margin-left: 0;
 }
 
 .socialwiki_wikicontent .socialwiki-toc {
@@ -94,7 +109,7 @@
     padding-left: 24px;
 }
 
-.socialwiki_wikicontent .socialwiki_form-button {
+.socialwiki_wikicontent .socialwiki-form-button {
     margin-left: 0%;
 }
 
@@ -138,106 +153,95 @@
     font-weight: bold;
 }
 
-.socialwiki_wikicontent .socialwiki_modifieduser p {
+.socialwiki_wikicontent .socialwiki-modifieduser p {
     line-height: 35px;
 }
 
-.socialwiki_wikicontent .socialwiki_modifieduser img {
+.socialwiki_wikicontent .socialwiki-modifieduser img {
     border: thin solid black;
 }
 
-.socialwiki_wikicontent .socialwiki_restore_yes,
-.socialwiki_wikicontent .socialwiki_deletecomment_yes {
+.socialwiki_wikicontent .socialwiki-deletecomment-yes {
     float: left;
 }
 
-.socialwiki_wikicontent .socialwiki_restore_no,
-.socialwiki_wikicontent .socialwiki_deletecomment_no {
+.socialwiki_wikicontent .socialwiki-deletecomment-no {
     float: right;
 }
 
-.socialwiki_wikicontent .socialwiki_restoreform,
-.socialwiki_wikicontent .socialwiki_deletecommentform {
+.socialwiki_wikicontent .socialwiki-deletecommentform {
     width: 10%;
     margin: auto;
 }
 
-.socialwiki_wikicontent .socialwiki_diff {
+.socialwiki_wikicontent .socialwiki-diff {
     width: 49%;
     margin: 0.5em 0.5%;
     float: left;
 }
 
-.socialwiki_wikicontent .socialwiki_diffheading,
-.socialwiki_wikicontent .socialwiki_diffcontent {
+.socialwiki_wikicontent .socialwiki-diffheading,
+.socialwiki_wikicontent .socialwiki-diffcontent {
     padding: 10px;
     border: 1px solid #DDD;
 }
 
-.socialwiki_wikicontent .socialwiki_diffheading {
+.socialwiki_wikicontent .socialwiki-diffheading {
     border-bottom: none;
 }
 
-.socialwiki_wikicontent .socialwiki_diffleft {
+.socialwiki_wikicontent .socialwiki-diffleft {
     float: left;
 }
 
-.socialwiki_wikicontent .socialwiki_diffright {
+.socialwiki_wikicontent .socialwiki-diffright {
     float: right;
 }
 
-.socialwiki_wikicontent .socialwiki_difftime {
+.socialwiki_wikicontent .socialwiki-difftime {
     margin-top: 1.2em;
 }
 
-.socialwiki_wikicontent .socialwiki_restore,
-.socialwiki_wikicontent .socialwiki_difftime,
-.socialwiki_wikicontent .socialwiki_headingtime {
+.socialwiki_wikicontent .socialwiki-restore,
+.socialwiki_wikicontent .socialwiki-difftime,
+.socialwiki_wikicontent .socialwiki-headingtime {
     font-size: 0.8em;
     font-weight: normal;
 }
 
-.socialwiki_wikicontent .socialwiki_difftime,
-.socialwiki_wikicontent .socialwiki_headingtime {
+.socialwiki_wikicontent .socialwiki-difftime,
+.socialwiki_wikicontent .socialwiki-headingtime {
     font-style: oblique;
     text-align: center;
 }
 
-.socialwiki_wikicontent .socialwiki_diffpaging {
+.socialwiki_wikicontent .socialwiki-diffpaging {
     float: left;
     width: 50%;
 }
 
-.socialwiki_wikicontent .socialwiki_diffbutton {
+.socialwiki_wikicontent .socialwiki-diffbutton {
     text-align: center;
 }
 
-.socialwiki_wikicontent .socialwiki_histdate {
-    text-align: left;
-}
-
-.socialwiki_wikicontent .socialwiki_histnewdate {
-    border-top: 1px dotted gray;
-}
-
-.socialwiki_wikicontent .ouw_deleted {
+.socialwiki_wikicontent .socialwiki-diff-deleted {
     background: #FFFFAA;
     color: red;
     text-decoration: line-through;
 }
 
-.socialwiki_wikicontent .ouw_added {
+.socialwiki_wikicontent .socialwiki-diff-added {
     background: #CCFFCC;
     color: red;
 }
 
-.socialwiki_wikicontent a.socialwiki_newentry:link,
-.socialwiki_wikicontent a.socialwiki_newentry:visited {
+.socialwiki_wikicontent a.socialwiki-newentry:link,
+.socialwiki_wikicontent a.socialwiki-newentry:visited {
     color: red;
     font-style: italic;
 }
 
-.socialwiki_wikicontent a.socialwiki_newentry {
+.socialwiki_wikicontent a.socialwiki-newentry {
     color: red;
     font-style: italic;
 }
@@ -247,45 +251,19 @@
     padding: 5px;
 }
 
-.socialwiki_wikicontent .socialwiki_navigation_container {
-    margin: 0 auto;
-}
-
-.socialwiki_wikicontent .socialwiki_navigation_from {
-    float: left;
-    width: 40%;
-    min-width: 200px;
-    margin-left: 5%;
-}
-
-.socialwiki_wikicontent .socialwiki_navigation_to {
-    float: left;
-    width: 40%;
-    min-width: 200px;
-    margin-right: 5%;
-}
-
-.socialwiki_wikicontent .socialwiki_title {
+.socialwiki_wikicontent .socialwiki-title {
     text-align: left;
 }
 
-.socialwiki_wikicontent .socialwiki_clear {
+.socialwiki_wikicontent .socialwiki-clear {
     clear: both;
 }
 
-.socialwiki_wikicontent .socialwiki_right {
+.socialwiki_wikicontent .socialwiki-right {
     text-align: right;
 }
 
-.socialwiki_wikicontent .socialwiki_index {
-    text-align: right;
-}
-
-.socialwiki_wikicontent .notunderlined {
-    text-decoration: none;
-}
-
-.socialwiki_wikicontent a.socialwiki_edit_section {
+.socialwiki_wikicontent a.socialwiki-edit-section {
     font-size: 0.6em;
     vertical-align: top;
     position: relative;
@@ -304,19 +282,19 @@
 }
 
 /** Print CSS */
-.socialwiki_wikicontent #socialwiki_printable_content {
+.socialwiki_wikicontent #socialwiki-printable-content {
     text-align: left;
 }
 
-.socialwiki_wikicontent .dir-rtl #socialwiki_printable_content {
+.socialwiki_wikicontent .dir-rtl #socialwiki-printable-content {
     text-align: right;
 }
 
-.socialwiki_wikicontent #socialwiki_printable_content a {
+.socialwiki_wikicontent #socialwiki-printable-content a {
     color: black;
 }
 
-.socialwiki_wikicontent #socialwiki_printable_title {
+.socialwiki_wikicontent #socialwiki-printable-title {
     font-size: 2.2em;
     text-decoration: underline;
 }

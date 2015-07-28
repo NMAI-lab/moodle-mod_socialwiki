@@ -17,8 +17,7 @@
 /**
  * Generic & abstract parser functions & skeleton. It has some functions & generic stuff.
  *
- * @author Josep Arús
- *
+ * @author  Josep Arús
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package mod_socialwiki
  */
@@ -239,7 +238,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
             $i++;
         }
 
-        $this->returnvalues['toc'] = "<div class=\"socialwiki-toc\"><p class=\"socialwiki-toc-title\">"
+        $this->returnvalues['toc'] = "<div class='socialwiki-toc'><p class='socialwiki-toc-title'>"
                 . get_string('tableofcontents', 'socialwiki') . "</p>$toc</div>";
     }
 
@@ -369,7 +368,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         }
 
         if (isset($link['new']) && $link['new']) {
-            $options = array('class' => 'socialwiki_newentry');
+            $options = array('class' => 'socialwiki-newentry');
         } else {
             $options = array();
         }

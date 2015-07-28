@@ -17,19 +17,19 @@
 /**
  * The topic table for page groups.
  *
- * @package    mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2015 NMAI-lab
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Topic Table Class.
  *
- * @package    mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2015 NMAI-lab
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class topictable extends socialwiki_table {
+class socialwiki_topictable extends socialwiki_table {
 
     /**
      * The list of topics.
@@ -56,7 +56,7 @@ class topictable extends socialwiki_table {
      *
      * @param int $uid The user ID.
      * @param int $swid The subwiki ID.
-     * @return \topictable
+     * @return \socialwiki_topictable
      */
     public static function all_topictable($uid, $swid) {
         $topics = socialwiki_get_topics($swid);
@@ -65,7 +65,7 @@ class topictable extends socialwiki_table {
             return null;
         }
 
-        return new topictable($uid, $swid, $topics, 'topics');
+        return new socialwiki_topictable($uid, $swid, $topics, 'topics');
     }
 
     /**

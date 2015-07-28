@@ -86,7 +86,7 @@
     padding: 3px;
 }
 
-.socialwiki_wikicontent #socialwiki_likebutton[like="yes"] {
+.socialwiki_wikicontent #socialwiki-likebutton[like="yes"] {
     margin-right: 5px;
     width: 50px;
     height: 50px;
@@ -95,7 +95,7 @@
     background-image: url(pix/m/goodbutton.png);
 }
 
-.socialwiki_wikicontent #socialwiki_likebutton[like="yes"]:hover {
+.socialwiki_wikicontent #socialwiki-likebutton[like="yes"]:hover {
     margin-right: 5px;
     width: 50px;
     height: 50px;
@@ -104,7 +104,7 @@
     background-image: url(pix/m/goodbutton_hover.png);
 }
 
-.socialwiki_wikicontent #socialwiki_likebutton[like="no"] {
+.socialwiki_wikicontent #socialwiki-likebutton[like="no"] {
     margin-right: 5px;
     width: 50px;
     height: 50px;
@@ -113,7 +113,7 @@
     background-image: url(pix/m/badbutton.png);
 }
 
-.socialwiki_wikicontent #socialwiki_likebutton[like="no"]:hover {
+.socialwiki_wikicontent #socialwiki-likebutton[like="no"]:hover {
     margin-right: 5px;
     width: 50px;
     height: 50px;
@@ -230,24 +230,6 @@
     background-image: url(pix/m/homebutton_hover.png);
 }
 
-.socialwiki_wikicontent #socialwiki_versionbutton {
-    margin-right: 5px;
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-image: url(pix/m/versionbutton.png);
-}
-
-.socialwiki_wikicontent #socialwiki_versionbutton:hover {
-    margin-right: 5px;
-    width: 50px;
-    height: 50px;
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-image: url(pix/m/versionbutton_version.png);
-}
-
 .socialwiki_wikicontent #socialwiki_editbutton {
     margin-right: 5px;
     width: 50px;
@@ -327,7 +309,7 @@
     display: inline-block;
 }
 
-.socialwiki_wikicontent .socialwiki_title {
+.socialwiki_wikicontent .socialwiki-title {
     display: inline-block;
     text-align: center;
     width: 100%;
@@ -337,29 +319,23 @@
     text-align: center;
 }
 
-.socialwiki_wikicontent .socialwiki_unfollowlink,
-.socialwiki_wikicontent .socialwiki_unlikelink {
-    position: relative;
-    margin-left: 50px;
-}
-
-.socialwiki_wikicontent .socialwiki_link {
+.socialwiki_wikicontent .socialwiki-link {
     text-decoration: underline;
     margin-left: 25px;
     font-weight: bold;
     font-style: italic;
 }
 
-.socialwiki_wikicontent .socialwiki_link:link {
+.socialwiki_wikicontent .socialwiki-link:link {
     display: inline-block;
     margin-left: 20px;
 }
 
-.socialwiki_wikicontent .socialwiki_link:link {
+.socialwiki_wikicontent .socialwiki-link:link {
     color: white;
 }
 
-.socialwiki_wikicontent .socialwiki_link:visited {
+.socialwiki_wikicontent .socialwiki-link:visited {
     color: white;
 }
 

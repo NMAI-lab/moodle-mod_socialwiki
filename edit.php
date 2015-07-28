@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to edit a wiki page
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -29,15 +29,16 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require($CFG->dirroot . '/mod/socialwiki/edit_form.php');
 
 $pageid = required_param('pageid', PARAM_INT);
 $contentformat = optional_param('contentformat', '', PARAM_ALPHA);
 $option = optional_param('editoption', '', PARAM_TEXT);
 $section = optional_param('section', "", PARAM_TEXT);
-$version = optional_param('version', -1, PARAM_INT);
 $attachments = optional_param('attachments', 0, PARAM_INT);
 $deleteuploads = optional_param('deleteuploads', 0, PARAM_RAW);
 // 1 means create the empty first version of the page.
@@ -82,12 +83,10 @@ if ($option == get_string('save', 'socialwiki')) {
         print_error(get_string('invalidsesskey', 'socialwiki'));
     }
     if ($makenew == 0) {
-
         $newpageid = socialwiki_create_page($subwiki->id, $page->title, $contentformat, $USER->id, $page->id);
         $newpage = socialwiki_get_page($newpageid);
 
         $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
-
         $wikipage->set_page($newpage);
 
         socialwiki_increment_pageviews($newpage);
@@ -98,8 +97,8 @@ if ($option == get_string('save', 'socialwiki')) {
         $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
         $wikipage->set_page($page);
 
-        socialwiki_increment_pageviews($newpage);
-        socialwiki_increment_user_views($USER->id, $newpage->id);
+        socialwiki_increment_pageviews($page);
+        socialwiki_increment_user_views($USER->id, $page->id);
     }
 
     $wikipage->set_newcontent($newcontent);
@@ -121,10 +120,6 @@ if ($option == get_string('save', 'socialwiki')) {
             $wikipage->set_upload($option == get_string('upload', 'socialwiki'));
         }
     }
-}
-
-if ($version >= 0) {
-    $wikipage->set_versionnumber($version);
 }
 
 if (!empty($section)) {

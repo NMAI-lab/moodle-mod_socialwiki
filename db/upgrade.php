@@ -87,7 +87,7 @@ function xmldb_socialwiki_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2015070100, 'socialwiki'); // Socialwiki savepoint reached.
     }
 
-    // Remove locks, synonyms and links tables.
+    // Remove timerendered and readonly from pages table.
     if ($oldversion < 2015070900) {
         $table = new xmldb_table('socialwiki_pages');
         if ($dbman->table_exists($table)) {
@@ -104,6 +104,61 @@ function xmldb_socialwiki_upgrade($oldversion) {
         }
 
         upgrade_mod_savepoint(true, 2015070900, 'socialwiki'); // Socialwiki savepoint reached.
+    }
+
+    // Remove timemodified from pages.
+    if ($oldversion < 2015071300) {
+        $table = new xmldb_table('socialwiki_pages');
+        $timemodified = new xmldb_field('timemodified');
+
+        if ($dbman->field_exists($table, $timemodified)) {
+            $dbman->drop_field($table, $timemodified);
+        }
+
+        upgrade_mod_savepoint(true, 2015071300, 'socialwiki'); // Socialwiki savepoint reached.
+    }
+
+    // Remove the versions table.
+    if ($oldversion < 2015071600) {
+        $tablepages = new xmldb_table('socialwiki_pages');
+        $tableversions = new xmldb_table('socialwiki_versions');
+        $fieldformat = new xmldb_field('format', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'creole', 'cachedcontent');
+        $fieldcontent = new xmldb_field('cachedcontent', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'title');
+
+        // Add format field and transfer from versions table.
+        if (!$dbman->field_exists($tablepages, $fieldformat)) {
+            $dbman->add_field($tablepages, $fieldformat);
+
+            // Transfer format from versions table to pages.
+            $sql = "SELECT pageid, contentformat FROM {socialwiki_versions} GROUP BY pageid";
+            $rec = $DB->get_records_sql($sql, array());
+            foreach ($rec as $r) {
+                $page = new stdClass();
+                $page->id = $r->pageid;
+                $page->format = $r->contentformat;
+                $DB->update_record('socialwiki_pages', $page);
+            }
+        }
+
+        // Rename field cachedcontent.
+        if ($dbman->field_exists($tablepages, $fieldcontent)) {
+            $dbman->rename_field($tablepages, $fieldcontent, 'content');
+        }
+
+        // Transfer content and then delete version table.
+        if ($dbman->table_exists($tableversions)) {
+            $sql = "SELECT pageid, content FROM {socialwiki_versions} WHERE content != ?";
+            $rec = $DB->get_records_sql($sql, array(''));
+            foreach ($rec as $r) {
+                $page = new stdClass();
+                $page->id = $r->pageid;
+                $page->content = $r->content;
+                $DB->update_record('socialwiki_pages', $page);
+            }
+            $dbman->drop_table($tableversions);
+        }
+
+        upgrade_mod_savepoint(true, 2015071600, 'socialwiki'); // Socialwiki savepoint reached.
     }
 
     return true;

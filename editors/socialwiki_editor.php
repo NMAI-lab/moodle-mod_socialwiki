@@ -36,7 +36,7 @@
  * @param $comesfrom. Information about where the function call is made
  * @param commentid. id comment of comment that will be edited.
  */
-function socialwiki_print_editor_wiki($pageid, $content, $editor, $version = -1,
+function socialwiki_print_editor_wiki($pageid, $content, $editor,
         $section = null, $upload = false, $deleteuploads = array(), $comesfrom = 'editorview', $commentid = 0) {
     global $CFG, $OUTPUT, $PAGE;
 
@@ -90,7 +90,7 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor, $version = -1,
 
     $OUTPUT->heading(strtoupper(get_string('format' . $editor, 'socialwiki')));
 
-    $PAGE->requires->js($CFG->wwwroot . '/mod/socialwiki/editors/wiki/buttons.js');
+    $PAGE->requires->js(new moodle_url('/mod/socialwiki/editors/wiki/buttons.js'));
 
     echo $OUTPUT->container_start('mdl-align');
     foreach ($wikieditor as $button) {
@@ -105,7 +105,7 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor, $version = -1,
     echo '<form method="post" id="mform1" action="' . $action . '">';
     echo $OUTPUT->container(print_textarea(false, 20, 60, 0, 0, "newcontent", $content, 0, true), false, 'socialwikieditor');
     echo $OUTPUT->container_start();
-    socialwiki_print_edit_form_default_fields($editor, $pageid, $version, $upload, $deleteuploads);
+    socialwiki_print_edit_form_default_fields($editor, $pageid, $upload, $deleteuploads);
     echo $OUTPUT->container_end();
     echo '</form>';
     echo $OUTPUT->container_end();

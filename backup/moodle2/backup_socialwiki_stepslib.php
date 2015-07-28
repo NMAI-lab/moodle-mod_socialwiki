@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -45,8 +45,8 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         $pages = new backup_nested_element('pages');
 
-        $page = new backup_nested_element('page', array('id'), array('title', 'cachedcontent',
-            'timecreated', 'timemodified', 'userid', 'pageviews', 'parent'));
+        $page = new backup_nested_element('page', array('id'), array('title', 'content',
+            'format', 'timecreated', 'userid', 'pageviews', 'parent'));
 
         $likes = new backup_nested_element('likes');
 
@@ -55,11 +55,6 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $follows = new backup_nested_element('follows');
 
         $follow = new backup_nested_element('follow', array('id'), array('userfromid', 'usertoid'));
-
-        $versions = new backup_nested_element('versions');
-
-        $version = new backup_nested_element('version', array('id'), array('content', 'contentformat',
-            'version', 'timecreated', 'userid'));
 
         $tags = new backup_nested_element('tags');
 
@@ -77,9 +72,6 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         $subwiki->add_child($follows);
         $follows->add_child($follow);
-
-        $page->add_child($versions);
-        $versions->add_child($version);
 
         $page->add_child($tags);
         $tags->add_child($tag);
@@ -100,8 +92,6 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
             $follow->set_source_table('socialwiki_follows', array('subwikiid' => backup::VAR_PARENTID));
 
-            $version->set_source_table('socialwiki_versions', array('pageid' => backup::VAR_PARENTID));
-
             $tag->set_source_sql('SELECT t.id, t.name, t.rawname
                                     FROM {tag} t
                                     JOIN {tag_instance} ti ON ti.tagid = t.id
@@ -117,8 +107,6 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $subwiki->annotate_ids('user', 'userid');
 
         $page->annotate_ids('user', 'userid');
-
-        $version->annotate_ids('user', 'userid');
 
         // Define file annotations.
         $wiki->annotate_files('mod_socialwiki', 'intro', null); // This file area hasn't itemid.

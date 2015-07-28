@@ -14,8 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
+/**
+ * The help page.
+ *
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 $id = required_param('id', PARAM_INT);
 
 // Checking course module instance.

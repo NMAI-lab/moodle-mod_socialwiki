@@ -17,19 +17,19 @@
 /**
  * The user table for showing the wiki users.
  *
- * @package    mod_socialwiki
- * @copyright  2015 NMAI-lab
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * User Table Class.
  *
- * @package    mod_socialwiki
- * @copyright  2015 NMAI-lab
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class usertable extends socialwiki_table {
+class socialwiki_usertable extends socialwiki_table {
 
     /**
      * Create a topic table.
@@ -49,7 +49,7 @@ class usertable extends socialwiki_table {
      *
      * @param int $me The current user's ID.
      * @param int $swid The current subwiki ID.
-     * @return \usertable
+     * @return \socialwiki_usertable
      */
     public static function all_usertable($me, $swid) {
         $uids = socialwiki_get_active_subwiki_users($swid);
@@ -57,7 +57,7 @@ class usertable extends socialwiki_table {
             return ($i != $me);
         });
 
-        return new usertable($me, $swid, $ids, 'user');
+        return new socialwiki_usertable($me, $swid, $ids, 'user');
     }
 
     /**
@@ -65,7 +65,7 @@ class usertable extends socialwiki_table {
      *
      * @param int $uid The current user's ID.
      * @param int $swid The current subwiki ID.
-     * @return \usertable
+     * @return \socialwiki_usertable
      */
     public static function followed_usertable($uid, $swid) {
         $uids = socialwiki_get_follows($uid, $swid);
@@ -74,7 +74,7 @@ class usertable extends socialwiki_table {
             return null;
         }
 
-        return new usertable($uid, $swid, $ids, 'user');
+        return new socialwiki_usertable($uid, $swid, $ids, 'user');
     }
 
     /**
@@ -82,14 +82,14 @@ class usertable extends socialwiki_table {
      *
      * @param int $uid The current user's ID.
      * @param int $swid The current subwiki ID.
-     * @return \usertable
+     * @return \socialwiki_usertable
      */
     public static function followers_usertable($uid, $swid) {
         $ids = socialwiki_get_follower_users($uid, $swid);
         if (empty($ids)) {
             return null;
         }
-        return new usertable($uid, $swid, $ids, 'user');
+        return new socialwiki_usertable($uid, $swid, $ids, 'user');
     }
 
     /**
@@ -109,11 +109,11 @@ class usertable extends socialwiki_table {
         // Define function to build a row from a user.
         $buildfunction = function ($id) use ($headers, $me, $swid, $www) {
             $user = socialwiki_get_user_info($id);
-            $name = "<a style='margin:0;' class='socialwiki_link' href='"
+            $name = "<a style='margin:0;' class='socialwiki-link' href='"
                     . $www . "/mod/socialwiki/viewuserpages.php?userid="
                     . $user->id . "&subwikiid=$swid'>" . fullname($user) . "</a>";
 
-            $peer = peer::socialwiki_get_peer($id, $swid, $me);
+            $peer = socialwiki_peer::socialwiki_get_peer($id, $swid, $me);
             switch ($peer->depth) {
                 case 0:
                     $following = "Not in your network";

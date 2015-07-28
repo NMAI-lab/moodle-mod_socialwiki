@@ -13,55 +13,33 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+define('AJAX_SCRIPT', true);
 
-/**
- * This file contains all necessary code to view an old version of a page
- *
- * @package mod_socialwiki
- * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
- *
- * @author Jordi Piguillem
- * @author Marc Alier
- * @author David Jimenez
- * @author Josep Arus
- * @author Kenneth Riba
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
 
-$pageid = required_param('pageid', PARAM_TEXT);
-$versionid = required_param('versionid', PARAM_INT);
+$pageid = required_param('pageid', PARAM_INT);
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
 }
-
 if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
-
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
-
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
     print_error('invalidcoursemodule');
 }
+if (!is_enrolled(context_module::instance($cm->id), $USER->id)) {
+    // Must be an enrolled user to like a page.
+    print_error('cannotlike', 'socialwiki');
+}
 
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-
-require_login($course, true, $cm);
-
-$wikipage = new page_socialwiki_viewversion($wiki, $subwiki, $cm);
-
-$wikipage->set_page($page);
-$wikipage->set_versionid($versionid);
-
-$wikipage->print_header();
-$wikipage->print_content();
-$wikipage->print_footer();
+$out = '';
+if (confirm_sesskey()) {
+    $out = socialwiki_page_like($USER->id, $pageid, $subwiki->id);
+}
+echo json_encode($out);
