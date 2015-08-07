@@ -81,7 +81,7 @@ abstract class socialwiki_table {
     /**
      * Prints the table in HTML format.
      *
-     * @param string $tableid The HTML id of the table.
+     * @param string $tableid The HTML ID of the table.
      */
     public function print_html($tableid = 'a_table') {
         $output = "<table id=$tableid class='datatable'>";
@@ -158,8 +158,8 @@ abstract class socialwiki_table {
     /**
      * Builds any given table.
      *
-     * @param int $userid The user's id.
-     * @param int $swid The current subwikiid.
+     * @param int $userid The user's ID.
+     * @param int $swid The current subwiki ID.
      * @param string $tabletype The table type to build.
      * @return string HTML
      */

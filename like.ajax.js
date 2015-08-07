@@ -1,4 +1,3 @@
-<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,17 +14,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of socialwiki. Called by moodle_needs_upgrading() and /admin/index.php
+ * Script for the like button.
  *
  * @package   mod_socialwiki
  * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015072500;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2013101800;       // Requires Moodle version 2.6.
-$plugin->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.2';
-$plugin->cron      = 0;
+$(document).ready(function () {
+    $(".socialwiki-likebutton").click(function () {
+        $.get("like.ajax.php" + options, function (data) {
+            if (toString.call(data) === '[object Number]') {
+                var btnimg = $(".socialwiki-likebutton").children("img");
+                var url = btnimg.attr("other");
+                btnimg.attr("other", btnimg.attr("src"));
+                btnimg.attr("src", url);
+                var btntxt = $(".socialwiki-likebutton").children("span");
+                var swap = btntxt.attr("other");
+                btntxt.attr("other", btntxt.html());
+                btntxt.html(swap);
+                $("#numlikes").text(data + ((data == 1) ? ' like' : ' likes'));
+            }
+        });
+    });
+});

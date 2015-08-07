@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @TODO: Doc this file
+ * Page to show comments.
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -37,10 +37,10 @@ require_once($CFG->dirroot . "/mod/socialwiki/locallib.php");
 require_once($CFG->dirroot . '/mod/socialwiki/comments_form.php');
 
 $pageid = required_param('pageid', PARAM_TEXT);
-$action = optional_param('action', '', PARAM_ALPHANUMEXT);
+$action = optional_param('action', "", PARAM_ALPHANUMEXT);
 $id = optional_param('id', 0, PARAM_INT);
 $commentid = optional_param('commentid', 0, PARAM_INT);
-$newcontent = optional_param('newcontent', '', PARAM_CLEANHTML);
+$newcontent = optional_param('newcontent', "", PARAM_CLEANHTML);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 
 if (!$page = socialwiki_get_page($pageid)) {
@@ -51,7 +51,7 @@ if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {

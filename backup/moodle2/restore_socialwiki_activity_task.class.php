@@ -15,7 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package mod_socialwiki
+ * Defines restore_socialwiki_activity_task class.
+ *
+ * @package   mod_socialwiki
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,20 +27,22 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/socialwiki/backup/moodle2/restore_socialwiki_stepslib.php');
 
 /**
- * wiki restore task that provides all the settings and steps to perform one
- * complete restore of the activity
+ * Wiki restore task that provides all the settings and steps to perform one complete restore of the activity.
+ *
+ * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_socialwiki_activity_task extends restore_activity_task {
 
     /**
-     * Define (add) particular settings this activity can have
+     * Define (add) particular settings this activity can have.
      */
     protected function define_my_settings() {
         // No particular settings for this activity.
     }
 
     /**
-     * Define (add) particular steps this activity can have
+     * Define (add) particular steps this activity can have.
      */
     protected function define_my_steps() {
         // Wiki only has one structure step.
@@ -46,8 +50,7 @@ class restore_socialwiki_activity_task extends restore_activity_task {
     }
 
     /**
-     * Define the contents in the activity that must be
-     * processed by the link decoder
+     * Define the contents in the activity that must be processed by the link decoder.
      */
     public static function define_decode_contents() {
         $contents = array();
@@ -60,8 +63,7 @@ class restore_socialwiki_activity_task extends restore_activity_task {
     }
 
     /**
-     * Define the decoding rules for links belonging
-     * to the activity to be executed by the link decoder
+     * Define the decoding rules for links belonging to the activity to be executed by the link decoder.
      */
     public static function define_decode_rules() {
         $rules = array();
@@ -75,10 +77,8 @@ class restore_socialwiki_activity_task extends restore_activity_task {
     }
 
     /**
-     * Define the restore log rules that will be applied
-     * by the {@link restore_logs_processor} when restoring
-     * wiki logs. It must return one array
-     * of {@link restore_log_rule} objects
+     * Define the restore log rules that will be applied by the {@link restore_logs_processor} when restoring wiki logs.
+     * It must return one array of {@link restore_log_rule} objects.
      */
     public static function define_restore_log_rules() {
         $rules = array();
@@ -89,9 +89,9 @@ class restore_socialwiki_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('socialwiki', 'comments', 'comments.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'diff', 'diff.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'edit', 'edit.php?id={course_module}', '{socialwiki}');
-        $rules[] = new restore_log_rule('socialwiki', 'history', 'history.php?id={course_module}', '{socialwiki}');
+        $rules[] = new restore_log_rule('socialwiki', 'history', 'versions.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'map', 'map.php?id={course_module}', '{socialwiki}');
-        // TODO: Examine these 2 rules, because module is not "wiki", and it shouldn't happen.
+        // TODO: Examine these 2 rules, because module is not "socialwiki", and it shouldn't happen.
         $rules[] = new restore_log_rule('restore', 'restore', 'view.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('createpage', 'createpage', 'view.php?id={course_module}', '{socialwiki}');
 
@@ -99,14 +99,11 @@ class restore_socialwiki_activity_task extends restore_activity_task {
     }
 
     /**
-     * Define the restore log rules that will be applied
-     * by the {@link restore_logs_processor} when restoring
-     * course logs. It must return one array
-     * of {@link restore_log_rule} objects
+     * Define the restore log rules that will be applied by the {@link restore_logs_processor} when restoring course logs.
+     * It must return one array of {@link restore_log_rule} objects.
      *
-     * Note this rules are applied when restoring course logs
-     * by the restore final task, but are defined here at
-     * activity level. All them are rules not linked to any module instance (cmid = 0)
+     * Note this rules are applied when restoring course logs by the restore final task, but are defined here at activity level.
+     * All them are rules not linked to any module instance (cmid = 0).
      */
     public static function define_restore_log_rules_for_course() {
         $rules = array();

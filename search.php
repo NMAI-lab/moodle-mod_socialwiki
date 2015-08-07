@@ -18,7 +18,7 @@
  * The search page.
  *
  * @package mod_socialwiki
- * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
+ * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require('../../config.php');
@@ -26,13 +26,12 @@ require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/peer.php');
 
-$search = optional_param('searchstring', null, PARAM_TEXT);
-$courseid = optional_param('courseid', 0, PARAM_INT);
-$searchcontent = optional_param('searchcontent', 1, PARAM_INT); // Search page content.
-$cmid = optional_param('cmid', 0, PARAM_INT);
-$pageid = optional_param('pageid', -1, PARAM_INT);
-$option = optional_param('option', 0, PARAM_INT); // Option ID.
-$exact = optional_param('exact', 0, PARAM_INT); // If match should be exact (wikilinks).
+$search   = optional_param('searchstring', "", PARAM_TEXT); // Search string.
+$courseid = optional_param('courseid', 0, PARAM_INT);       // Course ID.
+$cmid     = optional_param('cmid', 0, PARAM_INT);           // Course module ID.
+$exact    = optional_param('exact', 0, PARAM_INT);          // If match should be exact (wikilinks).
+$content  = optional_param('searchcontent', 1, PARAM_INT);  // If page content should be searched.
+$view     = optional_param('view', 0, PARAM_INT);         // Option ID.
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     echo $courseid;
@@ -55,23 +54,20 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
 
-$wikipage = new page_socialwiki_search($wiki, $subwiki, $cm, $option);
-
 // Make * a wild-card search.
 if ($search == "*") {
     $search = "";
 }
 
+$wikipage = new page_socialwiki_search($wiki, $subwiki, $cm, $view);
+
 if ($exact != 0) { // Exact match on page title.
     $wikipage->set_search_string($search, 0, true);
 } else {
-    $wikipage->set_search_string($search, $searchcontent, false);
+    $wikipage->set_search_string($search, $content, false);
 }
 
-$wikipage->set_title(get_string('searchresultsfor', 'socialwiki') . ": $search");
-
+$wikipage->set_title(get_string('searchresult', 'socialwiki') . $search);
 $wikipage->print_header();
-
 $wikipage->print_content();
-
 $wikipage->print_footer();

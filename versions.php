@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains all necessary code to view the history page
+ * This file contains all necessary code to view the versions page
  *
  * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
@@ -52,22 +52,20 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 }
 
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 require_login($course, true, $cm);
-$context = context_module::instance($cm->id);
-require_capability('mod/socialwiki:viewpage', $context);
+require_capability('mod/socialwiki:viewpage', context_module::instance($cm->id));
 
 // Print the page header.
-$wikipage = new page_socialwiki_history($wiki, $subwiki, $cm);
+$wikipage = new page_socialwiki_versions($wiki, $subwiki, $cm);
 
 $wikipage->set_page($page);
 $wikipage->set_allversion($allversion);
 
 $wikipage->print_header();
 $wikipage->print_content();
-
 $wikipage->print_footer();

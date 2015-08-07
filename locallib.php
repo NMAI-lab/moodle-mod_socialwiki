@@ -31,16 +31,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require($CFG->dirroot . '/mod/socialwiki/lib.php');
-require($CFG->dirroot . '/mod/socialwiki/parser/parser.php');
-require($CFG->dirroot . '/tag/lib.php');
+require_once($CFG->dirroot . '/mod/socialwiki/lib.php');
+require_once($CFG->dirroot . '/mod/socialwiki/parser/parser.php');
+require_once($CFG->dirroot . '/tag/lib.php');
 
 define('SOCIALFORMAT_CREOLE', '37');
 define('SOCIALFORMAT_NWIKI', '38');
-define('SOCIAL_NO_VALID_RATE', '-999');
-define('SOCIALIMPROVEMENT', '+');
-define('SOCIALEQUAL', '=');
-define('SOCIALWORST', '-');
 
 /**
  * Get a wiki instance.
@@ -54,7 +50,7 @@ function socialwiki_get_wiki($wid) {
 }
 
 /**
- * Get sub wiki instances with same wiki id.
+ * Get subwiki instances with same wiki ID.
  *
  * @param int $wid The wiki ID.
  * @return stdClass
@@ -65,7 +61,7 @@ function socialwiki_get_subwikis($wid) {
 }
 
 /**
- * Get a sub wiki instance by wiki id and group id.
+ * Get a subwiki instance by wiki ID and group ID.
  *
  * @param int $wid The wiki ID.
  * @param int $gid The group ID.
@@ -78,7 +74,7 @@ function socialwiki_get_subwiki_by_group($wid, $gid, $uid = 0) {
 }
 
 /**
- * Get a sub wiki instace by instance id.
+ * Get a subwiki by ID.
  *
  * @param int $swid The subwiki ID.
  * @return stdClass
@@ -168,7 +164,6 @@ function socialwiki_get_page_by_title($swid, $title) {
     global $DB, $USER;
     $records = $DB->get_records('socialwiki_pages', array('subwikiid' => $swid, 'title' => $title));
     if (count($records) > 0) {
-
         foreach ($records as $r) {
             if (socialwiki_is_user_favourite($USER->id, $r->id, $swid)) {
                 return $r;
@@ -297,7 +292,7 @@ function socialwiki_create_page($swid, $title, $format, $uid, $parent = null) {
     $page = new stdClass();
     $page->subwikiid = $swid;
     $page->title = $title;
-    $page->content = '';
+    $page->content = "";
     $page->timecreated = time();
     $page->format = $format;
     $page->userid = $uid;
@@ -574,7 +569,6 @@ function socialwiki_parse_content($markup, $pagecontent, $options = array()) {
  * @return array Array('content' => string, 'url' => string, 'new' => bool, 'link_info' => array)
  */
 function socialwiki_parser_link($link, $options = null) {
-    // TODO: Doc return and options.
     global $CFG, $COURSE, $PAGE;
 
     $matches = array();
@@ -589,7 +583,7 @@ function socialwiki_parser_link($link, $options = null) {
         $specific = false;
 
         if (preg_match('/@(([0-9]+)|(\.))/', $link, $matches)) { // Retrieve a version?
-            $link = preg_replace('/@(([0-9]+)|(\.))/', '', $link);
+            $link = preg_replace('/@(([0-9]+)|(\.))/', "", $link);
             $specific = true;
         }
 
@@ -663,11 +657,11 @@ function socialwiki_parser_table($table) {
 /**
  * Returns an absolute path link, unless there is no such link.
  *
- * @param string $url Link's URL or filename
- * @param stdClass $context filearea params
- * @param string $component The component the file is associated with
- * @param string $filearea The filearea the file is stored in
- * @param int $swid Sub wiki id
+ * @param string $url Link's URL or filename.
+ * @param stdClass $context filearea params.
+ * @param string $component The component the file is associated with.
+ * @param string $filearea The filearea the file is stored in.
+ * @param int $swid The subwiki ID.
  *
  * @return string URL for files full path
  */
@@ -838,7 +832,7 @@ function socialwiki_user_can_edit($subwiki) {
  *
  * @param mixed $context Context in which page needs to be deleted.
  * @param mixed $pages Pages to be deleted.
- * @param int $swid ID of the subwiki for which all pages should be deleted
+ * @param int $swid ID of the subwiki for which all pages should be deleted.
  */
 function socialwiki_delete_pages($context, $pages = null, $swid = null) {
     global $DB;
@@ -982,7 +976,7 @@ function socialwiki_delete_comments_wiki() {
 function socialwiki_print_page_content($page, $context, $swid) {
     global $PAGE, $USER;
     $content = socialwiki_parse_content($page->format, $page->content, array('swid' => $swid, 'pageid' => $page->id));
-    $html = file_rewrite_pluginfile_urls($content['parsed_text'], 'pluginfile.php',
+    $html = file_rewrite_pluginfile_urls($content['toc'] . $content['parsed_text'], 'pluginfile.php',
             $context->id, 'mod_socialwiki', 'attachments', $swid);
     $wikioutput = $PAGE->get_renderer('mod_socialwiki');
     // This is where the page content, from the title down, is rendered!
@@ -1001,7 +995,6 @@ function socialwiki_print_page_content($page, $context, $swid) {
  * Prints default edit form fields and buttons.
  *
  * @param string $format Edit form format (ex. creole).
- * @param int $pid The page ID.
  * @param bool $upload
  * @param array $deleteuploads
  */
@@ -1091,7 +1084,7 @@ function socialwiki_print_upload_table($context, $filearea, $fileitemid, $delete
  * @param bool $filterunseen Don't show the pages that have no views.
  * @return stdClass
  */
-function socialwiki_get_updated_pages_by_subwiki($swid, $uid = '', $filterunseen = true) {
+function socialwiki_get_updated_pages_by_subwiki($swid, $uid = "", $filterunseen = true) {
     global $DB, $USER;
 
     $sql = "SELECT *
@@ -1270,6 +1263,14 @@ function socialwiki_numlikes($pid) {
     return count($DB->get_records_sql($sql, array($pid)));
 }
 
+/**
+ * Add or remove a user's like from a page.
+ *
+ * @param int $uid The user ID.
+ * @param int $pid The page ID.
+ * @param int $swid The subwiki ID.
+ * @return int
+ */
 function socialwiki_page_like($uid, $pid, $swid) {
     if (socialwiki_liked($uid, $pid)) {
         socialwiki_delete_like($uid, $pid);
@@ -1517,7 +1518,7 @@ function socialwiki_get_active_subwiki_users($swid) {
  */
 function socialwiki_get_relations($pid) {
     $relations = array();
-    $added = array(); // An array of page id's already added to $relations.
+    $added = array(); // An array of page ID's already added to $relations.
     // Add all parents up to root node.
     while ($pid != null && $pid != 0) {
         $relations[] = socialwiki_get_page($pid);
@@ -1558,7 +1559,8 @@ function socialwiki_get_currentstyle($swid) {
  * @return int
  */
 function socialwiki_indexof_page($pid, $pages) {
-    for ($i = 0; $i < count($pages); $i++) {
+    $pagescount = count($pages);
+    for ($i = 0; $i < $pagescount; $i++) {
         if ($pages[$i]->id == $pid) {
             return $i;
         }
@@ -1609,7 +1611,7 @@ function socialwiki_get_recommended_pages($uid, $swid) {
     Global $CFG;
     require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
     $scale = array('follow' => 1, 'like' => 1, 'trust' => 1, 'popular' => 1); // Scale with weight for each peer category.
-    $peers = socialwiki_get_peers($swid, $scale); // TODO: not sure if this does anything...
+    $peers = socialwiki_get_peers($swid, $scale);
     $pages = socialwiki_get_page_list($swid);
 
     foreach ($pages as $page) {
@@ -1794,7 +1796,7 @@ function socialwiki_format_time($time, $timeago = true) {
     // Loops through to return the first type available.
     foreach ($types as $t => &$i) {
         if ($diff->$t) {
-            return $diff->$t . ' ' . $i . ($diff->$t > 1 ? 's' : '') . ' ago';
+            return $diff->$t . ' ' . $i . ($diff->$t > 1 ? 's' : "") . ' ago';
         }
     }
 }

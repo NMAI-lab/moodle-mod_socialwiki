@@ -26,8 +26,17 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once("$CFG->libdir/formslib.php");
 
+/**
+ * Form used for adding new files.
+ *
+ * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_socialwiki_filesedit_form extends moodleform {
 
+    /**
+     * Build the full form.
+     */
     protected function definition() {
         $mform = $this->_form;
 

@@ -112,7 +112,7 @@ abstract class socialgeneric_parser {
             return false;
         }
 
-        $this->string = & $string;
+        $this->string = &$string;
 
         $this->set_options(is_array($options) ? $options : array());
 

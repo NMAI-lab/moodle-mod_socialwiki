@@ -16,7 +16,7 @@
 
 /**
  * Standard diff function plus some extras for handling XHTML diffs.
- * 
+ *
  * @copyright 2007 The Open University
  * @author    s.marshall@open.ac.uk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -327,9 +327,9 @@ class socialwiki_diffcontent_line {
      * @return string Normalised string representation of this line object
      */
     public function get_as_string() {
-        $result = '';
+        $result = "";
         foreach ($this->words as $word) {
-            if ($result !== '') {
+            if ($result !== "") {
                 $result .= ' ';
             }
             $result .= $word->word;
@@ -395,9 +395,9 @@ function socialwiki_diff_html_to_lines($content) {
 
     // Put line breaks on block tags. Mark each line break with ` symbol.
     $blocktags = array('p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'td', 'li');
-    $taglist = '';
+    $taglist = "";
     foreach ($blocktags as $blocktag) {
-        if ($taglist !== '') {
+        if ($taglist !== "") {
             $taglist .= '|';
         }
         $taglist .= "<$blocktag>|<\\/$blocktag>";
@@ -654,7 +654,7 @@ function socialwiki_diff_add_markers($html, $words, $markerclass, $beforetext, $
     // be replaced by span later, this for ease of replacing.
     $spanstart = "<socialwiki_diff_add_markers>";
     $pos = 0;
-    $result = '';
+    $result = "";
     foreach ($words as $word) {
         // Add everything up to the word.
         $result .= substr($html, $pos, $word->start - $pos);

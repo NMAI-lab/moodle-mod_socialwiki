@@ -14,6 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * This is run when the follow button is clicked.
+ *
+ * This will simply act as a toggle turning the follow on or off.
+ *
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
@@ -45,7 +55,7 @@ if ($pageid > -1) {
     }
 
     if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-        print_error('invalidcoursemodule');
+        print_error('invalidcoursemodule', 'socialwiki');
     }
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 

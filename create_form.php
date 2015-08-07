@@ -24,8 +24,17 @@
 
 require($CFG->libdir . '/formslib.php');
 
+/**
+ * Form used for creating a new page (first version).
+ *
+ * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_socialwiki_create_form extends moodleform {
 
+    /**
+     * Build the full form.
+     */
     protected function definition() {
         $mform = $this->_form;
 
@@ -53,7 +62,7 @@ class mod_socialwiki_create_form extends moodleform {
                 } else {
                     $attr = array();
                 }
-                $mform->addElement('radio', 'pageformat', '', get_string('format' . $format, 'socialwiki'), $format, $attr);
+                $mform->addElement('radio', 'pageformat', "", get_string('format' . $format, 'socialwiki'), $format, $attr);
             }
         }
         $mform->setType('pageformat', PARAM_ALPHANUMEXT);

@@ -36,7 +36,18 @@ if (!defined('MOODLE_INTERNAL')) {
 
 require_once($CFG->dirroot . '/lib/formslib.php');
 
+/**
+ * Form used for editing and creating comments.
+ *
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_socialwiki_comments_form extends moodleform {
+
+    /**
+     * Build the full form.
+     */
     protected function definition() {
         $mform = $this->_form;
 
@@ -49,10 +60,10 @@ class mod_socialwiki_comments_form extends moodleform {
         $mform->setType('entrycomment_editor', PARAM_RAW); // Processed by trust text or cleaned before the display.
 
         // Hidden optional params.
-        $mform->addElement('hidden', 'id', '');
+        $mform->addElement('hidden', 'id', "");
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('hidden', 'action', '');
+        $mform->addElement('hidden', 'action', "");
         $mform->setType('action', PARAM_ALPHAEXT);
 
         // Buttons.
@@ -61,6 +72,12 @@ class mod_socialwiki_comments_form extends moodleform {
         $this->set_data($current);
     }
 
+    /**
+     * Edit the data in the form.
+     *
+     * @param string $current
+     * @param array $commentoptions
+     */
     public function edit_definition($current, $commentoptions) {
         $this->set_data($current);
         $this->set_data($commentoptions);

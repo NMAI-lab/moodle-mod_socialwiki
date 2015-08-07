@@ -35,48 +35,33 @@ require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/edit_form.php');
 
-$pageid = required_param('pageid', PARAM_INT);
-$contentformat = optional_param('contentformat', '', PARAM_ALPHA);
-$option = optional_param('editoption', '', PARAM_TEXT);
+$pageid = required_param('pageid', PARAM_INT); // Page ID.
+$contentformat = optional_param('contentformat', "", PARAM_ALPHA); // Content Format (eg. creole, HTML).
+$option = optional_param('editoption', "", PARAM_TEXT);
 $section = optional_param('section', "", PARAM_TEXT);
-$attachments = optional_param('attachments', 0, PARAM_INT);
-$deleteuploads = optional_param('deleteuploads', 0, PARAM_RAW);
-// 1 means create the empty first version of the page.
-// 0 means just add a new version of the page which was previously created.
-$makenew = optional_param('makenew', 0, PARAM_INT);
-$newcontent = '';
+$makenew = optional_param('makenew', 0, PARAM_INT); // 0 is new versions and 1 is whole new page (first version).
 
-// This doesn't seem to get called ever?
-if (!empty($newcontent) && is_array($newcontent)) {
-    $newcontent = $newcontent['text'];
-}
+$newcontent = "";
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
 }
-
 if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
-
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
-
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
-
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-
 if (!empty($section) && !$sectioncontent = socialwiki_get_section_page($page, $section)) {
     print_error('invalidsection', 'socialwiki');
 }
 
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 require_login($course, true, $cm);
-
-$context = context_module::instance($cm->id);
-require_capability('mod/socialwiki:editpage', $context);
+require_capability('mod/socialwiki:editpage', context_module::instance($cm->id));
 
 if ($option == get_string('save', 'socialwiki')) {
     if (!confirm_sesskey()) {
@@ -125,22 +110,11 @@ if ($option == get_string('save', 'socialwiki')) {
 if (!empty($section)) {
     $wikipage->set_section($sectioncontent, $section);
 }
-
-if (!empty($attachments)) {
-    $wikipage->set_attachments($attachments);
-}
-
-if (!empty($deleteuploads)) {
-    $wikipage->set_deleteuploads($deleteuploads);
-}
-
 if (!empty($contentformat)) {
     $wikipage->set_format($contentformat);
 }
 
 $wikipage->print_header();
-
 $wikipage->print_content();
-
 $wikipage->print_footer();
 

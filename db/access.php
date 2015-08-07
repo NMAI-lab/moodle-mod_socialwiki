@@ -18,6 +18,7 @@
  * Plugin capabilities
  *
  * @package mod_socialwiki
+ * @copyright 2015 NMAI-lab
  * @author  Jordi Piguillem
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -29,7 +29,7 @@ require_once("$CFG->dirroot/repository/lib.php");
 
 $subwikiid = required_param('subwiki', PARAM_INT);
 // Not being used for file management, we use it to generate navbar link.
-$returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
+$returnurl = optional_param('returnurl', "", PARAM_LOCALURL);
 
 if (!$subwiki = socialwiki_get_subwiki($subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
@@ -42,7 +42,7 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 
 // Checking course module instance.
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 
 // Checking course instance.

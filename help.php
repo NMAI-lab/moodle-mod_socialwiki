@@ -28,7 +28,7 @@ $id = required_param('id', PARAM_INT);
 
 // Checking course module instance.
 if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 
 // Checking course instance.
@@ -43,7 +43,7 @@ if (!$wiki = socialwiki_get_wiki($cm->instance)) {
 $PAGE->set_cm($cm);
 
 // Getting the subwiki corresponding to that socialwiki, group and user.
-// Getting current group id.
+// Getting current group ID.
 $currentgroup = groups_get_activity_group($cm);
 
 $context = context_module::instance($cm->id);

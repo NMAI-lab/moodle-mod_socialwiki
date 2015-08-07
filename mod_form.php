@@ -37,8 +37,18 @@ require_once('moodleform_mod.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/lib/datalib.php');
 
+/**
+ * Form used for editing and creating new pages/versions.
+ *
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_socialwiki_mod_form extends moodleform_mod {
 
+    /**
+     * Build the full form.
+     */
     protected function definition() {
         $mform = $this->_form;
         $required = get_string('required');
@@ -50,7 +60,7 @@ class mod_socialwiki_mod_form extends moodleform_mod {
         $mform->addElement('text', 'name', get_string('wikiname', 'socialwiki'), array('size' => '64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', $required, 'required', null, 'client');
-        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+        $mform->addRule('name', get_string('maximumchars', "", 255), 'maxlength', 255, 'client');
         // Adding the optional "intro" and "introformat" pair of fields.
         $this->add_intro_editor(true, get_string('wikiintro', 'socialwiki'));
 

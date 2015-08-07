@@ -78,7 +78,7 @@
                 _re_dic[ decimalPoint ] = new RegExp(_fnEscapeRegex(decimalPoint), 'g');
             }
             return typeof num === 'string' && decimalPoint !== '.' ?
-                    num.replace(/\./g, '').replace(_re_dic[ decimalPoint ], '.') :
+                    num.replace(/\./g, "").replace(_re_dic[ decimalPoint ], '.') :
                     num;
         };
 
@@ -97,7 +97,7 @@
             }
 
             if (formatted && strType) {
-                d = d.replace(_re_formatted_numeric, '');
+                d = d.replace(_re_formatted_numeric, "");
             }
 
             return !isNaN(parseFloat(d)) && isFinite(d);
@@ -205,7 +205,7 @@
         };
 
         var _stripHtml = function (d) {
-            return d.replace(_re_html, '');
+            return d.replace(_re_html, "");
         };
 
         /**
@@ -385,7 +385,7 @@
 
             // Boolean initialisation of x-scrolling.
             if (typeof init.sScrollX === 'boolean') {
-                init.sScrollX = init.sScrollX ? '100%' : '';
+                init.sScrollX = init.sScrollX ? '100%' : "";
             }
 
             // Column search objects are in an array, so it needs to be converted
@@ -516,7 +516,7 @@
             var iCol = oSettings.aoColumns.length;
             var oCol = $.extend({}, DataTable.models.oColumn, oDefaults, {
                 "nTh": nTh ? nTh : document.createElement('th'),
-                "sTitle": oDefaults.sTitle ? oDefaults.sTitle : nTh ? nTh.innerHTML : '',
+                "sTitle": oDefaults.sTitle ? oDefaults.sTitle : nTh ? nTh.innerHTML : "",
                 "aDataSort": oDefaults.aDataSort ? oDefaults.aDataSort : [iCol],
                 "mData": oDefaults.mData ? oDefaults.mData : iCol,
                 idx: iCol
@@ -552,7 +552,7 @@
                 oCol.sWidthOrig = th.attr('width') || null;
 
                 // Style attribute.
-                var t = (th.attr('style') || '').match(/width:\s*(\d+[pxem%]+)/);
+                var t = (th.attr('style') || "").match(/width:\s*(\d+[pxem%]+)/);
                 if (t) {
                     oCol.sWidthOrig = t[1];
                 }
@@ -665,7 +665,7 @@
             }
 
             var scroll = settings.oScroll;
-            if (scroll.sY !== '' || scroll.sX !== '') {
+            if (scroll.sY !== "" || scroll.sX !== "") {
                 _fnScrollDraw(settings);
             }
 
@@ -991,7 +991,7 @@
             }
 
             if (cellData === null && type == 'display') {
-                return '';
+                return "";
             }
             return cellData;
         }
@@ -1025,7 +1025,7 @@
          * @return {array} Split string
          */
         function _fnSplitObjNotation(str) {
-            return $.map(str.match(/(\\.|[^\.])+/g) || [''], function (s) {
+            return $.map(str.match(/(\\.|[^\.])+/g) || [""], function (s) {
                 return s.replace(/\\./g, '.');
             });
         }
@@ -1084,7 +1084,7 @@
 
                             if (arrayNotation) {
                                 // Array notation.
-                                a[i] = a[i].replace(__reArray, '');
+                                a[i] = a[i].replace(__reArray, "");
 
                                 // Condition allows simply [] to be passed in.
                                 if (a[i] !== "") {
@@ -1111,7 +1111,7 @@
                                 break;
                             } else if (funcNotation) {
                                 // Function call.
-                                a[i] = a[i].replace(__reFn, '');
+                                a[i] = a[i].replace(__reFn, "");
                                 data = data[ a[i] ]();
                                 continue;
                             }
@@ -1174,7 +1174,7 @@
                         funcNotation = a[i].match(__reFn);
 
                         if (arrayNotation) {
-                            a[i] = a[i].replace(__reArray, '');
+                            a[i] = a[i].replace(__reArray, "");
                             data[ a[i] ] = [];
 
                             // Get the remainder of the nested object to set so we can recurse.
@@ -1194,7 +1194,7 @@
                             return;
                         } else if (funcNotation) {
                             // Function call.
-                            a[i] = a[i].replace(__reFn, '');
+                            a[i] = a[i].replace(__reFn, "");
                             data = data[ a[i] ](val);
                         }
 
@@ -1209,11 +1209,11 @@
                     // Last item in the input - i.e, the actual set.
                     if (aLast.match(__reFn)) {
                         // Function call.
-                        data = data[ aLast.replace(__reFn, '') ](val);
+                        data = data[ aLast.replace(__reFn, "") ](val);
                     } else {
                         // If array notation is used, we just want to strip it and use the property name
                         // and assign the value. If it isn't used, then we get the result we want anyway.
-                        data[ aLast.replace(__reArray, '') ] = val;
+                        data[ aLast.replace(__reArray, "") ] = val;
                     }
                 };
 
@@ -1811,7 +1811,7 @@
                     sZero = oLang.sEmptyTable;
                 }
 
-                anRows[ 0 ] = $('<tr/>', {'class': iStripes ? asStripeClasses[0] : ''})
+                anRows[ 0 ] = $('<tr/>', {'class': iStripes ? asStripeClasses[0] : ""})
                         .append($('<td />', {
                             'valign': 'top',
                             'colSpan': _fnVisbleColumns(oSettings),
@@ -1891,7 +1891,7 @@
             // All DataTables are wrapped in a div
             var insert = $('<div/>', {
                 id: oSettings.sTableId + '_wrapper',
-                'class': classes.sWrapper + (oSettings.nTFoot ? '' : ' ' + classes.sNoFooter)
+                'class': classes.sWrapper + (oSettings.nTFoot ? "" : ' ' + classes.sNoFooter)
             });
 
             oSettings.nHolding = holding[0];
@@ -1899,7 +1899,7 @@
             oSettings.nTableReinsertBefore = oSettings.nTable.nextSibling;
 
             /* Loop over the user set positioning and place the elements as needed */
-            var aDom = oSettings.sDom.split('');
+            var aDom = oSettings.sDom.split("");
             var featureNode, cOption, nNewNode, cNext, sAttr, j;
             for (var i = 0; i < aDom.length; i++) {
                 featureNode = null;
@@ -2598,7 +2598,7 @@
          *  @memberof DataTable#oApi
          */
         function _fnFilterColumn(settings, searchStr, colIdx, regex, smart, caseInsensitive) {
-            if (searchStr === '') {
+            if (searchStr === "") {
                 return;
             }
 
@@ -2687,19 +2687,19 @@
                  * generate:
                  * ^(?=.*?\bone\b)(?=.*?\btwo three\b)(?=.*?\bfour\b).*$
                  */
-                var a = $.map(search.match(/"[^"]+"|[^ ]+/g) || [''], function (word) {
+                var a = $.map(search.match(/"[^"]+"|[^ ]+/g) || [""], function (word) {
                     if (word.charAt(0) === '"') {
                         var m = word.match(/^"(.*)"$/);
                         word = m ? m[1] : word;
                     }
 
-                    return word.replace('"', '');
+                    return word.replace('"', "");
                 });
 
                 search = '^(?=.*?' + a.join(')(?=.*?') + ').*$';
             }
 
-            return new RegExp(search, caseInsensitive ? 'i' : '');
+            return new RegExp(search, caseInsensitive ? 'i' : "");
         }
 
         /**
@@ -2742,7 +2742,7 @@
                             // Search in DataTables 1.10 is string based. In 1.11 this
                             // should be altered to also allow strict type checking.
                             if (cellData === null) {
-                                cellData = '';
+                                cellData = "";
                             }
 
                             if (typeof cellData !== 'string' && cellData.toString) {
@@ -2750,7 +2750,7 @@
                             }
                         }
                         else {
-                            cellData = '';
+                            cellData = "";
                         }
 
                         // If it looks like there is an HTML entity in the string,
@@ -2765,7 +2765,7 @@
                         }
 
                         if (cellData.replace) {
-                            cellData = cellData.replace(/[\r\n]/g, '');
+                            cellData = cellData.replace(/[\r\n]/g, "");
                         }
 
                         filterData.push(cellData);
@@ -3230,7 +3230,7 @@
             // Scrolling from here on in
             var scroll = settings.oScroll;
 
-            if (scroll.sX === '' && scroll.sY === '') {
+            if (scroll.sX === "" && scroll.sY === "") {
                 return settings.nTable;
             }
 
@@ -3765,7 +3765,7 @@
                         .append($(oSettings.nTFoot).clone());
 
                 // Remove any assigned widths from the footer (from scrolling).
-                tmpTable.find('tfoot th, tfoot td').css('width', '');
+                tmpTable.find('tfoot th, tfoot td').css('width', "");
 
                 // Apply custom sizing to the cloned header.
                 headerCells = _fnGetUniqueThs(oSettings, tmpTable.find('thead')[0]);
@@ -3773,9 +3773,9 @@
                 for (i = 0; i < visibleColumns.length; i++) {
                     column = columns[ visibleColumns[i] ];
 
-                    headerCells[i].style.width = column.sWidthOrig !== null && column.sWidthOrig !== '' ?
+                    headerCells[i].style.width = column.sWidthOrig !== null && column.sWidthOrig !== "" ?
                             _fnStringToCss(column.sWidthOrig) :
-                            '';
+                            "";
                 }
 
                 // Find the widest cell for each column and put it into the table.
@@ -3988,8 +3988,8 @@
             var s, max = -1, maxIdx = -1;
 
             for (var i = 0, ien = settings.aoData.length; i < ien; i++) {
-                s = _fnGetCellData(settings, i, colIdx, 'display') + '';
-                s = s.replace(__re_html_remove, '');
+                s = _fnGetCellData(settings, i, colIdx, 'display') + "";
+                s = s.replace(__re_html_remove, "");
 
                 if (s.length > max) {
                     max = s.length;
@@ -4629,7 +4629,7 @@
          */
         function _fnLog(settings, level, msg, tn) {
             msg = 'DataTables warning: ' +
-                    (settings ? 'table id=' + settings.sTableId + ' - ' : '') + msg;
+                    (settings ? 'table id=' + settings.sTableId + ' - ' : "") + msg;
 
             if (tn) {
                 msg += '. For more information about this error, please see ' +
@@ -4976,7 +4976,7 @@
                 var api = this.api(true);
 
                 if (src !== undefined) {
-                    var type = src.nodeName ? src.nodeName.toLowerCase() : '';
+                    var type = src.nodeName ? src.nodeName.toLowerCase() : "";
 
                     return col !== undefined || type == 'td' || type == 'th' ?
                             api.cell(src, col).data() :
@@ -5846,7 +5846,7 @@
             for (i = 0, ien = heir.length; i < ien; i++) {
                 method = heir[i].indexOf('()') !== -1;
                 key = method ?
-                        heir[i].replace('()', '') :
+                        heir[i].replace('()', "") :
                         heir[i];
 
                 var src = find(struct, key);
@@ -6334,11 +6334,11 @@
         _api_register('rows()', function (selector, opts) {
             // argument shifting
             if (selector === undefined) {
-                selector = '';
+                selector = "";
             }
             else if ($.isPlainObject(selector)) {
                 opts = selector;
-                selector = '';
+                selector = "";
             }
 
             opts = _selector_opts(opts);
@@ -6387,7 +6387,7 @@
 
         _api_registerPlural('rows().ids()', 'row().id()', function (hash) {
             return this.iterator('row', function (settings, row) {
-                return (hash ? '#' : '') + settings.rowId(settings.aoData[ row ]._aData);
+                return (hash ? '#' : "") + settings.rowId(settings.aoData[ row ]._aData);
             }, 1);
         });
 
@@ -6639,7 +6639,7 @@
         };
 
         // Strings for the method names to help minification
-        var _emp = '';
+        var _emp = "";
         var _child_obj = _emp + 'row().child';
         var _child_mth = _child_obj + '()';
 
@@ -6725,7 +6725,7 @@
                 var selInt = _intVal(s);
 
                 // Selector - all
-                if (s === '') {
+                if (s === "") {
                     return _range(columns.length);
                 }
 
@@ -6753,7 +6753,7 @@
                 // jQuery or string selector
                 var match = typeof s === 'string' ?
                         s.match(__re_column_selector) :
-                        '';
+                        "";
 
                 if (match) {
                     switch (match[2]) {
@@ -6853,10 +6853,10 @@
         _api_register('columns()', function (selector, opts) {
             // argument shifting
             if (selector === undefined) {
-                selector = '';
+                selector = "";
             } else if ($.isPlainObject(selector)) {
                 opts = selector;
-                selector = '';
+                selector = "";
             }
 
             opts = _selector_opts(opts);
@@ -8002,8 +8002,8 @@
             // weird edge case where it is trying to expand strings rather than use the
             // variable version. This results in about 200 bytes being added, for very
             // little preference benefit since it this run on script load only.
-            var _empty = '';
-            _empty = '';
+            var _empty = "";
+            _empty = "";
 
             var _stateDefault = _empty + 'ui-state-default';
             var _sortIcon = _empty + 'css_right ui-icon ui-icon-';
@@ -8123,7 +8123,7 @@
                             }
                             else {
                                 btnDisplay = null;
-                                btnClass = '';
+                                btnClass = "";
 
                                 switch (button) {
                                     case 'ellipsis':
@@ -8133,31 +8133,31 @@
                                     case 'first':
                                         btnDisplay = lang.sFirst;
                                         btnClass = button + (page > 0 ?
-                                                '' : ' ' + classes.sPageButtonDisabled);
+                                                "" : ' ' + classes.sPageButtonDisabled);
                                         break;
 
                                     case 'previous':
                                         btnDisplay = lang.sPrevious;
                                         btnClass = button + (page > 0 ?
-                                                '' : ' ' + classes.sPageButtonDisabled);
+                                                "" : ' ' + classes.sPageButtonDisabled);
                                         break;
 
                                     case 'next':
                                         btnDisplay = lang.sNext;
                                         btnClass = button + (page < pages - 1 ?
-                                                '' : ' ' + classes.sPageButtonDisabled);
+                                                "" : ' ' + classes.sPageButtonDisabled);
                                         break;
 
                                     case 'last':
                                         btnDisplay = lang.sLast;
                                         btnClass = button + (page < pages - 1 ?
-                                                '' : ' ' + classes.sPageButtonDisabled);
+                                                "" : ' ' + classes.sPageButtonDisabled);
                                         break;
 
                                     default:
                                         btnDisplay = button + 1;
                                         btnClass = page === button ?
-                                                classes.sPageButtonActive : '';
+                                                classes.sPageButtonActive : "";
                                         break;
                                 }
 
@@ -8268,7 +8268,7 @@
                         data
                         .replace(_re_new_lines, " ")
                         .replace(_re_html, "") :
-                        '';
+                        "";
             },
             string: function (data) {
                 return _empty(data) ?
@@ -8293,11 +8293,11 @@
 
             if (d.replace) {
                 if (re1) {
-                    d = d.replace(re1, '');
+                    d = d.replace(re1, "");
                 }
 
                 if (re2) {
-                    d = d.replace(re2, '');
+                    d = d.replace(re2, "");
                 }
             }
 
@@ -8348,21 +8348,21 @@
             // HTML.
             "html-pre": function (a) {
                 return _empty(a) ?
-                        '' :
+                        "" :
                         a.replace ?
                         a.replace(/<.*?>/g, "").toLowerCase() :
-                        a + '';
+                        a + "";
             },
             // String.
             "string-pre": function (a) {
                 // This is a little complex, but faster than always calling toString,
                 // http://jsperf.com/tostring-v-check
                 return _empty(a) ?
-                        '' :
+                        "" :
                         typeof a === 'string' ?
                         a.toLowerCase() :
                         !a.toString ?
-                        '' :
+                        "" :
                         a.toString();
             },
             // String-asc and -desc are retained only for compatibility with the old sort methods.
@@ -8375,7 +8375,7 @@
         });
 
         // Numeric sorting types - order doesn't matter here.
-        _addNumericSort('');
+        _addNumericSort("");
 
         $.extend(true, DataTable.ext.renderer, {
             header: {
@@ -8475,7 +8475,7 @@
          *   // Column definition using the number renderer
          *   {
          *     data: "salary",
-         *     render: $.fn.dataTable.render.number( '\'', '.', 0, '$' )
+         *     render: $.fn.dataTable.render.number( '\"", '.', 0, '$' )
          *   }
          *
          * @namespace
@@ -8488,20 +8488,20 @@
                             return d;
                         }
 
-                        var negative = d < 0 ? '-' : '';
+                        var negative = d < 0 ? '-' : "";
                         d = Math.abs(parseFloat(d));
 
                         var intPart = parseInt(d, 10);
                         var floatPart = precision ?
                                 decimal + (d - intPart).toFixed(precision).substring(2) :
-                                '';
+                                "";
 
-                        return negative + (prefix || '') +
+                        return negative + (prefix || "") +
                                 intPart.toString().replace(
                                 /\B(?=(\d{3})+(?!\d))/g, thousands
                                 ) +
                                 floatPart +
-                                (postfix || '');
+                                (postfix || "");
                     }
                 };
             }

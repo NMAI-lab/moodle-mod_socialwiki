@@ -17,7 +17,7 @@
 /**
  * This file contains all necessary code to view a socialwiki page
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -33,69 +33,52 @@ require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID.
+$id    = optional_param('id', 0, PARAM_INT);      // Course Module ID.
+$wid   = optional_param('wid', 0, PARAM_INT);     // Wiki ID.
+$swid  = optional_param('swid', 0, PARAM_INT);    // Subwiki ID.
+$pid   = optional_param('pageid', 0, PARAM_INT);  // Page ID.
+$title = optional_param('title', "", PARAM_TEXT); // Page Title.
+$group = optional_param('group', 0, PARAM_INT);   // Group ID.
 
-$pageid = optional_param('pageid', 0, PARAM_INT); // Page ID.
-
-$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID.
-$title = optional_param('title', '', PARAM_TEXT); // Page Title.
-$currentgroup = optional_param('group', 0, PARAM_INT); // Group ID.
-$userid = optional_param('uid', 0, PARAM_INT); // User ID.
-$groupanduser = optional_param('groupanduser', 0, PARAM_TEXT);
-
-$edit = optional_param('edit', -1, PARAM_BOOL);
-
-$action = optional_param('action', '', PARAM_ALPHA);
-$swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID.
-
-/*
- * Case 0:
- *
- * User that comes from a course. Home page must be shown
- *
- * URL params: id -> course module id
- *
- */
 if ($id) {
-    $url = new moodle_url('/mod/socialwiki/home.php', array('id' => $id));
-    redirect($url);
+    /*
+     * Case 0:
+     *
+     * User that comes from a course. Home page must be shown
+     *
+     * URL params: id -> Course Module ID (required)
+     *
+     */
 
+    redirect(new moodle_url('/mod/socialwiki/home.php', array('id' => $id)));
+} else if ($pid) {
     /*
      * Case 1:
      *
      * A user wants to see a page.
      *
-     * URL Params: pageid -> page id
-     *
+     * URL Params: pageid -> Page ID (required)
      */
-} else if ($pageid) {
 
-    // Checking page instance.
-    if (!$page = socialwiki_get_page($pageid)) {
+    if (!$page = socialwiki_get_page($pid)) {
         print_error('incorrectpageid', 'socialwiki');
     }
-
-    // Checking subwiki.
     if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
         print_error('incorrectsubwikiid', 'socialwiki');
     }
-
-    // Checking socialwiki instance of that subwiki.
     if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
-
-    // Checking course module instance.
     if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-        print_error('invalidcoursemodule');
+        print_error('invalidcoursemodule', 'socialwiki');
     }
 
-    $currentgroup = $subwiki->groupid;
+    $group = $subwiki->groupid;
 
     // Checking course instance.
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-
     require_login($course, true, $cm);
+} else if ($wid && $title) {
     /*
      * Case 2:
      *
@@ -105,62 +88,50 @@ if ($id) {
      *  * If it exists, page must be shown
      *  * If it does not exists, system must ask for its creation
      *
-     * URL params: wid -> subwiki id (required)
-     *             title -> a page title (required)
-     *             group -> group id (optional)
-     *             uid -> user id (optional)
-     *             groupanduser -> (optional)
+     * URL params: wid -> Subwiki ID (required)
+     *             title -> A Page Title (required)
+     *             group -> Group ID (optional)
      */
-} else if ($wid && $title) {
 
-    // Setting wiki instance.
     if (!$wiki = socialwiki_get_wiki($wid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
-
-    // Checking course module.
     if (!$cm = get_coursemodule_from_instance("socialwiki", $wiki->id)) {
-        print_error('invalidcoursemodule');
+        print_error('invalidcoursemodule', 'socialwiki');
     }
 
     // Checking course instance.
     $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-
     require_login($course, true, $cm);
 
     $groupmode = groups_get_activity_groupmode($cm);
 
-    if ($groupmode == NOGROUPS) {
-        $gid = 0;
-        $uid = 0;
-    } else {
-        $gid = $currentgroup;
-        $uid = 0;
+    $gid = 0;
+    if ($groupmode != NOGROUPS) {
+        $gid = $group;
     }
 
     // Getting subwiki instance. If it does not exists, redirect to create page.
-    if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $gid, $uid)) {
+    if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $gid)) {
         $context = context_module::instance($cm->id);
 
-        $modeanduser = $wiki->wikimode == 'individual' && $uid != $USER->id;
+        $modeanduser = $wiki->wikimode == 'individual';
         $modeandgroupmember = $wiki->wikimode == 'collaborative' && !groups_is_member($gid);
 
         $manage = has_capability('mod/socialwiki:managewiki', $context);
         $edit = has_capability('mod/socialwiki:editpage', $context);
         $manageandedit = $manage && $edit;
 
-        if ($groupmode == VISIBLEGROUPS and ( $modeanduser || $modeandgroupmember) and ! $manageandedit) {
+        if ($groupmode == VISIBLEGROUPS && ($modeanduser || $modeandgroupmember) && !$manageandedit) {
             print_error('nocontent', 'socialwiki');
         }
 
-        $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $title);
-        $url = new moodle_url('/mod/socialwiki/create.php', $params);
-        redirect($url);
+        redirect(new moodle_url('/mod/socialwiki/create.php', array('wid' => $wiki->id, 'group' => $gid, 'title' => $title)));
     }
 
     // Checking is there is a page with this title. If it does not exists, redirect to first page.
     if (!$page = socialwiki_get_page_by_title($subwiki->id, $title)) {
-        $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $wiki->firstpagetitle);
+        $params = array('wid' => $wiki->id, 'group' => $gid, 'title' => $wiki->firstpagetitle);
         // Check to see if the first page has been created.
         if (!socialwiki_get_page_by_title($subwiki->id, $wiki->firstpagetitle)) {
             $url = new moodle_url('/mod/socialwiki/create.php', $params);
@@ -181,22 +152,9 @@ require_once($CFG->libdir . '/completionlib.php');
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
-if (($edit != - 1) and $PAGE->user_allowed_editing()) {
-    $USER->editing = $edit;
-}
-
 $wikipage = new page_socialwiki_view($wiki, $subwiki, $cm);
 
-/* The following piece of code is used in order
- * to perform set_url correctly. It is necessary in order
- * to make page_socialwiki_view class know that this page
- * has been called via its id.
- */
-if ($id) {
-    $wikipage->set_coursemodule($id);
-}
-
-$wikipage->set_gid($currentgroup);
+$wikipage->set_gid($group);
 $wikipage->set_page($page);
 
 $wikipage->print_header();

@@ -15,8 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Page to edit a comment.
  *
- * @package mod_socialwiki
+ * @package   mod_socialwiki
  * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
  * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
  *
@@ -29,12 +30,13 @@
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
 $pageid = required_param('pageid', PARAM_INT);
-$action = optional_param('action', '', PARAM_ALPHANUMEXT);
+$action = optional_param('action', "", PARAM_ALPHANUMEXT);
 $commentid = optional_param('commentid', 0, PARAM_INT);
 
 if (!$page = socialwiki_get_page($pageid)) {
@@ -44,7 +46,7 @@ if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
@@ -56,7 +58,7 @@ $editcomments = new page_socialwiki_editcomment($wiki, $subwiki, $cm);
 $comment = new stdClass();
 if ($action == 'edit') {
     if (!$comment = $DB->get_record('comments', array('id' => $commentid))) {
-        print_error('invalidcomment');
+        print_error('invalidcomment', 'socialwiki');
     }
 }
 

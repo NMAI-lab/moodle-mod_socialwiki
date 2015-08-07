@@ -15,41 +15,42 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines backup_wiki_activity_task class
+ * Defines backup_wiki_activity_task class.
  *
- * @package     mod_socialwiki
- * @category    backup
- * @copyright   2010 Jordi Piguillem <pigui0@hotmail.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_socialwiki
+ * @copyright 2010 Jordi Piguillem <pigui0@hotmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/socialwiki/backup/moodle2/backup_socialwiki_stepslib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/backup/moodle2/backup_socialwiki_settingslib.php');
 
 /**
- * Provides all the settings and steps to perform one complete backup of the activity
+ * Provides all the settings and steps to perform one complete backup of the activity.
+ *
+ * @copyright 2010 Jordi Piguillem <pigui0@hotmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_socialwiki_activity_task extends backup_activity_task {
 
     /**
-     * No specific settings for this activity
+     * No specific settings for this activity.
      */
     protected function define_my_settings() {
     }
 
     /**
-     * Defines a backup step to store the instance data in the wiki.xml file
+     * Defines a backup step to store the instance data in the wiki.xml file.
      */
     protected function define_my_steps() {
         $this->add_step(new backup_socialwiki_activity_structure_step('socialwiki_structure', 'socialwiki.xml'));
     }
 
     /**
-     * Encodes URLs to the index.php and view.php scripts
+     * Encodes URLs to the index.php and view.php scripts.
      *
-     * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
+     * @param string $content HTML text that eventually contains URLs to the activity instance scripts
      * @return string the content with the URLs encoded
      */
     public static function encode_content_links($content) {

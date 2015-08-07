@@ -43,7 +43,7 @@ if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
 if (!$cm = get_coursemodule_from_instance("socialwiki", $subwiki->wikiid)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {

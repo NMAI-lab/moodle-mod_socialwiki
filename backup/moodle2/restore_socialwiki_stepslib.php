@@ -15,16 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines restore_socialwiki_stepslib class.
+ *
  * @package   mod_socialwiki
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-/**
- * Define all the restore steps that will be used by the restore_wiki_activity_task
- */
 
 /**
  * Structure step to restore one wiki activity
+ *
+ * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_socialwiki_activity_structure_step extends restore_activity_structure_step {
 

@@ -32,8 +32,18 @@ if (!defined('MOODLE_INTERNAL')) {
 
 require($CFG->dirroot . '/mod/socialwiki/editors/wikieditor.php');
 
+/**
+ * Form used for editing and creating new pages/versions.
+ *
+ * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
+ * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_socialwiki_edit_form extends moodleform {
 
+    /**
+     * Build the full form.
+     */
     protected function definition() {
         $mform = $this->_form;
         // BEWARE HACK: In order for things to work we need to override the form id and set it to mform1.
@@ -100,21 +110,11 @@ class mod_socialwiki_edit_form extends moodleform {
         $mform->addElement('hidden', 'contentformat', $format);
         $mform->setType('contentformat', PARAM_ALPHANUMEXT);
 
-        /*
-          if (!empty($CFG->usetags)) {
-          $tags = !isset($this->_customdata['tags'])?"":$this->_customdata['tags'];
-          $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
-          $mform->addElement('tags', 'tags', get_string('tags'));
-          $mform->setDefault('tags', $tags);
-          $mform->setType('tags', PARAM_TEXT);
-          }
-         */
-
         $buttongroup = array();
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('save', 'socialwiki'), array('id' => 'save'));
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('preview'), array('id' => 'preview'));
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('cancel'), array('id' => 'cancel'));
 
-        $mform->addGroup($buttongroup, 'buttonar', '', array(' '), false);
+        $mform->addGroup($buttongroup, 'buttonar', "", array(' '), false);
     }
 }

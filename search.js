@@ -26,7 +26,7 @@
  * If popular is selected from the menu dropown then resize to show them better.
  */
 $(document).ready(function () {
-    if (/option=3/.test(document.URL)) { // Only in view 'popular'.
+    if (/view=3/.test(document.URL)) { // Only in view 'popular'.
         $('.tagcloud').tagcloud();
     }
 });
@@ -46,7 +46,6 @@ $(document).ready(function () {
     };
 
     $.fn.tagcloud = function () {
-        var opts = $.fn.tagcloud.defaults;
         var tagWeights = this.map(function () {
             return $(this).attr("rel");
         });
@@ -61,18 +60,15 @@ $(document).ready(function () {
             zerorange = true; // Remember range was 0.
         }
         // Sizes.
-        var fontIncr = (opts.size.end - opts.size.start) / range;
+        var size = {start: 8, end: 18, unit: "pt"};
+        var fontIncr = (size.end - size.start) / range;
         return this.each(function () {
             var weighting = $(this).attr("rel") - lowest;
             if (zerorange) { // If there's just one value, put it in the middle rather than at the bottom of the sizes range.
-                $(this).css({"font-size": (opts.size.start + opts.size.end) / 2 + opts.size.unit});
+                $(this).css({"font-size": (size.start + size.end) / 2 + size.unit});
             } else {
-                $(this).css({"font-size": opts.size.start + (weighting * fontIncr) + opts.size.unit});
+                $(this).css({"font-size": size.start + (weighting * fontIncr) + size.unit});
             }
         });
-    };
-
-    $.fn.tagcloud.defaults = {
-        size: {start: 8, end: 18, unit: "pt"}
     };
 })(jQuery);

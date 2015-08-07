@@ -92,8 +92,8 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
             $tag, "", get_string('wikiexternalurl', 'socialwiki'));
 
         $tag = $this->gettockens($editor, 'list');
-        $wikieditor['u_list'] = array('ed_ul.gif', get_string('wikiunorderedlist', 'socialwiki'), '\\n' . $tag[0], '', '');
-        $wikieditor['o_list'] = array('ed_ol.gif', get_string('wikiorderedlist', 'socialwiki'), '\\n' . $tag[1], '', '');
+        $wikieditor['u_list'] = array('ed_ul.gif', get_string('wikiunorderedlist', 'socialwiki'), '\\n' . $tag[0], "", "");
+        $wikieditor['o_list'] = array('ed_ol.gif', get_string('wikiorderedlist', 'socialwiki'), '\\n' . $tag[1], "", "");
 
         $tag = $this->gettockens($editor, 'header');
         $wikieditor['h1'] = array('ed_h1.gif', get_string('wikiheader', 'socialwiki', 1),
@@ -104,7 +104,7 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
             '\\n' . $tag . $tag . $tag . ' ', ' ' . $tag . $tag . $tag . '\\n', get_string('wikiheader', 'socialwiki', 3));
 
         $tag = $this->gettockens($editor, 'line_break');
-        $wikieditor['hr'] = array('ed_hr.gif', get_string('wikihr', 'socialwiki'), '\\n' . $tag . '\\n', '', '');
+        $wikieditor['hr'] = array('ed_hr.gif', get_string('wikihr', 'socialwiki'), '\\n' . $tag . '\\n', "", "");
 
         $tag = $this->gettockens($editor, 'nowiki');
         $wikieditor['nowiki'] = array('ed_nowiki.gif', get_string('wikinowikitext', 'socialwiki'),

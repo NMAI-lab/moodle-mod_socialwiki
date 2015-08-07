@@ -90,9 +90,9 @@ class creole_parser extends socialwiki_markup_parser {
             'token' => array('**', '**')
         ),
         'italic' => array(
-            'expression' => "#(?<!http:|https:|ftp:)// (.+?)(?<!http:|https:|ftp:)// #is",
+            'expression' => "#(?<!http:|https:|ftp:)//(.+?)(?<!http:|https:|ftp:)//#is",
             'tag' => 'em',
-            'token' => array('// ', '// ')
+            'token' => array('//', '//')
         )
     );
 
@@ -204,8 +204,8 @@ class creole_parser extends socialwiki_markup_parser {
     protected function bold_tag_rule($match) {
         $text = $match[1];
         $this->rules($text, array('only' => array('italic')));
-        if (strpos($text, "// ") !== false) {
-            $text = str_replace("// ", $this->protect("// "), $text);
+        if (strpos($text, "//") !== false) {
+            $text = str_replace("//", $this->protect("//"), $text);
         }
         return array($text, array());
     }

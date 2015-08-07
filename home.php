@@ -40,7 +40,7 @@ $tab = optional_param('tabid', 0, PARAM_INT); // Option ID.
 if ($id) {
     // Checking course module instance.
     if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
-        print_error('invalidcoursemodule');
+        print_error('invalidcoursemodule', 'socialwiki');
     }
 
     // Checking course instance.
@@ -55,10 +55,10 @@ if ($id) {
     $PAGE->set_cm($cm);
 
     // Getting the subwiki corresponding to that socialwiki, group and user.
-    // Getting current group id.
+    // Getting current group ID.
     $currentgroup = groups_get_activity_group($cm);
     $gid = !empty($gid) ? $gid : 0;
-    // Set user id 0.
+    // Set user ID to 0.
     $userid = 0;
 
     // Getting subwiki. If it does not exists, redirecting to create page.

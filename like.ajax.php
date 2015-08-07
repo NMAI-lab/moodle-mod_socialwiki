@@ -13,6 +13,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Accessed by javascript to change a page being liked/unliked.
+ *
+ * This will simply act as a toggle turning the like on or off.
+ *
+ * @package   mod_socialwiki
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 define('AJAX_SCRIPT', true);
 
 require_once('../../config.php');
@@ -31,14 +42,14 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
-    print_error('invalidcoursemodule');
+    print_error('invalidcoursemodule', 'socialwiki');
 }
 if (!is_enrolled(context_module::instance($cm->id), $USER->id)) {
     // Must be an enrolled user to like a page.
     print_error('cannotlike', 'socialwiki');
 }
 
-$out = '';
+$out = "";
 if (confirm_sesskey()) {
     $out = socialwiki_page_like($USER->id, $pageid, $subwiki->id);
 }

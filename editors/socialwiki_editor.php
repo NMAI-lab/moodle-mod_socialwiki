@@ -69,9 +69,9 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor,
         $tag[0], $tag[1], get_string('wikiexternalurl', 'socialwiki'));
     $tag = gettockens($editor, 'list');
     $wikieditor['u_list'] = array('ed_ul.gif', get_string('wikiunorderedlist', 'socialwiki'),
-        '\\n' . $tag[0], '', '');
+        '\\n' . $tag[0], "", "");
     $wikieditor['o_list'] = array('ed_ol.gif', get_string('wikiorderedlist', 'socialwiki'),
-        '\\n' . $tag[1], '', '');
+        '\\n' . $tag[1], "", "");
     $tag = gettockens($editor, 'image');
     $wikieditor['image'] = array('ed_img.gif', get_string('wikiimage', 'socialwiki'),
         $tag[0], $tag[1], get_string('wikiimage', 'socialwiki'));
@@ -83,7 +83,7 @@ function socialwiki_print_editor_wiki($pageid, $content, $editor,
     $wikieditor['h3'] = array('ed_h3.gif', get_string('wikiheader', 'socialwiki', 3), '\\n'
         . $tag . $tag . $tag . ' ', ' ' . $tag . $tag . $tag . '\\n', get_string('wikiheader', 'socialwiki', 3));
     $tag = gettockens($editor, 'line_break');
-    $wikieditor['hr'] = array('ed_hr.gif', get_string('wikihr', 'socialwiki'), '\\n' . $tag . '\\n', '', '');
+    $wikieditor['hr'] = array('ed_hr.gif', get_string('wikihr', 'socialwiki'), '\\n' . $tag . '\\n', "", "");
     $tag = gettockens($editor, 'nowiki');
     $wikieditor['nowiki'] = array('ed_nowiki.gif', get_string('wikinowikitext', 'socialwiki'),
         $tag[0], $tag[1], get_string('wikinowikitext', 'socialwiki'));

@@ -241,7 +241,7 @@ class socialwiki_versiontable extends socialwiki_table {
     }
 
     /**
-     * Get peers from user ids, with all relevant info: used by get_all_likers.
+     * Get peers from user IDs, with all relevant info: used by get_all_likers.
      *
      * @param array $ids The ID's of the peers.
      * @return array

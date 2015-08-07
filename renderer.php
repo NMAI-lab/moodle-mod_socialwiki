@@ -124,7 +124,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         }
 
         // If there is more than one page create html for paging bar.
-        $html = '';
+        $html = "";
         if ($totalcount > 1) {
             $html .= '<div class="paging">';
 
@@ -202,7 +202,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             if ($tab == 'files' && !has_capability('mod/socialwiki:viewpage', $context)) {
                 continue;
             }
-            if (($tab == 'view' || $tab == 'home' || $tab == 'history') && !has_capability('mod/socialwiki:viewpage', $context)) {
+            if (($tab == 'view' || $tab == 'home' || $tab == 'versions') && !has_capability('mod/socialwiki:viewpage', $context)) {
                 continue;
             }
             if ($tab == 'admin' && !has_capability('mod/socialwiki:managewiki', $context)) {
@@ -215,7 +215,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             }
 
             if ($tab == 'versions') {
-                $link = new moodle_url('/mod/socialwiki/history.php', array('pageid' => $pageid));
+                $link = new moodle_url('/mod/socialwiki/versions.php', array('pageid' => $pageid));
             }
 
             $tabs[] = new tabobject($tab, $link, get_string($tab, 'socialwiki'));
@@ -418,20 +418,18 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @param int $exact If exact then only an exact title will return.
      * @return string HTML
      */
-    public function menu_search($cmid, $currentselect, $searchstring, $exact = 0) {
+    public function menu_search($cmid, $currentview, $searchstring, $exact = 0) {
         Global $COURSE;
-        $options = array('tree', 'list', 'popular');
-        $items = array();
-        foreach ($options as $opt) {
-            $items[] = get_string($opt, 'socialwiki');
-        }
+
         $selectoptions = array();
-        foreach ($items as $key => $item) {
-            $selectoptions[$key + 1] = $item;
+        foreach (array('tree', 'list', 'popular') as $key => $v) {
+            $selectoptions[$key + 1] = get_string($v, 'socialwiki');
         }
+
         $select = new single_select(new moodle_url('/mod/socialwiki/search.php', array('searchstring' => $searchstring,
-            'courseid' => $COURSE->id, 'cmid' => $cmid, 'exact' => $exact)), 'option', $selectoptions, $currentselect);
-        $select->label = get_string('searchmenu', 'socialwiki') . ': ';
+            'courseid' => $COURSE->id, 'cmid' => $cmid, 'exact' => $exact)), 'view', $selectoptions, $currentview);
+        $select->label = get_string('searchviews', 'socialwiki');
+
         return $this->output->container($this->output->render($select), 'midpad colourtext');
     }
 
@@ -489,7 +487,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function content_area_begin() {
-        $html = '';
+        $html = "";
         $html .= html_writer::start_div('socialwiki_wikicontent', array("id" => "socialwiki_content_area"));
         return $html;
     }
@@ -500,7 +498,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function content_area_end() {
-        $html = '';
+        $html = "";
         $html .= html_writer::end_div();
         return $html;
     }
@@ -521,7 +519,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         $html .= html_writer::end_div();
 
         $html .= html_writer::start_div('socialwiki-contributors');
-        $html .= 'Contributors to this page:';
+        $html .= get_string('pagecontributors', 'socialwiki');
         $contributors = socialwiki_get_contributors($page->id);
 
         $contriblinks = "";
@@ -562,7 +560,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function help_area_start() {
-        $html = '';
+        $html = "";
         $html .= $this->content_area_begin();
         $html .= html_writer::start_div('wikipage');
         return $html;
@@ -576,9 +574,9 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function help_content($heading, $content) {
-        $html = '';
+        $html = "";
         $html .= html_writer::tag('h2', $heading);
-        $html .= html_writer::start_div('', array('id' => 'socialwiki_wikicontent'));
+        $html .= html_writer::start_div("", array('id' => 'socialwiki_wikicontent'));
         $html .= $content;
         $html .= html_writer::end_div();
         return $html;
@@ -590,7 +588,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      * @return string HTML
      */
     public function help_area_end() {
-        $html = '';
+        $html = "";
         $html .= html_writer::end_div();
         $html .= $this->content_area_end();
         return $html;

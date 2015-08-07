@@ -69,19 +69,19 @@ function xmldb_socialwiki_upgrade($oldversion) {
 
     // Remove locks, synonyms and links tables.
     if ($oldversion < 2015070100) {
-        $table = new xmldb_table('socialwiki_locks');
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
+        $tablelocks = new xmldb_table('socialwiki_locks');
+        if ($dbman->table_exists($tablelocks)) {
+            $dbman->drop_table($tablelocks);
         }
 
-        $table = new xmldb_table('socialwiki_synonyms');
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
+        $tablesynonyms = new xmldb_table('socialwiki_synonyms');
+        if ($dbman->table_exists($tablesynonyms)) {
+            $dbman->drop_table($tablesynonyms);
         }
 
-        $table = new xmldb_table('socialwiki_links');
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
+        $tablelinks = new xmldb_table('socialwiki_links');
+        if ($dbman->table_exists($tablelinks)) {
+            $dbman->drop_table($tablelinks);
         }
 
         upgrade_mod_savepoint(true, 2015070100, 'socialwiki'); // Socialwiki savepoint reached.
@@ -89,17 +89,16 @@ function xmldb_socialwiki_upgrade($oldversion) {
 
     // Remove timerendered and readonly from pages table.
     if ($oldversion < 2015070900) {
-        $table = new xmldb_table('socialwiki_pages');
-        if ($dbman->table_exists($table)) {
-
+        $tablepages = new xmldb_table('socialwiki_pages');
+        if ($dbman->table_exists($tablepages)) {
             $timerendered = new xmldb_field('timerendered');
-            if ($dbman->field_exists($table, $timerendered)) {
-                $dbman->drop_field($table, $timerendered);
+            if ($dbman->field_exists($tablepages, $timerendered)) {
+                $dbman->drop_field($tablepages, $timerendered);
             }
 
             $readonly = new xmldb_field('readonly');
-            if ($dbman->field_exists($table, $readonly)) {
-                $dbman->drop_field($table, $readonly);
+            if ($dbman->field_exists($tablepages, $readonly)) {
+                $dbman->drop_field($tablepages, $readonly);
             }
         }
 
@@ -148,7 +147,7 @@ function xmldb_socialwiki_upgrade($oldversion) {
         // Transfer content and then delete version table.
         if ($dbman->table_exists($tableversions)) {
             $sql = "SELECT pageid, content FROM {socialwiki_versions} WHERE content != ?";
-            $rec = $DB->get_records_sql($sql, array(''));
+            $rec = $DB->get_records_sql($sql, array(""));
             foreach ($rec as $r) {
                 $page = new stdClass();
                 $page->id = $r->pageid;

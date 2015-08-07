@@ -25,12 +25,12 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
 
     protected $prettyprint = false;
     protected $printable = false;
-    // Page id.
+    // Page ID.
     protected $pageid;
     // Sections.
     protected $repeatedsections;
     protected $sectionediting = true;
-    // Header & ToC.
+    // Header & Table of Contents.
     protected $toc = array();
     protected $maxheaderdepth = 3;
 
@@ -175,20 +175,15 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
      * Header generation
      */
     protected function generate_header($text, $level) {
-        $text = trim($text);
-
-        if (!$this->prettyprint && $level == 1) {
-            $text .= socialparser_utils::h('a', '[' . get_string('editsection', 'socialwiki') . ']',
-                    array('href' => "edit.php?pageid={$this->pageid}&section=" . urlencode($text), 'class' => 'wiki_edit_section'));
-        }
+        $txt = trim($text);
 
         if ($level <= $this->maxheaderdepth) {
-            $this->toc[] = array($level, $text);
+            $this->toc[] = array($level, $txt);
             $num = count($this->toc);
-            $text = socialparser_utils::h('a', "", array('name' => "toc-$num")) . $text;
+            $txt = socialparser_utils::h('a', "", array('name' => "toc-$num")) . $txt;
         }
 
-        return socialparser_utils::h('h' . $level, $text) . "\n\n";
+        return socialparser_utils::h('h' . $level, $txt) . "\n\n";
     }
 
     /**
@@ -237,7 +232,6 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
                     array('class' => 'socialwiki-toc-section-' . $header[0] . " socialwiki-toc-section"));
             $i++;
         }
-
         $this->returnvalues['toc'] = "<div class='socialwiki-toc'><p class='socialwiki-toc-title'>"
                 . get_string('tableofcontents', 'socialwiki') . "</p>$toc</div>";
     }
