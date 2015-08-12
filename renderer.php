@@ -410,27 +410,34 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Builds the menu for the search page.
+     * Builds the version view for search or pages.
      *
-     * @param int $cmid The course module ID.
-     * @param int $currentselect The currently selected item.
-     * @param string $searchstring The string being searched.
-     * @param int $exact If exact then only an exact title will return.
-     * @return string HTML
+     * @param string $type Either versions or search.
+     * @param array $options Parameters for the view menu links.
+     * @param int $currentview The current view.
+     * @param stdClass[] $pages An array of the pages to show.
      */
-    public function menu_search($cmid, $currentview, $searchstring, $exact = 0) {
-        Global $COURSE;
-
+    public function versions($type, $options, $currentview, $pages, $pageid = -1) {
+        global $USER, $CFG;
         $selectoptions = array();
         foreach (array('tree', 'list', 'popular') as $key => $v) {
-            $selectoptions[$key + 1] = get_string($v, 'socialwiki');
+            $selectoptions[$key] = get_string($v, 'socialwiki');
         }
 
-        $select = new single_select(new moodle_url('/mod/socialwiki/search.php', array('searchstring' => $searchstring,
-            'courseid' => $COURSE->id, 'cmid' => $cmid, 'exact' => $exact)), 'view', $selectoptions, $currentview);
+        $select = new single_select(new moodle_url("/mod/socialwiki/$type.php", $options), 'view', $selectoptions, $currentview);
         $select->label = get_string('searchviews', 'socialwiki');
 
-        return $this->output->container($this->output->render($select), 'midpad colourtext');
+        echo $this->output->container($this->output->render($select), 'midpad');
+
+        if ($currentview == 1) {
+            require($CFG->dirroot . '/mod/socialwiki/table/table.php');
+            echo socialwiki_versiontable::html_versiontable($USER->id, $this->subwiki->id, $pages, 'version');
+        } else {
+            require($CFG->dirroot . '/mod/socialwiki/tree/tree.php');
+            $tree = new socialwiki_tree();
+            $tree->build_tree($pages);
+            $tree->display($pageid);
+        }
     }
 
     /**
@@ -456,29 +463,6 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
             $html .= '</div>';
         }
         return $html;
-    }
-
-    /**
-     * Builds the menu for the admin page.
-     *
-     * @param int $pageid The page ID.
-     * @param int $currentselect The current seleted option.
-     * @return string HTML
-     */
-    public function menu_admin($pageid, $currentselect) {
-        $options = array('removepages', 'deleteversions');
-        $items = array();
-        foreach ($options as $opt) {
-            $items[] = get_string($opt, 'socialwiki');
-        }
-        $selectoptions = array();
-        foreach ($items as $key => $item) {
-            $selectoptions[$key + 1] = $item;
-        }
-        $select = new single_select(new moodle_url('/mod/socialwiki/admin.php',
-                array('pageid' => $pageid)), 'option', $selectoptions, $currentselect);
-        $select->label = get_string('adminmenu', 'socialwiki') . ': ';
-        return $this->output->container($this->output->render($select), 'midpad');
     }
 
     /**
@@ -555,42 +539,18 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Opens the help area.
-     *
-     * @return string HTML
-     */
-    public function help_area_start() {
-        $html = "";
-        $html .= $this->content_area_begin();
-        $html .= html_writer::start_div('wikipage');
-        return $html;
-    }
-
-    /**
      * The help area content.
      *
      * @param string $heading The section heading.
-     * @param string $content The section content.
+     * @param string $type The section content type to show.
      * @return string HTML
      */
-    public function help_content($heading, $content) {
+    public function help_content($type) {
         $html = "";
-        $html .= html_writer::tag('h2', $heading);
-        $html .= html_writer::start_div("", array('id' => 'socialwiki_wikicontent'));
-        $html .= $content;
+        $html .= html_writer::start_div("", array('id' => strtolower($type), 'style' => 'padding-top: 40px'));
+        $html .= html_writer::tag('h2', $type);
+        $html .= get_string('help_' . strtolower($type), 'socialwiki');
         $html .= html_writer::end_div();
-        return $html;
-    }
-
-    /**
-     * Closes the help area.
-     *
-     * @return string HTML
-     */
-    public function help_area_end() {
-        $html = "";
-        $html .= html_writer::end_div();
-        $html .= $this->content_area_end();
         return $html;
     }
 }

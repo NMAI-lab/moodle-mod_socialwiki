@@ -26,11 +26,7 @@
  * your older installation to the current version.
  *
  * @package mod_socialwiki
- * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
- *
- * @author Jordi Piguillem
- *
+ * @copyright 2015 NMAI-lab
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  *
  */

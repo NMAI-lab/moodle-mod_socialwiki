@@ -15,29 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains all necessary code to view the versions page
+ * The versions page.
  *
  * @package   mod_socialwiki
- * @copyright 2009 Marc Alier, Jordi Piguillem marc.alier@upc.edu
- * @copyright 2009 Universitat Politecnica de Catalunya http://www.upc.edu
- *
- * @author Jordi Piguillem
- * @author Marc Alier
- * @author David Jimenez
- * @author Josep Arus
- * @author Kenneth Riba
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require('../../config.php');
-require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
-require($CFG->dirroot . '/mod/socialwiki/tree/tree.php');
 require($CFG->dirroot . "/mod/socialwiki/locallib.php");
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . "/mod/socialwiki/peer.php");
 
-$pageid = required_param('pageid', PARAM_TEXT);
-$allversion = optional_param('allversion', 0, PARAM_INT);
+$pageid = required_param('pageid', PARAM_TEXT); // Page ID.
+$view   = optional_param('view', 0, PARAM_INT); // Option ID.
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
@@ -61,10 +52,9 @@ require_login($course, true, $cm);
 require_capability('mod/socialwiki:viewpage', context_module::instance($cm->id));
 
 // Print the page header.
-$wikipage = new page_socialwiki_versions($wiki, $subwiki, $cm);
+$wikipage = new page_socialwiki_versions($wiki, $subwiki, $cm, $view);
 
 $wikipage->set_page($page);
-$wikipage->set_allversion($allversion);
 
 $wikipage->print_header();
 $wikipage->print_content();

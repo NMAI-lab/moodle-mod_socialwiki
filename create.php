@@ -32,11 +32,11 @@ require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 // New action will display a form contains page title and page format selections.
 // Create action will create a new page in db, and redirect to page editing page.
 $action = optional_param('action', 'new', PARAM_TEXT); // Two actions: new and create.
-$title = optional_param('title', get_string('newpage', 'socialwiki'), PARAM_TEXT); // Title of the new page, can be empty.
-$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID.
-$swid = optional_param('swid', 0, PARAM_INT); // Subwiki ID.
-$group = optional_param('group', 0, PARAM_INT); // Group ID.
-$uid = optional_param('uid', 0, PARAM_INT); // User ID.
+$title  = optional_param('title', get_string('newpage', 'socialwiki'), PARAM_TEXT); // Title of the new page, can be empty.
+$wid    = optional_param('wid', 0, PARAM_INT);   // Wiki ID.
+$swid   = optional_param('swid', 0, PARAM_INT);  // Subwiki ID.
+$group  = optional_param('group', 0, PARAM_INT); // Group ID.
+$uid    = optional_param('uid', 0, PARAM_INT);   // User ID.
 
 // Create action must be submitted by moodle form so sesskey must be checked.
 if ($action == 'create') {

@@ -35,13 +35,11 @@ require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/edit_form.php');
 
-$pageid = required_param('pageid', PARAM_INT); // Page ID.
-$contentformat = optional_param('contentformat', "", PARAM_ALPHA); // Content Format (eg. creole, HTML).
-$option = optional_param('editoption', "", PARAM_TEXT);
+$pageid  = required_param('pageid', PARAM_INT);              // Page ID.
+$format  = optional_param('contentformat', "", PARAM_ALPHA); // Content Format (eg. creole, HTML).
+$makenew = optional_param('makenew', 0, PARAM_INT);          // 0 is new versions and 1 is whole new page (first version).
+$option  = optional_param('editoption', "", PARAM_TEXT);     // Button option that was clicked.
 $section = optional_param('section', "", PARAM_TEXT);
-$makenew = optional_param('makenew', 0, PARAM_INT); // 0 is new versions and 1 is whole new page (first version).
-
-$newcontent = "";
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
@@ -68,7 +66,7 @@ if ($option == get_string('save', 'socialwiki')) {
         print_error(get_string('invalidsesskey', 'socialwiki'));
     }
     if ($makenew == 0) {
-        $newpageid = socialwiki_create_page($subwiki->id, $page->title, $contentformat, $USER->id, $page->id);
+        $newpageid = socialwiki_create_page($subwiki->id, $page->title, $format, $USER->id, $page->id);
         $newpage = socialwiki_get_page($newpageid);
 
         $wikipage = new page_socialwiki_save($wiki, $subwiki, $cm, $makenew);
@@ -86,8 +84,7 @@ if ($option == get_string('save', 'socialwiki')) {
         socialwiki_increment_user_views($USER->id, $page->id);
     }
 
-    $wikipage->set_newcontent($newcontent);
-
+    $wikipage->set_newcontent("");
     $wikipage->set_upload(true);
 } else {
     if ($option == get_string('preview')) {
@@ -110,8 +107,8 @@ if ($option == get_string('save', 'socialwiki')) {
 if (!empty($section)) {
     $wikipage->set_section($sectioncontent, $section);
 }
-if (!empty($contentformat)) {
-    $wikipage->set_format($contentformat);
+if (!empty($format)) {
+    $wikipage->set_format($format);
 }
 
 $wikipage->print_header();

@@ -34,7 +34,7 @@ require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$pageid = required_param('pageid', PARAM_TEXT);
+$pageid = required_param('pageid', PARAM_TEXT); // Page ID.
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');

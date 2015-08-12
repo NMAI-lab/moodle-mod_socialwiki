@@ -27,9 +27,8 @@ require_once('locallib.php');
 require_once("$CFG->dirroot/mod/socialwiki/filesedit_form.php");
 require_once("$CFG->dirroot/repository/lib.php");
 
-$subwikiid = required_param('subwiki', PARAM_INT);
-// Not being used for file management, we use it to generate navbar link.
-$returnurl = optional_param('returnurl', "", PARAM_LOCALURL);
+$subwikiid = required_param('subwiki', PARAM_INT);            // Subwiki ID.
+$returnurl = optional_param('returnurl', "", PARAM_LOCALURL); // Not for file management, use it to generate navbar link.
 
 if (!$subwiki = socialwiki_get_subwiki($subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');

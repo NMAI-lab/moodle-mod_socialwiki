@@ -17,10 +17,9 @@
 /**
  * HTML parser implementation. It only implements links.
  *
- * @author Josep Arús
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package mod_socialwiki
+ * @author Josep Arús
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 require_once("nwiki.php");
 
@@ -46,8 +45,9 @@ class html_parser extends nwiki_parser {
     }
 
     /**
-     * Header tag rule
-     * @param array $match Header regex match
+     * Header tag rule.
+     * 
+     * @param array $match Header regex match.
      * @return string
      */
     protected function header_tag_rule($match) {

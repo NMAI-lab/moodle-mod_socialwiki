@@ -115,6 +115,15 @@ To create a new page, type the new page name enclosed in double square brackets,
 To link to a page copy the page url double square brackets with an existing page title inside links to a search for that page.';
 $string['formatnwiki_link'] = 'mod/socialwiki/nwiki';
 $string['help'] = 'Help';
+$string['help_home'] = 'Nothing here yet.';
+$string['help_edit'] = 'There are 3 diffrent ways to add links:
+<ul><li>[[page name]] Links to a search page name.</li>
+<li>[[page name@pageid]] Links to a specific version of a page.</li>
+<li>[[page name@.]] Links to the most recent version of that page.</li></ul>';
+$string['help_search'] = 'There are 3 different search views:
+        <ul><li>Tree View: displays the search results in a tree view to so the versions of the page can easily be seen.</li>
+        <li>List View: shows a list of pages ordered using your likes and the people you are following to order the pages.</li>
+        <li>Popular: orders the pages with the pages with more likes appearing at the top.</li></ul>';
 $string['versions'] = 'Versions';
 $string['versions_help'] = 'The versions lists links to previous versions of the page.';
 $string['html'] = 'HTML';
@@ -129,10 +138,6 @@ $string['invalidsesskey'] = 'The given sesskey is not valid. Please resend data 
 $string['invalidsubwikiid'] = 'Invalid Subwiki ID has been given.';
 $string['invalidwikiid'] = 'Invalid Wiki ID has been given.';
 $string['individualpagedoesnotexist'] = 'Individual wiki page doesn\'t exist';
-$string['links_help'] = 'There are 3 diffrent ways to add links: <br/>
-* [[page name]] links to a search pageName <br/>
-* [[page name@pageid]] links to a specific version of a page <br/>
-* [[page name@.]] links to the most recent version of that page';
 $string['list'] = 'List View';
 $string['listall'] = 'List all';
 $string['listrelated'] = 'List related';
@@ -210,7 +215,7 @@ $string['pagename'] = 'Page name';
 $string['peerscores'] = 'PEER SCORES';
 $string['pluginadministration'] = 'Social Wiki administration';
 $string['pluginname'] = 'Social Wiki';
-$string['popular'] = 'Popular';
+$string['popular'] = 'Popular View';
 $string['prettyprint'] = 'Printer-friendly version';
 $string['previewwarning'] = 'This is a preview. Changes have not been saved yet.';
 $string['rated'] = 'You rated this page as a {$a}';
@@ -232,15 +237,11 @@ $string['save'] = 'Save';
 $string['saving'] = 'Saving wiki page';
 $string['savingerror'] = 'Saving error';
 $string['searchcontent'] = 'Search in page content';
-$string['search_help'] = 'There are 3 different search views:<br/>
-        Tree View: displays the search results in a tree view to so the versions of the page can easily be seen.<br/>
-        List View: shows a list of pages ordered using your likes and the people you are following to order the pages<br/>
-        Popular: orders the pages with the pages with more likes appearing at the top';
 $string['search'] = 'Search Wiki';
 $string['searchresult'] = 'Search results for: ';
 $string['searchresults_empty'] = 'No results';
 $string['searchterms'] = 'Search terms';
-$string['searchviews'] = 'Search views';
+$string['searchviews'] = 'Views: ';
 $string['special'] = 'Special';
 $string['style'] = 'Select style for Social wiki activity';
 $string['tableofcontents'] = 'Table of contents';
@@ -268,7 +269,7 @@ $string['view'] = 'View';
 $string['viewallversions'] = 'View all versions';
 $string['viewperpage'] = 'Show {$a} versions per page';
 $string['viewversion'] = 'Viewing page version #{$a}';
-$string['viewcurrent'] = 'Current version';
+$string['viewcurrent'] = 'Current Version';
 $string['viewuserpages'] = 'View User\'s Pages';
 $string['socialwiki'] = 'Social Wiki';
 $string['wikiattachments'] = 'Wiki attachments';

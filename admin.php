@@ -29,8 +29,8 @@ require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
-$pageid = required_param('pageid', PARAM_INT); // Page ID.
-$delete = optional_param('delete', 0, PARAM_INT); // ID of the page to be deleted.
+$pageid  = required_param('pageid', PARAM_INT);     // Page ID.
+$delete  = optional_param('delete', 0, PARAM_INT);  // Page ID to be deleted.
 $listall = optional_param('listall', 0, PARAM_INT); // List all pages.
 
 if (!$page = socialwiki_get_page($pageid)) {

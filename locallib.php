@@ -409,11 +409,11 @@ function socialwiki_get_related_pages($swid, $title) {
  */
 function socialwiki_search_title($swid, $search, $exact = false) {
     global $DB;
-    $sql = "SELECT {socialwiki_pages}.*, COUNT(pageid) AS total
-            FROM  {socialwiki_pages} LEFT JOIN  {socialwiki_likes}
-            ON {socialwiki_pages}.id = {socialwiki_likes}.pageid
-            WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.title LIKE ?)
-            GROUP BY {socialwiki_pages}.id ORDER BY total DESC";
+    $sql = "SELECT p.*, COUNT(pageid) AS total
+            FROM {socialwiki_pages} p LEFT JOIN {socialwiki_likes} l
+            ON p.id = l.pageid
+            WHERE p.subwikiid=? AND (p.title LIKE ?)
+            GROUP BY p.id ORDER BY total DESC";
     if ($exact) { // Exact title match.
         return $DB->get_records_sql($sql, array($swid, $search));
     } else {
@@ -442,12 +442,11 @@ function socialwiki_search_content($swid, $search) {
  */
 function socialwiki_search_all($swid, $search) {
     global $DB;
-    $sql = "SELECT {socialwiki_pages}.*, COUNT(pageid) AS total
-            FROM  {socialwiki_pages}
-            LEFT JOIN  {socialwiki_likes}  ON {socialwiki_pages}.id = {socialwiki_likes}.pageid
-            WHERE {socialwiki_pages}.subwikiid=? AND ({socialwiki_pages}.content LIKE ? OR {socialwiki_pages}.title LIKE ?)
-            GROUP BY {socialwiki_pages}.id
-            ORDER BY total DESC";
+    $sql = "SELECT p.*, COUNT(pageid) AS total
+            FROM {socialwiki_pages} p LEFT JOIN {socialwiki_likes} l
+            ON p.id = l.pageid
+            WHERE p.subwikiid=? AND (p.content LIKE ? OR p.title LIKE ?)
+            GROUP BY p.id ORDER BY total DESC";
     return $DB->get_records_sql($sql, array($swid, '%' . $search . '%', '%' . $search . '%'));
 }
 
@@ -1342,20 +1341,6 @@ function socialwiki_get_page_likes($pid, $swid) {
     return array_map(function($a) {
         return $a->userid;
     }, $res);
-}
-
-/**
- * Get page's author.
- *
- * @param int $pid The page ID.
- * @return string
- */
-function socialwiki_get_author($pid) {
-    global $DB;
-    $sql = 'SELECT userid
-            FROM {socialwiki_pages}
-            WHERE id=?';
-    return $DB->get_record_sql($sql, array($pid));
 }
 
 /**

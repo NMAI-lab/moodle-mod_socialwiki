@@ -246,8 +246,34 @@ class socialwiki_tree {
     /**
      * Display the full tree as an HTML list with a horizontal scroll
      */
-    public function display() {
+    public function display($pageid = -1) {
         Global $USER;
+        // Add radio buttons to compare versions if there is more than one version.
+        $compare = "";
+        if (count($this->nodes) > 1) {
+            foreach ($this->nodes as $node) {
+                $node->content .= '<span id="comp' . $node->id . '" style="display:block">';
+                $node->content .= $this->choose_from_radio(substr($node->id, 1), 'compare')
+                        . $this->choose_from_radio(substr($node->id, 1), 'comparewith');
+                if ($node->id == 'l' . $pageid) { // Current page.
+                    $node->content .= "<br/>" . get_string('viewcurrent', 'socialwiki');
+                }
+                $node->content .= "</span>";
+            }
+            
+            $compare .= html_writer::start_tag('form', array('action' => new moodle_url('/mod/socialwiki/diff.php'),
+                'method' => 'get', 'id' => 'diff', 'class' => 'socialwiki-form-center'));
+            if ($pageid != -1) {
+                $compare .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'pageid', 'value' => $pageid));
+            }
+            $compare .= html_writer::empty_tag('input', array(
+                'type'  => 'submit',
+                'id'    => 'comparebtn',
+                'class' => 'socialwiki-form-button',
+                'value' => get_string('comparesel', 'socialwiki')));
+            $compare .= html_writer::end_tag('form');
+        }
+
         $treeul = '<div class="tree" id="doublescroll"><ul>'; // Doublescroll puts scrollbar on top and bottom.
         $allpeerset = array();
         foreach ($this->roots as $node) {
@@ -261,17 +287,35 @@ class socialwiki_tree {
         if (!empty($this->roots)) { // If it's empty there's no tree and no peers so we're ok.
             $swid = $this->roots[0]->swid;
         }
-        $peerinfo = '<div id="peer-info" style="display:none"><ul>';
+
+        echo $treeul . $compare;
+
+        // Peer info from each author.
+        echo '<div id="peer-info" style="display:none"><ul>';
         foreach ($allpeerset as $p) {
             $peerarray = socialwiki_peer::socialwiki_get_peer($p, $swid, $USER->id)->to_array();
-            $peerinfo .= '<li>';
+            echo '<li>';
             foreach ($peerarray as $k => $v) {
-                $peerinfo .= "<$k>$v</$k>";
+                echo "<$k>$v</$k>";
             }
-            $peerinfo .= '</li>';
+           echo '</li>';
         }
-        $peerinfo .= '</ul></div>';
-
-        echo $treeul . $peerinfo;
+        echo '</ul></div>';
+        
+        return count($this->nodes);
+    }
+    
+    /**
+     * Given an array of values, creates a group of radio buttons to be part of a form.
+     *
+     * @param int $value   The page ID value.
+     * @param string $name The radio button name.
+     * @return string HTML
+     */
+    private function choose_from_radio($value, $name = 'unnamed') {
+        $output = "<span class='radiogroup $name'>";
+        $output .= "<input form = 'diff' name='$name' type='radio' value='$value'";
+        $output .= '</span>';
+        return $output;
     }
 }

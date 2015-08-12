@@ -28,10 +28,10 @@ require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
 
-$from = required_param('from', PARAM_TEXT); // The url of the previous page.
-$pageid = optional_param('pageid', -1, PARAM_INT);
-$user2 = optional_param('user2', -1, PARAM_INT);
-$swid = optional_param('swid', -1, PARAM_INT);
+$from   = required_param('from', PARAM_TEXT);      // The url of the previous page.
+$pageid = optional_param('pageid', -1, PARAM_INT); // Get the author from a page.
+$user2  = optional_param('user2', -1, PARAM_INT);  // The user that is going to be followed.
+$swid   = optional_param('swid', -1, PARAM_INT);   // Subwiki ID.
 
 if (!confirm_sesskey()) {
     print_error(get_string('invalidsesskey', 'socialwiki'));

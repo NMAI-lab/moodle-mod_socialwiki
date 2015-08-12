@@ -45,7 +45,8 @@
 
 .socialwiki_wikicontent .tree {
     white-space: nowrap;
-    padding-bottom: 15px;
+    margin-bottom: 15px;
+    text-align: center;
     overflow: auto;
 }
 
@@ -146,7 +147,7 @@
 }
 
 .socialwiki_wikicontent input[type="radio"] {
-    margin: -4px 0 0 2px;
+    margin: 0 6px;
 }
 
 /*Thats all. I hope you enjoyed it.

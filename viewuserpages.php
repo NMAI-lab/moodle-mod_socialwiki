@@ -27,10 +27,10 @@ require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/table/table.php');
 
-$subwikiid = required_param('subwikiid', PARAM_INT); // Subwiki ID.
-$userid = required_param('userid', PARAM_INT); // User ID.
+$swid = required_param('subwikiid', PARAM_INT); // Subwiki ID.
+$uid  = required_param('userid', PARAM_INT);    // User ID.
 
-if (!$subwiki = socialwiki_get_subwiki($subwikiid)) {
+if (!$subwiki = socialwiki_get_subwiki($swid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
@@ -43,7 +43,7 @@ if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 require_login($course, true, $cm);
 
-$viewuserpage = new page_socialwiki_viewuserpages($wiki, $subwiki, $cm, $userid);
+$viewuserpage = new page_socialwiki_viewuserpages($wiki, $subwiki, $cm, $uid);
 
 $viewuserpage->print_header();
 $viewuserpage->print_content();

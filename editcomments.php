@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
 $pageid = required_param('pageid', PARAM_INT);
 $action = optional_param('action', "", PARAM_ALPHANUMEXT);
-$commentid = optional_param('commentid', 0, PARAM_INT);
+$comid  = optional_param('commentid', 0, PARAM_INT);
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
@@ -57,7 +57,7 @@ require_login($course, true, $cm);
 $editcomments = new page_socialwiki_editcomment($wiki, $subwiki, $cm);
 $comment = new stdClass();
 if ($action == 'edit') {
-    if (!$comment = $DB->get_record('comments', array('id' => $commentid))) {
+    if (!$comment = $DB->get_record('comments', array('id' => $comid))) {
         print_error('invalidcomment', 'socialwiki');
     }
 }

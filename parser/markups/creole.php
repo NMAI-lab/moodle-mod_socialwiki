@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Creole parser implementation
+ * Creole parser implementation.
  *
- * @author Josep Arús
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * 
  * @package mod_socialwiki
+ * @author Josep Arús
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 require_once("wikimarkup.php");
 
@@ -46,14 +46,12 @@ class creole_parser extends socialwiki_markup_parser {
             'tags' => array()
         ),
         'list' => array(
-            'expression' => "/((?:^\ *[\*#][^\*#]\ *.+?)(?:^\ *[\*#]{1,5}\ *.+?)*)"
-            . "(\n\s*(?:\n|<(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)))/ims",
+            'expression' => "/((?:^\ *[\*#][^\*#]\ *.+?)(?:^\ *[\*#]{1,5}\ *.+?)*)(\n\s*(?:\n|<(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)))/ims",
             'tags' => array(),
             'token' => array('*', '#')
         ),
         'paragraph' => array(
-            'expression' => "/^\ *((?:<(?!\ *\/?(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)"
-            . "\ *\/?>)|[^<\s]).+?)\n\s*\n/ims",
+            'expression' => "/^\ *((?:<(?!\ *\/?(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)\ *\/?>)|[^<\s]).+?)\n\s*\n/ims",
             // Not specified -> all tags (null or unset).
             'tag' => 'p'
         )

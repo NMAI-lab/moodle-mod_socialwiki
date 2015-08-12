@@ -69,7 +69,7 @@ Feature: Using different format options
     And I follow "Internal link"
     And I should see "New page title"
 
-  @javascript  
+  @javascript
   Scenario: Forced format
     And I add a "Social Wiki" to section "1" and I fill the form with:
       | Social Wiki name | ForceFormat Socialwiki |

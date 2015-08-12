@@ -25,10 +25,10 @@
 require_once('../../config.php');
 require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
 
-$swid = required_param('swid', PARAM_INT); // Subwiki ID.
-$wid = optional_param('wid', 0, PARAM_INT); // Wiki ID.
+$swid         = required_param('swid', PARAM_INT);     // Subwiki ID.
+$wid          = optional_param('wid', 0, PARAM_INT);   // Wiki ID.
 $currentgroup = optional_param('group', 0, PARAM_INT); // Group ID.
-$userid = optional_param('uid', 0, PARAM_INT); // User ID.
+$userid       = optional_param('uid', 0, PARAM_INT);   // User ID.
 $groupanduser = optional_param('groupanduser', null, PARAM_TEXT);
 
 if ($groupanduser) {

@@ -21,6 +21,7 @@
  * @copyright 2015 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
@@ -31,7 +32,7 @@ $courseid = optional_param('courseid', 0, PARAM_INT);       // Course ID.
 $cmid     = optional_param('cmid', 0, PARAM_INT);           // Course module ID.
 $exact    = optional_param('exact', 0, PARAM_INT);          // If match should be exact (wikilinks).
 $content  = optional_param('searchcontent', 1, PARAM_INT);  // If page content should be searched.
-$view     = optional_param('view', 0, PARAM_INT);         // Option ID.
+$view     = optional_param('view', 0, PARAM_INT);           // Option ID.
 
 if (!$course = $DB->get_record('course', array('id' => $courseid))) {
     echo $courseid;
