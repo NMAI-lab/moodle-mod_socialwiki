@@ -46,7 +46,7 @@ class html_parser extends nwiki_parser {
 
     /**
      * Header tag rule.
-     * 
+     *
      * @param array $match Header regex match.
      * @return string
      */

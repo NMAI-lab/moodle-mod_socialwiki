@@ -165,12 +165,16 @@ abstract class page_socialwiki {
             echo $tabthing;
         }
     }
-    
+
+    /**
+     * Prints the help button.
+     */
     public function print_help() {
         global $PAGE;
-        $html = html_writer::start_tag('form', array('style' => "float:right", 'action' => 'help.php#' . basename(filter_input(INPUT_SERVER, 'PHP_SELF'), '.php'), 'target' => '_blank'));
+        $html = html_writer::start_tag('form', array('action' => 'help.php#'
+            . basename(filter_input(INPUT_SERVER, 'PHP_SELF'), '.php'), 'target' => '_blank'));
         $html .= '<input type="hidden" name="id" value="' . $PAGE->cm->id . '"/>';
-        $html .= '<input value="' . get_string('help', 'socialwiki') . '" type="submit">';
+        $html .= '<input value="' . get_string('help', 'socialwiki') . '" type="submit" class="helpbtn">';
         $html .= html_writer::end_tag('form');
         echo $html;
     }
@@ -315,9 +319,11 @@ class page_socialwiki_view extends page_socialwiki {
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/like.ajax.js"));
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
     }
-    
+
+    /**
+     * Do not print the help button.
+     */
     public function print_help() {
-        
     }
 
     /**
@@ -548,8 +554,6 @@ class page_socialwiki_edit extends page_socialwiki {
     protected function print_edit($content = null) {
         global $CFG;
 
-        $format = $this->page->format;
-
         if ($content == null) {
             if (empty($this->section)) {
                 $content = $this->page->content;
@@ -572,25 +576,21 @@ class page_socialwiki_edit extends page_socialwiki {
 
         $data = new stdClass();
         $data->newcontent = $content;
-        $data->format = $format;
+        $data->format = $this->page->format;
 
-        switch ($format) {
-            case 'html':
-                $data->newcontentformat = FORMAT_HTML;
-                // Append editor context to editor options, giving preference to existing context.
-                self::$attachmentoptions = array_merge(
-                        array('context' => $this->modcontext), self::$attachmentoptions);
-                $data = file_prepare_standard_editor($data, 'newcontent', self::$attachmentoptions,
-                        $this->modcontext, 'mod_socialwiki', 'attachments', $this->subwiki->id);
-                break;
-            default:
-                break;
-        }
-
-        if ($this->page->format != 'html') {
+        if ($this->page->format == 'html') {
+            $data->newcontentformat = FORMAT_HTML;
+            // Append editor context to editor options, giving preference to existing context.
+            self::$attachmentoptions = array_merge(
+                    array('context' => $this->modcontext), self::$attachmentoptions);
+            $data = file_prepare_standard_editor($data, 'newcontent', self::$attachmentoptions,
+                    $this->modcontext, 'mod_socialwiki', 'attachments', $this->subwiki->id);
+        } else {
             $params['fileitemid'] = $this->subwiki->id;
             $params['component'] = 'mod_socialwiki';
             $params['filearea'] = 'attachments';
+            echo '<a href="' . $CFG->wwwroot . '/mod/socialwiki/files.php?swid='
+                    . $this->subwiki->id . '">' . get_string('uploadtitle', 'socialwiki') . '</a>';
         }
         $form = new mod_socialwiki_edit_form($url, $params);
         $form->set_data($data);
@@ -900,7 +900,7 @@ class page_socialwiki_search extends page_socialwiki_versions {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
         $params = array('searchstring' => $this->searchstring,
             'courseid' => $COURSE->id, 'cmid' => $PAGE->cm->id, 'exact' => $this->exact);
-        $this->wikioutput->versions('search', $params, $this->view, $this->searchresult);
+        $this->wikioutput->versions('search', $params, $this->searchresult, $this->view, $this->subwiki->id);
     }
 }
 
@@ -1280,7 +1280,8 @@ class page_socialwiki_versions extends page_socialwiki {
     public function print_content() {
         require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
         $params = array('pageid' => $this->page->id);
-        $this->wikioutput->versions('versions', $params, $this->view, socialwiki_get_relations($this->page->id), $this->page->id);
+        $this->wikioutput->versions('versions', $params,
+            socialwiki_get_relations($this->page->id), $this->view, $this->subwiki->id, $this->page->id);
     }
 }
 
@@ -1314,7 +1315,7 @@ class page_socialwiki_home extends page_socialwiki {
     public function __construct($wiki, $subwiki, $cm) {
         Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
-        
+
         $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/table.js"));
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/table.css"));
@@ -2016,5 +2017,46 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
         socialwiki_table::builder($this->uid, $this->subwiki->id, 'userfaves');
         // User Verions Table.
         socialwiki_table::builder($this->uid, $this->subwiki->id, 'userpages');
+    }
+}
+
+class page_socialwiki_help extends page_socialwiki {
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/help.php', array('id' => $PAGE->cm->id));
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    public function create_navbar() {
+        global $PAGE, $CFG;
+        $PAGE->navbar->add(format_string($this->title), $CFG->wwwroot . '/mod/socialwiki/help.php?id=' . $PAGE->cm->id);
+    }
+
+    /**
+     * Do not print the help button.
+     */
+    public function print_help() {
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        global $PAGE;
+        echo $this->wikioutput->help_content('home');
+        echo $this->wikioutput->help_content('search');
+        echo $this->wikioutput->help_content('create');
+        echo $this->wikioutput->help_content('edit');
+        echo $this->wikioutput->help_content('versions');
+        echo $this->wikioutput->help_content('diff');
+        if (has_capability('mod/socialwiki:managewiki', context_module::instance($PAGE->cm->id))) {
+            echo $this->wikioutput->help_content('admin');
+        }
+        echo $this->wikioutput->help_content('viewuserpages');
     }
 }

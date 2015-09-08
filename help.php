@@ -24,6 +24,7 @@
 
 require('../../config.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 
 $id = required_param('id', PARAM_INT);
 
@@ -41,17 +42,9 @@ if (!$wiki = socialwiki_get_wiki($cm->instance)) {
     print_error('incorrectwikiid', 'socialwiki');
 }
 
-$PAGE->set_cm($cm);
-$PAGE->set_context(context_module::instance($cm->id));
-$PAGE->requires->css(new moodle_url("/mod/socialwiki/{$wiki->style}_style.css"));
 
-$wikioutput = $PAGE->get_renderer('mod_socialwiki');
-
-echo $OUTPUT->header();
-echo $wikioutput->content_area_begin();
-echo $OUTPUT->heading('Help Page', 1);
-echo $wikioutput->help_content('Home');
-echo $wikioutput->help_content('Edit');
-echo $wikioutput->help_content('Search');
-echo $wikioutput->content_area_end();
-echo $OUTPUT->footer();
+$wikipage = new page_socialwiki_help($wiki, 0, $cm);
+$wikipage->set_title(get_string('help', 'socialwiki'));
+$wikipage->print_header();
+$wikipage->print_content();
+$wikipage->print_footer();

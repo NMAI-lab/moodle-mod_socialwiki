@@ -25,7 +25,7 @@ $(document).ready(function() {
     if (/view=2/.test(document.URL)) { // Only in view 'popular'.
         $('.tagcloud').tagcloud();
     }
-    
+
     /**
      * Double scroll bar above and below the area.
      */

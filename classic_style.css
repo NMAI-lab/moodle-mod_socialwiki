@@ -15,7 +15,7 @@
 */
 
 /**
- * The default Classic Tree Style Sheet
+ * The Classic Styling.
  *
  * @package mod_socialwiki
  * @copyright 2015 NMAI-lab
@@ -24,6 +24,19 @@
 
 h1, h2, h3, h4, h5, h6 {
     text-align: left;
+}
+
+.socialwiki_wikicontent div:target h2 {
+    color: #428bca;
+    border-left: 2px solid black;
+    padding-left: 5px;
+    margin-left: -7px;
+}
+
+.socialwiki_wikicontent .helpbtn {
+    float: right;
+    padding: 9px 28px;
+    font-size: 150%;
 }
 
 .socialwiki_wikicontent .s-label {

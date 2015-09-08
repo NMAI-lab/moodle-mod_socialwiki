@@ -17,7 +17,7 @@
 /**
  * Creole parser implementation.
  *
- * 
+ *
  * @package mod_socialwiki
  * @author Josep Arús
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License

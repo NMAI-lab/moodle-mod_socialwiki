@@ -260,7 +260,7 @@ class socialwiki_tree {
                 }
                 $node->content .= "</span>";
             }
-            
+
             $compare .= html_writer::start_tag('form', array('action' => new moodle_url('/mod/socialwiki/diff.php'),
                 'method' => 'get', 'id' => 'diff', 'class' => 'socialwiki-form-center'));
             if ($pageid != -1) {
@@ -301,10 +301,10 @@ class socialwiki_tree {
            echo '</li>';
         }
         echo '</ul></div>';
-        
+
         return count($this->nodes);
     }
-    
+
     /**
      * Given an array of values, creates a group of radio buttons to be part of a form.
      *

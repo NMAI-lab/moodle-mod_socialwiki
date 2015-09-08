@@ -73,7 +73,7 @@ class mod_socialwiki_edit_form extends moodleform {
         }
 
         // Editor.
-        $mform->addElement('header', 'general', $pagetitle);
+        // Extra header $mform->addElement('header', 'general', $pagetitle);.
         $fieldname = get_string('format' . $format, 'socialwiki');
 
         if ($format != 'html') {

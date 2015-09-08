@@ -414,10 +414,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      *
      * @param string $type Either versions or search.
      * @param array $options Parameters for the view menu links.
-     * @param int $currentview The current view.
      * @param stdClass[] $pages An array of the pages to show.
+     * @param int $currentview The current view.
+     * @param int $swid The subwiki ID.
+     * @param int $pid The page ID.
      */
-    public function versions($type, $options, $currentview, $pages, $pageid = -1) {
+    public function versions($type, $options, $pages, $currentview, $swid, $pid = -1) {
         global $USER, $CFG;
         $selectoptions = array();
         foreach (array('tree', 'list', 'popular') as $key => $v) {
@@ -431,12 +433,12 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         if ($currentview == 1) {
             require($CFG->dirroot . '/mod/socialwiki/table/table.php');
-            echo socialwiki_versiontable::html_versiontable($USER->id, $this->subwiki->id, $pages, 'version');
+            echo socialwiki_versiontable::html_versiontable($USER->id, $swid, $pages, 'version');
         } else {
             require($CFG->dirroot . '/mod/socialwiki/tree/tree.php');
             $tree = new socialwiki_tree();
             $tree->build_tree($pages);
-            $tree->display($pageid);
+            $tree->display($pid);
         }
     }
 
@@ -547,9 +549,9 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
      */
     public function help_content($type) {
         $html = "";
-        $html .= html_writer::start_div("", array('id' => strtolower($type), 'style' => 'padding-top: 40px'));
-        $html .= html_writer::tag('h2', $type);
-        $html .= get_string('help_' . strtolower($type), 'socialwiki');
+        $html .= html_writer::start_div("", array('id' => $type, 'style' => 'padding-top: 40px; margin-top: -20px'));
+        $html .= html_writer::tag('h2', get_string($type, 'socialwiki'));
+        $html .= get_string('help_' . $type, 'socialwiki');
         $html .= html_writer::end_div();
         return $html;
     }
