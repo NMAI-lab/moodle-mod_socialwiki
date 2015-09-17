@@ -83,8 +83,8 @@ abstract class socialwiki_table {
      *
      * @param string $tableid The HTML ID of the table.
      */
-    public function print_html($tableid = 'a_table') {
-        $output = "<table id=$tableid class='datatable'>";
+    public function print_html() {
+        $output = "<table class='datatable'>";
         $tabledata = $this->get_table_data();
         // Headers.
         $output .= "<thead><tr>";

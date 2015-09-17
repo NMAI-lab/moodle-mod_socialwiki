@@ -177,8 +177,8 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
     protected function generate_header($text, $level) {
         $txt = trim($text);
 
-        if ($level <= $this->maxheaderdepth) {
-            $this->toc[] = array($level, $txt);
+        if ($level - 2 <= $this->maxheaderdepth) {
+            $this->toc[] = array($level - 2, $txt);
             $num = count($this->toc);
             $txt = socialparser_utils::h('a', "", array('name' => "toc-$num")) . $txt;
         }

@@ -103,12 +103,9 @@ class creole_parser extends socialwiki_markup_parser {
     }
 
     protected function header_block_rule($match) {
+        $num = strlen($match[1]) + 2;
 
-        $num = strlen($match[1]);
-
-        $text = trim($match[2]);
-
-        $text = preg_replace("/\s*={1,$num}$/im", "", $text);
+        $text = preg_replace("/\s*={1,$num}$/im", "", trim($match[2]));
 
         return $this->generate_header($text, $num);
     }

@@ -33,9 +33,9 @@ class html_parser extends nwiki_parser {
         $this->tagrules = array('link' => $this->tagrules['link'], 'url' => $this->tagrules['url']);
 
         // Headers are considered tags here.
+        $headerdepth = $this->maxheaderdepth + 2;
         $this->tagrules['header'] =
-                array('expression' => "/<\s*h([1-$this->maxheaderdepth])\s*>(.+?)<\/h[1-$this->maxheaderdepth]>/is"
-        );
+                array('expression' => "/<\s*h([1-$headerdepth])\s*>(.+?)<\/h[1-$headerdepth]>/is");
     }
 
     protected function before_parsing() {
@@ -51,6 +51,10 @@ class html_parser extends nwiki_parser {
      * @return string
      */
     protected function header_tag_rule($match) {
+        // Fix to avoid users adding h1 and h2 that aren't allowed.
+        if ($match[1] < 3) {
+            $match[1] = 3;
+        }
         return $this->generate_header($match[2], $match[1]);
     }
 

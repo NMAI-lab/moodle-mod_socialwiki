@@ -1432,7 +1432,8 @@ class page_socialwiki_home extends page_socialwiki {
         // Make a new Page button.
         $makebutton = '<h2>' . html_writer::start_tag('form', array('style' => "float:right", 'action' => 'create.php'));
         $makebutton .= '<input type="hidden" name="swid" value="' . $this->subwiki->id . '"/>';
-        $makebutton .= '<input value="' . get_string('makepage', 'socialwiki') . '" type="submit" id="id_submitbutton">';
+        $makebutton .= '<input value="' . get_string('makepage', 'socialwiki')
+                . '" type="submit" id="id_submitbutton" style="margin: 0 0 0 0.5em; position: relative; z-index: 1;">';
         $makebutton .= html_writer::end_tag('form') . '</h2>';
         echo $makebutton , socialwiki_table::builder($USER->id, $this->subwiki->id, 'alltopics'); // All Pages Table.
     }

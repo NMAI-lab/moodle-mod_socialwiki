@@ -25,18 +25,15 @@
  * Implements a DataTable on any HTML tables on the page.
  */
 $(document).ready(function () {
-    // Build the Datatable from HTML table.
-    var table = $('.datatable').DataTable({
-        "scrollY": true,
+    // Build the Datatables from HTML tables.
+    $('.datatable').DataTable({
         "scrollX": true,
+        "scrollY": "220px",
+        "scrollCollapse": true,
         "info": false,
         "paging": false,
         "columnDefs": [{"type": "time-ago","targets": 2}]
     });
-    // Only show the search if there is at least 12 results.
-    if (table.page.len() < 12) {
-        $(this).find(".dataTables_filter").hide();
-    }
 });
 
 /**

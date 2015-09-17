@@ -298,7 +298,7 @@ class socialwiki_tree {
             foreach ($peerarray as $k => $v) {
                 echo "<$k>$v</$k>";
             }
-           echo '</li>';
+            echo '</li>';
         }
         echo '</ul></div>';
 

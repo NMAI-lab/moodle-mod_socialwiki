@@ -23,7 +23,7 @@
  *     ensure that you either have "example_alt_pagination" as a body class name, or better yet,
  *     modify that selector.
  *   Note that the path used for Images is relative. All images are by default located in
- *     ../images/ - relative to this CSS file.
+ *     ../pix/ - relative to the main folder.
  */
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -31,7 +31,7 @@
  */
 .socialwiki_wikicontent .dataTables_wrapper {
     position: relative;
-    clear: both;
+    margin-bottom: 2em;
     zoom: 1; /* Feeling sorry for IE */
 }
 
@@ -58,7 +58,7 @@
 
 .socialwiki_wikicontent .dataTables_filter {
     text-align: right;
-    margin-top: -2.6em;
+    margin-top: -3em;
 }
 
 .socialwiki_wikicontent .dataTables_filter input {
@@ -69,10 +69,21 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables display
  */
+
 .socialwiki_wikicontent table.datatable {
     clear: both;
     width: 100%;
     margin-bottom: 0;
+    display: block;
+    height: 250px;
+    overflow: auto;
+    resize: vertical;
+}
+
+.jsenabled .socialwiki_wikicontent table.datatable {
+    display: table;
+    height: auto;
+    resize: none;
 }
 
 .socialwiki_wikicontent table.datatable thead th {
@@ -80,6 +91,7 @@
     border-bottom: 1px solid black;
     font-weight: bold;
     text-align: left;
+    outline: none;
     cursor: pointer;
     *cursor: hand;
 }
@@ -111,16 +123,11 @@
     background: url('../pix/table/sort_desc_disabled.png') no-repeat center right;
 }
 
-.socialwiki_wikicontent table.datatable thead th:active,
-.socialwiki_wikicontent table.datatable thead td:active {
-    outline: none;
-}
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * DataTables row classes
  */
 .socialwiki_wikicontent tr.odd {
-    background-color: #E2E4FF;
+    background-color: #F7F7F9;
 }
 
 .socialwiki_wikicontent tr.even {
@@ -133,40 +140,20 @@
 .socialwiki_wikicontent .dataTables_scrollBody {
     *margin-top: -1px;
     -webkit-overflow-scrolling: touch;
-    max-height: 200px;
+    resize: vertical;
 }
 
 .socialwiki_wikicontent table.dataTable tbody tr {
-    border-top: 1px solid #C9C9C9;
-}
-
-.socialwiki_wikicontent table.dataTable tbody tr:first-child td {
-    border-top: none;
+    border-bottom: 1px solid #C9C9C9;
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Sorting classes for columns
  */
 .socialwiki_wikicontent tr.odd td.sorting_1 {
-    background-color: #D3D6FF;
-}
-
-.socialwiki_wikicontent tr.odd td.sorting_2 {
-    background-color: #DADCFF;
-}
-
-.socialwiki_wikicontent tr.odd td.sorting_3 {
-    background-color: #E0E2FF;
+    background-color: #ECECEE;
 }
 
 .socialwiki_wikicontent tr.even td.sorting_1 {
-    background-color: #EAEBFF;
-}
-
-.socialwiki_wikicontent tr.even td.sorting_2 {
-    background-color: #F2F3FF;
-}
-
-.socialwiki_wikicontent tr.even td.sorting_3 {
-    background-color: #F9F9FF;
+    background-color: #F5F5F7;
 }

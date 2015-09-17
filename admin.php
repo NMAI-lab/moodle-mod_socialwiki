@@ -48,7 +48,9 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 }
 
 require_login($course, true, $cm);
-require_capability('mod/socialwiki:managewiki', context_module::instance($cm->id));
+
+$context = context_module::instance($cm->id);
+require_capability('mod/socialwiki:managewiki', $context);
 
 // Delete page if a page ID to delete was supplied.
 if (!empty($delete) && confirm_sesskey()) {

@@ -177,34 +177,17 @@ function socialwiki_get_page_by_title($swid, $title) {
 }
 
 /**
- * Get first page of wiki instace.
+ * Get first page of wiki instance.
  *
  * @param int $swid The subwiki ID.
- * @param int $module Wiki instance object.
- * @return stdClass Last version of first page edited by a teacher
+ * @return stdClass Lastest version of first page
  */
-function socialwiki_get_first_page($swid, $module = null) {
-    global $DB, $COURSE;
-    $context = context_course::instance($COURSE->id);
-    $teachers = socialwiki_get_teachers($context->id);
-    $toreturn = array();
-    foreach ($teachers as $teacher) {
-        $sql = "SELECT p.* FROM {socialwiki} w, {socialwiki_subwikis} s, {socialwiki_pages} p
-                WHERE s.id = ? AND s.wikiid = w.id AND w.firstpagetitle = p.title AND p.subwikiid = s.id AND p.userid=?
-                ORDER BY id ASC";
-        $records = $DB->get_records_sql($sql, array($swid, $teacher->id));
-
-        if ($records) {
-            // Get the last edit of this page by the teacher.
-            $toreturn[max(array_keys($records))] = $records[max(array_keys($records))];
-        }
-    }
-    // If there are isn't a front page return false.
-    if ($toreturn) {
-        return $toreturn[max(array_keys($toreturn))];
-    } else {
-        return false;
-    }
+function socialwiki_get_first_page($swid) {
+    global $DB;
+    $sql = "SELECT p.* FROM {socialwiki} w, {socialwiki_subwikis} s, {socialwiki_pages} p
+            WHERE s.id = ? AND s.wikiid = w.id AND w.firstpagetitle = p.title AND p.subwikiid = s.id
+            ORDER BY id DESC LIMIT 1";
+    return $DB->get_record_sql($sql, array($swid));
 }
 
 /**
@@ -575,52 +558,49 @@ function socialwiki_parser_link($link, $options = null) {
     if (is_object($link)) { // If the fn is passed a page_socialwiki object as 1st argument.
         $parsedlink = array('content' => $link->title, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='
             . $link->id, 'new' => false, 'link_info' => array('link' => $link->title, 'pageid' => $link->id, 'new' => false));
-
-        return $parsedlink;
-    } else {
+    } else { // Standard case, wikilink shortcut in text
         $swid = $options['swid'];
         $specific = false;
 
-        if (preg_match('/@(([0-9]+)|(\.))/', $link, $matches)) { // Retrieve a version?
+        if (preg_match('/@(([0-9]+)|(\.))/', $link, $matches)) { // Check if getting a specific version.
             $link = preg_replace('/@(([0-9]+)|(\.))/', "", $link);
             $specific = true;
         }
 
-        if ($page = socialwiki_get_page_by_title($swid, $link)) {
-            if ($specific == false) { // Normal wikilink searching for pages by title.
+        if ($page = socialwiki_get_page_by_title($swid, $link)) { // Check if there is a page with that name.
+            if ($specific) { // Going to a specific page (no search).
+                if ($matches[1] == '.') { // Get the most recent version with the title.
+                    $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
+                            . '/mod/socialwiki/view.php?pageid=' . $page->id, 'new' => false,
+                        'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
+                } else { // Get the page at the ID.
+                    if (socialwiki_get_page($matches[1])) { // Page found and linked.
+                        $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='
+                            . $matches[1], 'new' => false,
+                            'link_info' => array('link' => $link, 'pageid' => $matches[1], 'new' => false));
+                    } else { // The page wasn't found, do a search instead.
+                        $currentpage = optional_param('pageid', 0, PARAM_INT);
+                        $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
+                                . '/mod/socialwiki/search.php?searchstring=' . $link . '&pageid=' . $currentpage
+                                . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id . '&exact=1', 'new' => false,
+                            'link_info' => array('link' => $link, 'pageid' => -$page->id, 'new' => false));
+                    }
+                }
+            } else { // Make a search for pages based on the title.
                 $currentpage = optional_param('pageid', 0, PARAM_INT);
                 $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
                         . '/mod/socialwiki/search.php?searchstring=' . $link . '&pageid=' . $currentpage
                         . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id . '&exact=1', 'new' => false,
                     'link_info' => array('link' => $link, 'pageid' => -$page->id, 'new' => false));
-            } else {
-                if ($matches[1] == '.') {
-                    $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
-                            . '/mod/socialwiki/view.php?pageid=' . $page->id, 'new' => false,
-                        'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
-                } else {
-
-                    if (socialwiki_get_page($matches[1])) {
-                        $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='
-                            . $matches[1], 'new' => false,
-                            'link_info' => array('link' => $link, 'pageid' => $matches[1], 'new' => false));
-                    } else {
-                        $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/view.php?pageid='
-                            . socialwiki_get_first_page(socialwiki_get_subwiki($swid)->wikiid)->id,
-                            'new' => false, 'link_info' => array('link' => $link, 'pageid' => $page->id, 'new' => false));
-                    }
-                }
             }
 
-            return $parsedlink;
-        } else {
-            // May want to change what happens in here later,
-            // kind of like the ability to make a link to a new page by just creating a link to it.
-            return array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/create.php?swid='
+        } else { // A page with that title doesn't exist.
+            $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot . '/mod/socialwiki/create.php?swid='
                 . $swid . '&amp;title=' . urlencode($link) . '&amp;action=new', 'new' => true,
                 'link_info' => array('link' => $link, 'new' => true, 'pageid' => 0));
         }
     }
+    return $parsedlink;
 }
 
 /**
@@ -1551,38 +1531,6 @@ function socialwiki_indexof_page($pid, $pages) {
         }
     }
     return -1;
-}
-
-/**
- * Returns array of teachers as moodle allows multiple teachers per course.
- *
- * @param int $contextid The current context ID.
- * @return stdClass[]
- */
-function socialwiki_get_teachers($contextid) {
-    Global $DB;
-    $sql = 'SELECT ra.userid AS id
-            FROM {role_assignments} ra
-            JOIN {role} r ON r.id=ra.roleid
-            WHERE contextid=? AND (shortname=? OR shortname=?)';
-    return $DB->get_records_sql($sql, array($contextid, 'teacher', 'editingteacher'));
-}
-
-/**
- * Checks if the user is a teacher.
- *
- * @param int $contextid The current context ID.
- * @param int $uid The current user ID.
- * @return bool
- */
-function socialwiki_is_teacher($contextid, $uid) {
-    $teachers = socialwiki_get_teachers($contextid);
-    foreach ($teachers as $teacher) {
-        if ($uid == $teacher->id) {
-            return true;
-        }
-    }
-    return false;
 }
 
 /**

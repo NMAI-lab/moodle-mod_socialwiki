@@ -113,7 +113,7 @@ class nwiki_parser extends socialwiki_markup_parser {
             return $match[0];
         }
 
-        $num = strlen($match[1]);
+        $num = strlen($match[1]) + 2;
 
         return $this->generate_header($match[2], $num);
     }
