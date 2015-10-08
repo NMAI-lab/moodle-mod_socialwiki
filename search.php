@@ -27,20 +27,20 @@ require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/peer.php');
 
+$id       = optional_param('id', 0, PARAM_INT);           // Course module ID.
 $search   = optional_param('searchstring', "", PARAM_TEXT); // Search string.
-$courseid = optional_param('courseid', 0, PARAM_INT);       // Course ID.
-$cmid     = optional_param('cmid', 0, PARAM_INT);           // Course module ID.
 $exact    = optional_param('exact', 0, PARAM_INT);          // If match should be exact (wikilinks).
-$content  = optional_param('searchcontent', 1, PARAM_INT);  // If page content should be searched.
+$srhtitle = optional_param('searchtitle', 1, PARAM_BOOL);   // Page title should not be searched.
+$srhcont  = optional_param('searchcontent', 1, PARAM_BOOL); // Page content should not be searched.
 $view     = optional_param('view', 0, PARAM_INT);           // Option ID.
 
-if (!$course = $DB->get_record('course', array('id' => $courseid))) {
-    echo $courseid;
-    print_error('invalidcourseid');
+// Checking course module instance.
+if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
+    print_error('invalidcoursemodule', 'socialwiki');
 }
-if (!$cm = get_coursemodule_from_id('socialwiki', $cmid)) {
-    print_error('invalidcoursemodule');
-}
+
+// Checking course instance.
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 require_login($course, true, $cm);
 
@@ -49,7 +49,7 @@ if (!$gid = groups_get_activity_group($cm)) {
     $gid = 0;
 }
 if (!$subwiki = socialwiki_get_subwiki_by_group($cm->instance, $gid)) {
-    return false;
+    print_error('incorrectsubwikiid', 'socialwiki');
 }
 if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
     print_error('incorrectwikiid', 'socialwiki');
@@ -63,9 +63,9 @@ if ($search == "*") {
 $wikipage = new page_socialwiki_search($wiki, $subwiki, $cm, $view);
 
 if ($exact != 0) { // Exact match on page title.
-    $wikipage->set_search_string($search, 0, true);
+    $wikipage->set_search_string($search, true, false, true);
 } else {
-    $wikipage->set_search_string($search, $content, false);
+    $wikipage->set_search_string($search, $srhtitle, $srhcont, false);
 }
 
 $wikipage->set_title(get_string('searchresult', 'socialwiki') . $search);

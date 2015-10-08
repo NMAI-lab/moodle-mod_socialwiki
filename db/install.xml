@@ -13,7 +13,6 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
-        <FIELD NAME="firstpagetitle" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="First Page" SEQUENCE="false" COMMENT="Wiki first page's name"/>
         <FIELD NAME="wikimode" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="collaborative" SEQUENCE="false" COMMENT="Wiki mode (individual, collaborative)"/>
         <FIELD NAME="defaultformat" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="creole" SEQUENCE="false" COMMENT="Wiki's default editor"/>
         <FIELD NAME="forceformat" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Forces the default editor"/>

@@ -75,11 +75,13 @@ class mod_socialwiki_create_form extends moodleform {
             if (count($groupinfo) > 1) {
                 $mform->addElement('select', 'groupinfo', get_string('group'), $groupinfo);
                 $mform->setDefault('groupinfo', $this->_customdata['groups']->currentgroup);
+                $mform->setType('groupinfo', PARAM_ALPHANUMEXT);
             } else {
                 $groupid = key($groupinfo);
                 $groupname = $groupinfo[$groupid];
                 $mform->addElement('static', 'groupdesciption', get_string('group'), $groupname);
                 $mform->addElement('hidden', 'groupinfo', $groupid);
+                $mform->setType('groupinfo', PARAM_ALPHANUMEXT);
             }
         }
 

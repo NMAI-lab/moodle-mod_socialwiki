@@ -50,7 +50,17 @@ function socialwiki_add_instance($wiki) {
     if (empty($wiki->forceformat)) {
         $wiki->forceformat = 0;
     }
-    return $DB->insert_record('socialwiki', $wiki);
+    
+    
+    $wikiid = $DB->insert_record('socialwiki', $wiki);
+    
+    $record = new StdClass();
+    $record->wikiid = $wikiid;
+    $record->groupid = 0;
+    $record->userid = 0;
+    $DB->insert_record('socialwiki_subwikis', $record);
+    
+    return $wikiid;
 }
 
 /**
@@ -408,7 +418,7 @@ function socialwiki_search_form($cm, $search = "") {
     $output .= '<input id="search_socialwiki" name="searchstring" type="text" size="18" value="';
     $output .= s($search, true) . '" alt="search" />';
     $output .= '<input name="courseid" type="hidden" value="' . $cm->course . '" />';
-    $output .= '<input name="cmid" type="hidden" value="' . $cm->id . '" />';
+    $output .= '<input name="id" type="hidden" value="' . $cm->id . '" />';
     $output .= '<input name="search_social_content" type="hidden" value="1" />';
     $output .= '<input value="' . get_string('search', 'socialwiki') . '" type="submit" />';
     $output .= '</fieldset>';

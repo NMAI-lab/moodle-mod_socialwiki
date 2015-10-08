@@ -7701,7 +7701,7 @@
         DataTable.defaults.column = {
             "aDataSort": null,
             "iDataSort": -1,
-            "asSorting": ['asc', 'desc'],
+            "asSorting": ['desc', 'asc'],
             "bSearchable": true,
             "bSortable": true,
             "bVisible": true,
@@ -8357,13 +8357,7 @@
             "string-pre": function (a) {
                 // This is a little complex, but faster than always calling toString,
                 // http://jsperf.com/tostring-v-check
-                return _empty(a) ?
-                        "" :
-                        typeof a === 'string' ?
-                        a.toLowerCase() :
-                        !a.toString ?
-                        "" :
-                        a.toString();
+                return _empty(a) ? "" : typeof a === 'string' ? a.toLowerCase() : !a.toString ? "" : a.toString();
             },
             // String-asc and -desc are retained only for compatibility with the old sort methods.
             "string-asc": function (x, y) {

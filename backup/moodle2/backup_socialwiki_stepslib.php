@@ -37,7 +37,7 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
 
         // Define each element separated.
         $wiki = new backup_nested_element('socialwiki', array('id'), array('name',
-            'intro', 'introformat', 'timecreated', 'timemodified', 'firstpagetitle',
+            'intro', 'introformat', 'timecreated', 'timemodified',
             'wikimode', 'defaultformat', 'forceformat', 'editbegin', 'editend'));
 
         $subwikis = new backup_nested_element('subwikis');

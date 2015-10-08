@@ -207,10 +207,16 @@ class socialwiki_tree {
      * @param stdClass[] $pages
      */
     public function build_tree($pages) {
+        if (empty($pages)) {
+            return false;
+        }
+        
         foreach ($pages as $page) {
             $this->add_node($page);
         }
         $this->add_children();
+        
+        return true;
     }
 
     /**
@@ -281,7 +287,6 @@ class socialwiki_tree {
             $allpeerset = array_merge($allpeerset, $node->list_peers_rec());
         }
         $treeul .= '</ul></div>';
-        $allpeerset = array_unique($allpeerset); // Remove duplicates.
 
         $swid = 0; // Just to set variable scope... 0 means nothing.
         if (!empty($this->roots)) { // If it's empty there's no tree and no peers so we're ok.
@@ -292,7 +297,8 @@ class socialwiki_tree {
 
         // Peer info from each author.
         echo '<div id="peer-info" style="display:none"><ul>';
-        foreach ($allpeerset as $p) {
+        $uniquepeerset = array_unique($allpeerset); // Remove duplicates.
+        foreach ($uniquepeerset as $p) {
             $peerarray = socialwiki_peer::socialwiki_get_peer($p, $swid, $USER->id)->to_array();
             echo '<li>';
             foreach ($peerarray as $k => $v) {

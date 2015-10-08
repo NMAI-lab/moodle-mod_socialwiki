@@ -131,14 +131,7 @@ if ($id) {
 
     // Checking is there is a page with this title. If it does not exists, redirect to first page.
     if (!$page = socialwiki_get_page_by_title($subwiki->id, $title)) {
-        $params = array('wid' => $wiki->id, 'group' => $gid, 'title' => $wiki->firstpagetitle);
-        // Check to see if the first page has been created.
-        if (!socialwiki_get_page_by_title($subwiki->id, $wiki->firstpagetitle)) {
-            $url = new moodle_url('/mod/socialwiki/create.php', $params);
-        } else {
-            $url = new moodle_url('/mod/socialwiki/view.php', $params);
-        }
-        redirect($url);
+        redirect(new moodle_url('/mod/socialwiki/create.php', array('wid' => $wiki->id, 'group' => $gid)));
     }
 } else {
     print_error('incorrectparameters');

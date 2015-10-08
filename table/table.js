@@ -26,13 +26,27 @@
  */
 $(document).ready(function () {
     // Build the Datatables from HTML tables.
-    $('.datatable').DataTable({
+    $('.datatable.typev').DataTable({
         "scrollX": true,
         "scrollY": "220px",
         "scrollCollapse": true,
         "info": false,
         "paging": false,
-        "columnDefs": [{"type": "time-ago","targets": 2}]
+        "columnDefs": [{"type": "time-ago","targets": 2}, {"type": "contrib","targets": [1, 5]}]
+    });
+    $('.datatable.typeu').DataTable({
+        "scrollX": true,
+        "scrollY": "220px",
+        "scrollCollapse": true,
+        "info": false,
+        "paging": false
+    });
+    $('.datatable.typeg').DataTable({
+        "scrollX": true,
+        "scrollY": "220px",
+        "scrollCollapse": true,
+        "info": false,
+        "paging": false
     });
 });
 
@@ -43,19 +57,26 @@ $(document).ready(function () {
  * @returns string
  */
 $.fn.dataTable.ext.type.order['time-ago-pre'] = function (d) {
-    var w = d.split(" ");
-    if (d.indexOf("second") > -1) {
-        return w[0];
-    } else if (d.indexOf("minute") > -1) {
-        return w[0] * 100;
-    } else if (d.indexOf("hour") > -1) {
-        return w[0] * 10000;
-    } else if (d.indexOf("day") > -1) {
-        return w[0] * 1000000;
-    } else if (d.indexOf("month") > -1) {
-        return w[0] * 1000000000;
-    } else if (d.indexOf("year") > -1) {
-        return w[0] * 100000000000;
+    var w = d.split(".");
+    if (w.length === 1) {
+        return d;
+    } else {
+        return parseInt(d.split(".")[1]);
     }
-    return d;
+};
+
+/**
+ * Sort function for contributor column.
+ *
+ * @param string d The text in the box.
+ * @returns string
+ */
+$.fn.dataTable.ext.type.order['contrib-pre'] = function (d) {
+    var w = d.split(">")[1].split(" ");
+    var l = parseInt(w[w.length -2]);
+    if (!isNaN(l)) {
+        return String.fromCharCode(l+150) + w;
+    } else {
+        return w;
+    }
 };

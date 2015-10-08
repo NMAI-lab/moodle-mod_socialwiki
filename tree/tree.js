@@ -40,6 +40,9 @@ $(document).ready(function() {
     scrollbar.onscroll = function () {
         element.scrollLeft = scrollbar.scrollLeft;
     };
+    element.onscroll = function () {
+        scrollbar.scrollLeft = element.scrollLeft;
+    };
     element.parentNode.insertBefore(scrollbar, element);
 
     /**

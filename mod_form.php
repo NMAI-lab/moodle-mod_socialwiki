@@ -74,12 +74,6 @@ class mod_socialwiki_mod_form extends moodleform_mod {
         if (!empty($this->_instance)) {
             $attr['disabled'] = 'disabled';
         }
-        $mform->addElement('text', 'firstpagetitle', get_string('firstpagetitle', 'socialwiki'), $attr);
-        $mform->addHelpButton('firstpagetitle', 'firstpagetitle', 'socialwiki');
-        $mform->setType('firstpagetitle', PARAM_TEXT);
-        if (empty($this->_instance)) {
-            $mform->addRule('firstpagetitle', $required, 'required', null, 'client');
-        }
         $styles = socialwiki_get_styles();
         $styleoptions = array();
         foreach ($styles as $style) {

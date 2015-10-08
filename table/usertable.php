@@ -40,7 +40,7 @@ class socialwiki_usertable extends socialwiki_table {
      * @param string $type Table header options.
      */
     public function __construct($uid, $swid, $ids, $type) {
-        parent::__construct($uid, $swid, $type);
+        parent::__construct($uid, $swid, $type, ' typeu');
         $this->userlist = $ids;
     }
 
@@ -56,6 +56,9 @@ class socialwiki_usertable extends socialwiki_table {
         $ids = array_filter($uids, function($i) use ($me) {
             return ($i != $me);
         });
+        if (empty($ids)) {
+            return null;
+        }
 
         return new socialwiki_usertable($me, $swid, $ids, 'user');
     }
@@ -100,7 +103,6 @@ class socialwiki_usertable extends socialwiki_table {
     public function get_table_data() {
         Global $CFG;
 
-        $ids = $this->userlist;
         $headers = $this->headers;
         $me = $this->uid;
         $swid = $this->swid;
@@ -144,8 +146,6 @@ class socialwiki_usertable extends socialwiki_table {
             return $row;
         };
 
-        $tabledata = array_map($buildfunction, $ids); // End array_map.
-
-        return $tabledata;
+        return array_map($buildfunction, $this->userlist); // End array_map, return the table data.
     }
 }

@@ -35,7 +35,7 @@ require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
 require($CFG->dirroot . '/mod/socialwiki/table/table.php');
 
 $id  = required_param('id', PARAM_INT);    // Course module ID.
-$tab = optional_param('tabid', 0, PARAM_INT); // Option ID.
+$tab = optional_param('tabid', 0, PARAM_INT); // Tab Option ID.
 
 // Checking course module instance.
 if (!$cm = get_coursemodule_from_id('socialwiki', $id)) {
@@ -63,15 +63,8 @@ $userid = 0;
 $context = context_module::instance($cm->id);
 // Getting subwiki. If it does not exists, redirecting to create page.
 if (!$subwiki = socialwiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid)) {
-    require_capability('mod/socialwiki:managewiki', $context);
-    $params = array('wid' => $wiki->id, 'group' => $currentgroup, 'uid' => $userid, 'title' => $wiki->firstpagetitle);
-    redirect(new moodle_url('/mod/socialwiki/create.php', $params));
-}
-// Getting front page. If it doesn't exist redirect a teacher to create it.
-if (!$page = socialwiki_get_first_page($subwiki->id)) {
-    require_capability('mod/socialwiki:managewiki', $context);
-    $params = array('swid' => $subwiki->id, 'title' => $wiki->firstpagetitle);
-    redirect(new moodle_url('/mod/socialwiki/create.php', $params));
+    socialwiki_add_subwiki($wiki->id, $currentgroup, $userid);
+    $subwiki = socialwiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid);
 }
 
 require_login($course, true, $cm);

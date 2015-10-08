@@ -61,16 +61,24 @@ abstract class socialwiki_table {
     protected $headers;
 
     /**
+     * The table type.
+     *
+     * @var string[]
+     */
+    protected $tabletype;
+    
+    /**
      * Create a table.
      *
      * @param int $u The current user ID.
      * @param int $s The current subwiki ID.
      * @param string $h Table header options.
      */
-    public function __construct($u, $s, $h) {
+    public function __construct($u, $s, $h, $v = ' typeg') {
         $this->uid = $u;
         $this->swid = $s;
-        $this->headers = self::getheaders($h);
+        $this->headers = self::get_headers($h);
+        $this->tabletype = $v;
     }
 
     /**
@@ -84,7 +92,7 @@ abstract class socialwiki_table {
      * @param string $tableid The HTML ID of the table.
      */
     public function print_html() {
-        $output = "<table class='datatable'>";
+        $output = "<table class='datatable{$this->tabletype}'>";
         $tabledata = $this->get_table_data();
         // Headers.
         $output .= "<thead><tr>";
@@ -111,7 +119,7 @@ abstract class socialwiki_table {
      * @param string $type The type of table.
      * @return string array
      */
-    public static function getheaders($type) {
+    public static function get_headers($type) {
         switch ($type) {
             case 'version':
                 return array(
@@ -151,7 +159,7 @@ abstract class socialwiki_table {
                     'networkdistance'
                 );
             default:
-                return array('error in getheaders: ' . $type);
+                return array('error in get_headers: ' . $type);
         }
     }
 

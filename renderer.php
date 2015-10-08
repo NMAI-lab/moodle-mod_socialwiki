@@ -433,12 +433,20 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
 
         if ($currentview == 1) {
             require($CFG->dirroot . '/mod/socialwiki/table/table.php');
-            echo socialwiki_versiontable::html_versiontable($USER->id, $swid, $pages, 'version');
+            $t = socialwiki_versiontable::html_versiontable($USER->id, $swid, $pages, 'version');
+            if ($t != null) {
+                echo $t->print_html();
+            } else {
+                echo get_string('searchresults_empty', 'socialwiki');
+            }
         } else {
             require($CFG->dirroot . '/mod/socialwiki/tree/tree.php');
             $tree = new socialwiki_tree();
-            $tree->build_tree($pages);
-            $tree->display($pid);
+            if ($tree->build_tree($pages)) {
+                $tree->display($pid);
+            } else {
+                echo get_string('searchresults_empty', 'socialwiki');
+            }
         }
     }
 

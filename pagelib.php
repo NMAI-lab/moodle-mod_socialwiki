@@ -826,85 +826,6 @@ class page_socialwiki_editcomment extends page_socialwiki {
 }
 
 /**
- * The socialwiki search page class.
- *
- * @copyright 2015 NMAI-lab
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class page_socialwiki_search extends page_socialwiki_versions {
-
-    /**
-     * Array of search result pages.
-     *
-     * @var stdClass[]
-     */
-    private $searchresult;
-
-    /**
-     * The search string.
-     *
-     * @var string
-     */
-    private $searchstring;
-
-    /**
-     * 1 for an exact search type.
-     *
-     * @var int
-     */
-    private $exact;
-
-    /**
-     * Sets the URL of the page.
-     */
-    public function set_url() {
-        global $PAGE, $CFG, $COURSE;
-        if (isset($this->page)) {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='
-                    . $this->page->id . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id);
-        } else {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php');
-        }
-    }
-
-    /**
-     * Add to the navigation bar at the top of the page.
-     */
-    protected function create_navbar() {
-        global $PAGE;
-        $PAGE->navbar->add(format_string($this->title));
-    }
-
-    /**
-     * Sets all search data.
-     *
-     * @param string $search The string that is searched.
-     * @param bool $searchcontent Whether to search the page content as well.
-     * @param int $exactmatch An exact match will only return pages with the exact title.
-     */
-    public function set_search_string($search, $searchcontent, $exactmatch = false) {
-        $this->searchstring = $search;
-        $this->exact = $exactmatch;
-        if ($searchcontent) {
-            $this->searchresult = socialwiki_search_all($this->subwiki->id, $search);
-        } else {
-            $this->searchresult = socialwiki_search_title($this->subwiki->id, $search, $exactmatch);
-        }
-    }
-
-    /**
-     * Prints the page content.
-     */
-    public function print_content() {
-        global $PAGE, $COURSE;
-        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
-        $params = array('searchstring' => $this->searchstring,
-            'courseid' => $COURSE->id, 'cmid' => $PAGE->cm->id, 'exact' => $this->exact);
-        $this->wikioutput->versions('search', $params, $this->searchresult, $this->view, $this->subwiki->id);
-    }
-}
-
-/**
  * The socialwiki create page class.
  *
  * @copyright 2015 NMAI-lab
@@ -1286,6 +1207,81 @@ class page_socialwiki_versions extends page_socialwiki {
 }
 
 /**
+ * The socialwiki search page class.
+ *
+ * @copyright 2015 NMAI-lab
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class page_socialwiki_search extends page_socialwiki_versions {
+
+    /**
+     * Array of search result pages.
+     *
+     * @var stdClass[]
+     */
+    private $searchresult;
+
+    /**
+     * The search string.
+     *
+     * @var string
+     */
+    private $searchstring;
+
+    /**
+     * 1 for an exact search type.
+     *
+     * @var int
+     */
+    private $exact;
+
+    /**
+     * Sets the URL of the page.
+     */
+    public function set_url() {
+        global $PAGE, $CFG;
+        if (isset($this->page)) {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='
+                    . $this->page->id . '&id=' . $PAGE->cm->id);
+        } else {
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?id=' . $PAGE->cm->id);
+        }
+    }
+
+    /**
+     * Add to the navigation bar at the top of the page.
+     */
+    protected function create_navbar() {
+        global $PAGE;
+        $PAGE->navbar->add(format_string($this->title));
+    }
+
+    /**
+     * Sets all search data.
+     *
+     * @param string $search The string that is searched.
+     * @param bool $notitle Whether to search the page content as well.
+     * @param int $exactmatch An exact match will only return pages with the exact title.
+     */
+    public function set_search_string($search, $searchtitle, $searchcontent, $exactmatch = false) {
+        $this->searchstring = $search;
+        $this->exact = $exactmatch;
+        $this->searchresult = socialwiki_search($this->subwiki->id, $search, $searchtitle, $searchcontent, $exactmatch);
+    }
+
+    /**
+     * Prints the page content.
+     */
+    public function print_content() {
+        global $PAGE, $COURSE;
+        require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
+        $params = array('searchstring' => $this->searchstring,
+            'courseid' => $COURSE->id, 'cmid' => $PAGE->cm->id, 'exact' => $this->exact);
+        $this->wikioutput->versions('search', $params, $this->searchresult, $this->view, $this->subwiki->id);
+    }
+}
+
+/**
  * The socialwiki home page class.
  *
  * @copyright 2015 NMAI-lab
@@ -1430,11 +1426,11 @@ class page_socialwiki_home extends page_socialwiki {
     public function print_topics_tab() {
         global $USER;
         // Make a new Page button.
-        $makebutton = '<h2>' . html_writer::start_tag('form', array('style' => "float:right", 'action' => 'create.php'));
+        $makebutton = html_writer::start_tag('form', array('style' => "float:right; margin: 0.6em 0;", 'action' => 'create.php'));
         $makebutton .= '<input type="hidden" name="swid" value="' . $this->subwiki->id . '"/>';
         $makebutton .= '<input value="' . get_string('makepage', 'socialwiki')
                 . '" type="submit" id="id_submitbutton" style="margin: 0 0 0 0.5em; position: relative; z-index: 1;">';
-        $makebutton .= html_writer::end_tag('form') . '</h2>';
+        $makebutton .= html_writer::end_tag('form');
         echo $makebutton , socialwiki_table::builder($USER->id, $this->subwiki->id, 'alltopics'); // All Pages Table.
     }
 

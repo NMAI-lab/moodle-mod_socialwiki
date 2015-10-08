@@ -177,20 +177,6 @@ function socialwiki_get_page_by_title($swid, $title) {
 }
 
 /**
- * Get first page of wiki instance.
- *
- * @param int $swid The subwiki ID.
- * @return stdClass Lastest version of first page
- */
-function socialwiki_get_first_page($swid) {
-    global $DB;
-    $sql = "SELECT p.* FROM {socialwiki} w, {socialwiki_subwikis} s, {socialwiki_pages} p
-            WHERE s.id = ? AND s.wikiid = w.id AND w.firstpagetitle = p.title AND p.subwikiid = s.id
-            ORDER BY id DESC LIMIT 1";
-    return $DB->get_record_sql($sql, array($swid));
-}
-
-/**
  * Save a page section.
  *
  * @param stdClass $page The page that is modified.
@@ -383,54 +369,48 @@ function socialwiki_get_related_pages($swid, $title) {
 }
 
 /**
- * Search wiki title.
- *
+ * Search wiki title and or content.
+ * 
  * @param int $swid The subwiki ID.
  * @param string $search What to search for.
- * @param bool $exact Only an exact match if true.
+ * @param type $searchtitle Search page titles.
+ * @param type $searchcontent Search page contents.
+ * @param bool $exact Only an exact title match if true.
  * @return stdClass[]
  */
-function socialwiki_search_title($swid, $search, $exact = false) {
+function socialwiki_search($swid, $search, $searchtitle = true, $searchcontent = true, $exact = false) {
     global $DB;
-    $sql = "SELECT p.*, COUNT(pageid) AS total
-            FROM {socialwiki_pages} p LEFT JOIN {socialwiki_likes} l
-            ON p.id = l.pageid
-            WHERE p.subwikiid=? AND (p.title LIKE ?)
-            GROUP BY p.id ORDER BY total DESC";
-    if ($exact) { // Exact title match.
-        return $DB->get_records_sql($sql, array($swid, $search));
-    } else {
-        return $DB->get_records_sql($sql, array($swid, '%' . $search . '%'));
+    
+    // Return nothing if not searching the title or content.
+    if (!$searchtitle && !$searchcontent) {
+        return [];
     }
-}
-
-/**
- * Search wiki content.
- *
- * @param int $swid The subwiki ID.
- * @param string $search What to search for.
- * @return stdClass[]
- */
-function socialwiki_search_content($swid, $search) {
-    global $DB;
-    return $DB->get_records_select('socialwiki_pages', "subwikiid = ? AND content LIKE ?", array($swid, '%' . $search . '%'));
-}
-
-/**
- * Search wiki title and content.
- *
- * @param int $swid subwiki ID.
- * @param string $search What to search for.
- * @return stdClass[]
- */
-function socialwiki_search_all($swid, $search) {
-    global $DB;
+    
+    // If not exact then allow for characters on either side.
+    if (!$exact) {
+        $search = '%' . $search . '%';
+    }
+    
+    // Search SQL.
     $sql = "SELECT p.*, COUNT(pageid) AS total
             FROM {socialwiki_pages} p LEFT JOIN {socialwiki_likes} l
             ON p.id = l.pageid
-            WHERE p.subwikiid=? AND (p.content LIKE ? OR p.title LIKE ?)
-            GROUP BY p.id ORDER BY total DESC";
-    return $DB->get_records_sql($sql, array($swid, '%' . $search . '%', '%' . $search . '%'));
+            WHERE p.subwikiid=? AND (";
+    
+    if ($searchtitle && $searchcontent) {
+        // If looking for title and content then search by both. 
+        $sql .= "p.content LIKE ? OR p.title LIKE ?";
+        $params = array($swid, $search, $search);
+    } else {
+        // Only place the correct term if title or content are turned off.
+        $sql .= $searchtitle ? "p.title LIKE ?" : "p.content LIKE ?";
+        $params = array($swid, $search);
+    }
+    
+    // Group the pages with likes together.
+    $sql .= ") GROUP BY p.id ORDER BY total DESC";
+    
+    return $DB->get_records_sql($sql, $params);
 }
 
 /**
@@ -714,7 +694,7 @@ function socialwiki_user_can_view($subwiki) {
                     //              or moodle/site:accessallgroups capability
                     //             and mod/wiki:viewpage capability.
                     $view = has_capability('mod/socialwiki:viewpage', $context);
-                    $manage = has_capability('mod/socialwiki:manage_socialwiki', $context);
+                    $manage = has_capability('mod/socialwiki:managewiki', $context);
                     $access = has_capability('moodle/site:accessallgroups', $context);
                     return ($manage || $access) && $view;
                 }
