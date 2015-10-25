@@ -116,27 +116,13 @@ class socialwiki_usertable extends socialwiki_table {
                     . $user->id . "&subwikiid=$swid'>" . fullname($user) . "</a>";
 
             $peer = socialwiki_peer::socialwiki_get_peer($id, $swid, $me);
-            switch ($peer->depth) {
-                case 0:
-                    $following = "Not in your network";
-                    break;
-                case 1:
-                    $following = "Followed";
-                    break;
-                case 2:
-                    $following = "Second Connection";
-                    break;
-                default:
-                    $following = "Distant Connection";
-                    break;
-            }
-
             $rowdata = array(
                 'name' => $name,
-                'popularity' => $peer->popularity,
-                'likesim' => substr("$peer->likesim", 0, 4),
-                'followsim' => substr("$peer->followsim", 0, 4),
-                'networkdistance' => $following
+                'popularity' => round($peer->popularity, 2),
+                'likesim' => round($peer->likesim * 100 ) . '%',
+                'followsim' => round($peer->followsim * 100 ) . '%',
+                'networkdistance' => "<span value=$peer->depth>"
+                    . get_string('distance' . $peer->depth, 'socialwiki') . '</span>'
             );
 
             foreach ($headers as $key) {

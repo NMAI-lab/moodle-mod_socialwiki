@@ -74,14 +74,13 @@ class socialwiki_topictable extends socialwiki_table {
      * @return array $table Each row being an array of head=>value pairs
      */
     protected function get_table_data() {
-        Global $COURSE, $PAGE;
+        Global $PAGE;
 
         $table = array();
 
         foreach ($this->tlist as $title => $data) {
             $titlelink = '<a href="search.php?searchstring=' . $title
-                    . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id
-                    . '&exact=1&option=1">' . $title . '</a>';
+                    . '&id=' . $PAGE->cm->id . '&exact=1&option=1">' . $title . '</a>';
 
             $row = array(
                 'title' => $titlelink,

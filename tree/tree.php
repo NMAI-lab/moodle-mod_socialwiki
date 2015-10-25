@@ -239,8 +239,7 @@ class socialwiki_tree {
                     $parent = $this->nodes[$node->parent];
                     $parent->add_child($node);
                 } else {
-                    // TODO: include a fictitious node? problem: lineage is broken.
-                    // for now: just create another root.
+                    // Create another root if no parent is found.
                     $this->roots[] = $node;
                 }
             } else { // Root node.

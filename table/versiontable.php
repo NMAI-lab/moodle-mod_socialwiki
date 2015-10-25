@@ -78,7 +78,6 @@ class socialwiki_versiontable extends socialwiki_table {
         $table = array();
 
         foreach ($this->allpages as $page) {
-            $updated = socialwiki_format_time($page->timecreated);
             $views = $page->pageviews;
             $likes = socialwiki_numlikes($page->id);
 
@@ -116,13 +115,13 @@ class socialwiki_versiontable extends socialwiki_table {
             $row = array(
                 'title' => "<div>$likeimg$unlikeimg$linkpage</div>",
                 'contributors' => $contribstring,
-                'updated' => "<t hidden>.{$page->timecreated}.</t>$updated",
+                'updated' => "<span value='{$page->timecreated}'>" . socialwiki_format_time($page->timecreated) . "</span>",
                 'likes' => $likes,
                 'views' => $views,
                 'favourite' => $favdiv,
-                'popularity' => substr($peerpop, 0, 4),
-                'likesim' => substr($likesim, 0, 4),
-                'followsim' => substr($followsim, 0, 4),
+                'popularity' => $peerpop,
+                'likesim' => round($likesim * 100 ) . '%',
+                'followsim' => round($followsim * 100 ) . '%',
                 'networkdistance' => substr($distance, 0, 4)
             );
             // Add trust values.

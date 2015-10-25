@@ -31,6 +31,7 @@
  */
 .socialwiki_wikicontent .dataTables_wrapper {
     position: relative;
+    margin-top: -0.8em;
     margin-bottom: 2em;
     zoom: 1; /* Feeling sorry for IE */
 }
@@ -57,8 +58,11 @@
 }
 
 .socialwiki_wikicontent .dataTables_filter {
-    text-align: right;
-    margin-top: -2.6em;
+    float: right;
+}
+
+.socialwiki_wikicontent .dataTables_filter label {
+    margin: 0;
 }
 
 .socialwiki_wikicontent .dataTables_filter input {

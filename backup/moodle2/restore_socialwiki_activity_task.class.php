@@ -91,7 +91,6 @@ class restore_socialwiki_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('socialwiki', 'edit', 'edit.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'history', 'versions.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'map', 'map.php?id={course_module}', '{socialwiki}');
-        // TODO: Examine these 2 rules, because module is not "socialwiki", and it shouldn't happen.
         $rules[] = new restore_log_rule('restore', 'restore', 'view.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('createpage', 'createpage', 'view.php?id={course_module}', '{socialwiki}');
 

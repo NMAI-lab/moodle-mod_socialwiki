@@ -50,6 +50,8 @@ class mod_socialwiki_mod_form extends moodleform_mod {
      * Build the full form.
      */
     protected function definition() {
+        Global $CFG;
+        
         $mform = $this->_form;
         $required = get_string('required');
 
@@ -61,8 +63,14 @@ class mod_socialwiki_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', $required, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', "", 255), 'maxlength', 255, 'client');
+        
         // Adding the optional "intro" and "introformat" pair of fields.
-        $this->add_intro_editor(true, get_string('wikiintro', 'socialwiki'));
+        if ($CFG->branch >= 29) {
+            // Moodle 2.9.0 and higher use the new API.
+            $this->standard_intro_elements();
+        } else {
+            $this->add_intro_editor();
+        }
 
         // Don't allow changes to the wiki type once it is set.
         $wikitypeattr = array();

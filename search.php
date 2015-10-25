@@ -44,7 +44,6 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 
 require_login($course, true, $cm);
 
-// TODO: Fix call to wiki_get_subwiki_by_group.
 if (!$gid = groups_get_activity_group($cm)) {
     $gid = 0;
 }

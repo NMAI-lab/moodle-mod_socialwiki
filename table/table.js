@@ -26,7 +26,7 @@
  */
 $(document).ready(function () {
     // Build the Datatables from HTML tables.
-    $('.datatable.typev').DataTable({
+    $('.datatable.typev').DataTable({  // Version Table.
         "scrollX": true,
         "scrollY": "220px",
         "scrollCollapse": true,
@@ -34,14 +34,15 @@ $(document).ready(function () {
         "paging": false,
         "columnDefs": [{"type": "time-ago","targets": 2}, {"type": "contrib","targets": [1, 5]}]
     });
-    $('.datatable.typeu').DataTable({
+    $('.datatable.typeu').DataTable({  // User Table.
         "scrollX": true,
         "scrollY": "220px",
         "scrollCollapse": true,
         "info": false,
-        "paging": false
+        "paging": false,
+        "columnDefs": [{"type": "distance","targets": 4}]
     });
-    $('.datatable.typeg').DataTable({
+    $('.datatable.typeg').DataTable({  // General Table (used for Topic).
         "scrollX": true,
         "scrollY": "220px",
         "scrollCollapse": true,
@@ -52,31 +53,38 @@ $(document).ready(function () {
 
 /**
  * Sort function for updated time ago column.
- *
- * @param string d The text in the box.
- * @returns string
+ * 
+ * @param {String} d The text in the box
+ * @returns {String}
  */
 $.fn.dataTable.ext.type.order['time-ago-pre'] = function (d) {
-    var w = d.split(".");
-    if (w.length === 1) {
-        return d;
-    } else {
-        return parseInt(d.split(".")[1]);
-    }
+    var val = parseInt(d.split('"')[1]);
+    return (isNaN(val) ? d : val);
 };
 
 /**
  * Sort function for contributor column.
- *
- * @param string d The text in the box.
- * @returns string
+ * 
+ * @param {String} d The text in the box
+ * @returns {String}
  */
 $.fn.dataTable.ext.type.order['contrib-pre'] = function (d) {
     var w = d.split(">")[1].split(" ");
-    var l = parseInt(w[w.length -2]);
+    var l = parseInt(w[w.length - 2]);
     if (!isNaN(l)) {
         return String.fromCharCode(l+150) + w;
     } else {
         return w;
     }
+};
+
+/**
+ * Sort function for social distance column.
+ * 
+ * @param {String} d The text in the box
+ * @returns {String}
+ */
+$.fn.dataTable.ext.type.order['distance-pre'] = function (d) {
+    var dist = parseInt(d[13]);
+    return ((dist === 1) ? 5 : dist);
 };

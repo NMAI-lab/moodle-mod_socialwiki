@@ -1273,10 +1273,9 @@ class page_socialwiki_search extends page_socialwiki_versions {
      * Prints the page content.
      */
     public function print_content() {
-        global $PAGE, $COURSE;
+        global $PAGE;
         require_capability('mod/socialwiki:viewpage', $this->modcontext, null, true, 'noviewpagepermission', 'socialwiki');
-        $params = array('searchstring' => $this->searchstring,
-            'courseid' => $COURSE->id, 'cmid' => $PAGE->cm->id, 'exact' => $this->exact);
+        $params = array('searchstring' => $this->searchstring, 'id' => $PAGE->cm->id, 'exact' => $this->exact);
         $this->wikioutput->versions('search', $params, $this->searchresult, $this->view, $this->subwiki->id);
     }
 }
@@ -1426,10 +1425,10 @@ class page_socialwiki_home extends page_socialwiki {
     public function print_topics_tab() {
         global $USER;
         // Make a new Page button.
-        $makebutton = html_writer::start_tag('form', array('style' => "float:right; margin: 0.6em 0;", 'action' => 'create.php'));
+        $makebutton = html_writer::start_tag('form', array('style' => "float:right; margin: 0;", 'action' => 'create.php'));
         $makebutton .= '<input type="hidden" name="swid" value="' . $this->subwiki->id . '"/>';
         $makebutton .= '<input value="' . get_string('makepage', 'socialwiki')
-                . '" type="submit" id="id_submitbutton" style="margin: 0 0 0 0.5em; position: relative; z-index: 1;">';
+                . '" type="submit" id="id_submitbutton" style="margin: 0; position: relative; z-index: 1;">';
         $makebutton .= html_writer::end_tag('form');
         echo $makebutton , socialwiki_table::builder($USER->id, $this->subwiki->id, 'alltopics'); // All Pages Table.
     }
@@ -1634,10 +1633,10 @@ class page_socialwiki_prettyview extends page_socialwiki {
      */
     public function print_header() {
         global $PAGE, $OUTPUT;
+        $this->set_url();
         $PAGE->set_pagelayout('embedded');
         echo $OUTPUT->header();
-
-        echo '<h1 id="socialwiki-printable-title">' . format_string($this->title) . '</h1>';
+        echo $OUTPUT->heading(format_string($this->title), 1, 'socialwiki-printable-title');
     }
 
     /**
@@ -1645,7 +1644,6 @@ class page_socialwiki_prettyview extends page_socialwiki {
      */
     public function set_url() {
         global $PAGE, $CFG;
-
         $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/prettyview.php', array('pageid' => $this->page->id));
     }
 
@@ -1944,16 +1942,10 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
      * Prints the page content.
      */
     public function print_content() {
-        Global $OUTPUT, $CFG, $USER, $PAGE;
-
-        $user = socialwiki_get_user_info($this->uid);
-        $scale = array('like' => 1, 'trust' => 1, 'follow' => 1, 'popular' => 1);
-        $context = context_module::instance($PAGE->cm->id);
-        $numpeers = count(get_enrolled_users($context)) - 1;
-        // Get this user's peer score.
-        $peer = socialwiki_peer::socialwiki_get_peer($user->id, $this->subwiki->id, $USER->id, $numpeers, $scale);
-
+        Global $OUTPUT, $CFG, $USER;
+        
         // USER INFO OUTPUT.
+        $user = socialwiki_get_user_info($this->uid);
         $html = $OUTPUT->heading(fullname($user), 1, 'colourtext');
         $html .= "<div class='home-picture'>";
         $html .= $OUTPUT->user_picture($user, array('size' => 100));
@@ -1997,6 +1989,9 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
             $followbtn .= html_writer::end_tag('button');
             $followbtn .= html_writer::end_tag('form');
 
+            // Get this user's peer score.
+            $peer = socialwiki_peer::socialwiki_get_peer($user->id, $this->subwiki->id, $USER->id);
+            
             $row1 = new html_table_row(array(get_string('networkdistance', 'socialwiki').':', $peer->depth, $followbtn));
             $row1->cells[2]->rowspan = 3;
 

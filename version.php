@@ -23,9 +23,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015072500;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2013101800;       // Requires Moodle version 2.6.
+$plugin->version   = 2015101500;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires  = 2013040500;       // Requires Moodle version 2.5 (original release date).
 $plugin->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.2';
+$plugin->release   = '1.0.3';
 $plugin->cron      = 0;

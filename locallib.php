@@ -531,7 +531,7 @@ function socialwiki_parse_content($markup, $pagecontent, $options = array()) {
  * @return array Array('content' => string, 'url' => string, 'new' => bool, 'link_info' => array)
  */
 function socialwiki_parser_link($link, $options = null) {
-    global $CFG, $COURSE, $PAGE;
+    global $CFG, $PAGE;
 
     $matches = array();
 
@@ -562,7 +562,7 @@ function socialwiki_parser_link($link, $options = null) {
                         $currentpage = optional_param('pageid', 0, PARAM_INT);
                         $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
                                 . '/mod/socialwiki/search.php?searchstring=' . $link . '&pageid=' . $currentpage
-                                . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id . '&exact=1', 'new' => false,
+                                . '&id=' . $PAGE->cm->id . '&exact=1', 'new' => false,
                             'link_info' => array('link' => $link, 'pageid' => -$page->id, 'new' => false));
                     }
                 }
@@ -570,7 +570,7 @@ function socialwiki_parser_link($link, $options = null) {
                 $currentpage = optional_param('pageid', 0, PARAM_INT);
                 $parsedlink = array('content' => $link, 'url' => $CFG->wwwroot
                         . '/mod/socialwiki/search.php?searchstring=' . $link . '&pageid=' . $currentpage
-                        . '&courseid=' . $COURSE->id . '&cmid=' . $PAGE->cm->id . '&exact=1', 'new' => false,
+                        . '&id=' . $PAGE->cm->id . '&exact=1', 'new' => false,
                     'link_info' => array('link' => $link, 'pageid' => -$page->id, 'new' => false));
             }
 
@@ -1515,6 +1515,7 @@ function socialwiki_indexof_page($pid, $pages) {
 
 /**
  * Returns an array of pages chosen based on peers likes and follows.
+ * TODO: DOES NOT WORK also never used.
  *
  * @param int $uid The user ID.
  * @param int $swid The subwiki ID.
@@ -1691,9 +1692,10 @@ function socialwiki_follow_depth($userfrom, $userto, $swid, $depth = 1, &$checke
  * @return string
  */
 function socialwiki_format_time($time, $timeago = true) {
-    // Standard month, day, year format.
+    // Standard day, month, year format.
+    $date = strftime('%d %b %Y', $time);
     if (!$timeago) {
-        return strftime('%d %b %Y', $time);
+        return $date;
     }
 
     // Return the time based upon how long ago from the current time.
@@ -1709,7 +1711,7 @@ function socialwiki_format_time($time, $timeago = true) {
     // Loops through to return the first type available.
     foreach ($types as $t => &$i) {
         if ($diff->$t) {
-            return $diff->$t . ' ' . $i . ($diff->$t > 1 ? 's' : "") . ' ago';
+            return "<span title='$date'>" . $diff->$t . ' ' . $i . ($diff->$t > 1 ? 's' : "") . ' ago</span>';
         }
     }
 }
