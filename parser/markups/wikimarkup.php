@@ -195,45 +195,33 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
         }
 
         $toc = "";
-        $currentsection = array(0, 0, 0);
+        $currenttype = 1;
         $i = 1;
-        foreach ($this->toc as & $header) {
-            switch ($header[0]) {
-                case 1:
-                    $currentsection = array($currentsection[0] + 1, 0, 0);
-                    break;
-                case 2:
-                    $currentsection[1] ++;
-                    $currentsection[2] = 0;
-                    if ($currentsection[0] == 0) {
-                        $currentsection[0] ++;
-                    }
-                    break;
-                case 3:
-                    $currentsection[2] ++;
-                    if ($currentsection[1] == 0) {
-                        $currentsection[1] ++;
-                    }
-                    if ($currentsection[0] == 0) {
-                        $currentsection[0] ++;
-                    }
-                    break;
-                default:
-                    continue;
+        foreach ($this->toc as &$header) {
+            if ($i !== 1) {
+                $toc .= $this->process_toc_level($header[0], $currenttype);
             }
-            $number = "$currentsection[0]";
-            if (!empty($currentsection[1])) {
-                $number .= ".$currentsection[1]";
-                if (!empty($currentsection[2])) {
-                    $number .= ".$currentsection[2]";
-                }
-            }
-            $toc .= socialparser_utils::h('p', $number . ". " . socialparser_utils::h('a', $header[1], array('href' => "#toc-$i")),
-                    array('class' => 'socialwiki-toc-section-' . $header[0] . " socialwiki-toc-section"));
+
+            $toc .= '<li class="socialwiki-toc-section">' . socialparser_utils::h('a', $header[1], array('href' => "#toc-$i"));
+            $currenttype = $header[0];
             $i++;
         }
-        $this->returnvalues['toc'] = "<div class='socialwiki-toc'><p class='socialwiki-toc-title'>"
-                . get_string('tableofcontents', 'socialwiki') . "</p>$toc</div>";
+        $this->returnvalues['toc'] = "<nav role='directory' class='socialwiki-toc'><h4 class='socialwiki-toc-title'>"
+                . get_string('tableofcontents', 'socialwiki') . "</h4><ol>$toc</ol></nav>";
+    }
+
+    private function process_toc_level($next, $current) {
+        if ($next > $current) {
+            for ($t = 0; $t < $next - $current; $t++) {
+                return '<ol>';
+            }
+        } else if ($next < $current) {
+            for ($t = 0; $t < $current - $next; $t++) {
+                return '</ol></li>';
+            }
+        } else {
+            return '</li>';
+        }
     }
 
     /**

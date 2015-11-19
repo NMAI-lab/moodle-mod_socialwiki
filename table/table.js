@@ -86,5 +86,5 @@ $.fn.dataTable.ext.type.order['contrib-pre'] = function (d) {
  */
 $.fn.dataTable.ext.type.order['distance-pre'] = function (d) {
     var dist = parseInt(d[13]);
-    return ((dist === 1) ? 5 : dist);
+    return ((dist === 1) ? 9 : dist);
 };

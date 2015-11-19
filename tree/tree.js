@@ -32,9 +32,7 @@ $(document).ready(function() {
     var element = document.getElementById('doublescroll');
     var scrollbar = document.createElement('div');
     scrollbar.appendChild(document.createElement('div'));
-    scrollbar.style.overflow = 'auto';
     scrollbar.style.overflowY = 'hidden';
-    scrollbar.style.width = element.width;
     scrollbar.firstChild.style.width = element.scrollWidth + 'px';
     scrollbar.firstChild.style.paddingTop = '10px';
     scrollbar.onscroll = function () {
@@ -45,24 +43,27 @@ $(document).ready(function() {
     };
     element.parentNode.insertBefore(scrollbar, element);
 
+    scrollbar.scrollLeft = (element.scrollWidth-element.offsetWidth)/2;
+    element.scrollLeft = scrollbar.scrollLeft;
     /**
      * Enable the compare button if 2 nodes have been selected.
      */
     var compare = false;
     var comparewith = false;
-    $('input[type="submit"]#comparebtn').prop('disabled', true);
-    $('input[type=radio]').change(function() {
-        var name = $(this).attr("name");
+    document.getElementById('comparebtn').disabled = true;
+    var radio = document.querySelectorAll('input[type=radio]');
+    for (var i = 0; i < radio.length; i++)
+    radio[i].onchange = function() {
+        var name = this.getAttribute("name");
         if (name === 'compare') {
             compare = true;
-        }
-        else if (name === 'comparewith') {
+        } else if (name === 'comparewith') {
             comparewith = true;
         }
         if (compare && comparewith) {
-            $('input[type="submit"]#comparebtn').prop('disabled', false);
+            document.getElementById('comparebtn').disabled = false;
         }
-    });
+    };
 
     /**
      * The Hide Button.

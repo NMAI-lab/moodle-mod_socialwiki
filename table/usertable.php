@@ -122,7 +122,7 @@ class socialwiki_usertable extends socialwiki_table {
                 'likesim' => round($peer->likesim * 100 ) . '%',
                 'followsim' => round($peer->followsim * 100 ) . '%',
                 'networkdistance' => "<span value=$peer->depth>"
-                    . get_string('distance' . $peer->depth, 'socialwiki') . '</span>'
+                    . get_string('distance' . ($peer->depth > 3 ? 3 : $peer->depth), 'socialwiki') . '</span>'
             );
 
             foreach ($headers as $key) {

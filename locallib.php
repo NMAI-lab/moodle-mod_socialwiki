@@ -935,11 +935,11 @@ function socialwiki_delete_comments_wiki() {
 function socialwiki_print_page_content($page, $context, $swid) {
     global $PAGE, $USER;
     $content = socialwiki_parse_content($page->format, $page->content, array('swid' => $swid, 'pageid' => $page->id));
-    $html = file_rewrite_pluginfile_urls($content['toc'] . $content['parsed_text'], 'pluginfile.php',
+    $html = file_rewrite_pluginfile_urls($content['parsed_text'], 'pluginfile.php',
             $context->id, 'mod_socialwiki', 'attachments', $swid);
     $wikioutput = $PAGE->get_renderer('mod_socialwiki');
     // This is where the page content, from the title down, is rendered!
-    echo $wikioutput->viewing_area(format_text($html, FORMAT_MOODLE, array('overflowdiv' => true, 'allowid' => true)), $page);
+    echo $wikioutput->viewing_area($content['toc'] . format_text($html, FORMAT_MOODLE, array('overflowdiv' => true, 'allowid' => true)), $page);
 
     // Only increment page view when linked, not refreshed.
     $pagerefreshed = (null !== filter_input(INPUT_SERVER, 'HTTP_CACHE_CONTROL'))
