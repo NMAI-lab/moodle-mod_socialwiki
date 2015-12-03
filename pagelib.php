@@ -208,7 +208,7 @@ abstract class page_socialwiki {
      */
     protected function print_pagetitle() {
         global $OUTPUT;
-        echo $OUTPUT->heading(format_string($this->title), 1, 'socialwiki-title');
+        echo $OUTPUT->heading(format_string($this->title), 2, 'socialwiki-title');
     }
 
     /**
@@ -314,9 +314,11 @@ class page_socialwiki_view extends page_socialwiki {
      */
     public function print_header() {
         global $PAGE;
-        parent::print_header();
+        // Print styling.
+        $PAGE->requires->css(new moodle_url("/mod/socialwiki/print.css"));
         // JS code for the ajax-powered like button.
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/like.ajax.js"));
+        parent::print_header();
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
     }
 
@@ -366,7 +368,7 @@ class page_socialwiki_view extends page_socialwiki {
         $html .= $OUTPUT->container_start("", 'socialwiki-title');
         $html .= '<script> var options="?pageid='.$this->page->id.'&sesskey='.sesskey().'"</script>'; // Passed to like.ajax.js.
 
-        $thetitle = html_writer::tag('h1', format_string($this->page->title));
+        $thetitle = html_writer::tag('h2', format_string($this->page->title));
 
         $isliked = socialwiki_liked($this->uid, $this->page->id);
         $likecurrent = ($isliked ? 'unlike' : 'like');
@@ -405,7 +407,6 @@ class page_socialwiki_view extends page_socialwiki {
         if (socialwiki_user_can_view($this->subwiki)) {
             if (!empty($this->page)) {
                 socialwiki_print_page_content($this->page, $this->modcontext, $this->subwiki->id);
-                echo $this->wikioutput->prettyview_link($this->page);
             } else {
                 echo get_string('nocontent', 'socialwiki');
             }
@@ -508,7 +509,7 @@ class page_socialwiki_edit extends page_socialwiki {
         if (isset($this->section)) {
             $title .= ' : ' . $this->section;
         }
-        echo $OUTPUT->heading(format_string($title), 1, 'socialwiki-title');
+        echo $OUTPUT->heading(format_string($title), 2, 'socialwiki-title');
     }
 
     /**
@@ -1158,7 +1159,7 @@ class page_socialwiki_versions extends page_socialwiki {
         $this->view = $view;
         if ($this->view == 1) {
             // For table view.
-            $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
+            $PAGE->requires->js(new moodle_url("table/datatables.min.js"));
             $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/table.js"));
             $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/table.css"));
         } else {
@@ -1311,7 +1312,7 @@ class page_socialwiki_home extends page_socialwiki {
         Global $PAGE;
         parent::__construct($wiki, $subwiki, $cm);
 
-        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
+        $PAGE->requires->js(new moodle_url("table/datatables.min.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/table.js"));
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/table.css"));
     }
@@ -1914,7 +1915,7 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
 
         $this->uid = $targetuser;
         $PAGE->set_title(fullname(socialwiki_get_user_info($targetuser)));
-        $PAGE->requires->js(new moodle_url("table/jquery.dataTables.js"));
+        $PAGE->requires->js(new moodle_url("table/datatables.min.js"));
         $PAGE->requires->js(new moodle_url("/mod/socialwiki/table/table.js"));
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/table/table.css"));
     }

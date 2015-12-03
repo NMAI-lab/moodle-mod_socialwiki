@@ -225,20 +225,6 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Link to the printer friendly version.
-     *
-     * @param stdClass $page The current page.
-     * @return string HTML
-     */
-    public function prettyview_link($page) {
-        $link = new moodle_url('/mod/socialwiki/prettyview.php', array('pageid' => $page->id));
-        $html = $this->output->container_start('socialwiki-right');
-        $html .= $this->output->action_link($link, get_string('prettyprint', 'socialwiki'), new popup_action('click', $link));
-        $html .= $this->output->container_end();
-        return $html;
-    }
-
-    /**
      * Print the subwiki selector.
      *
      * @param stdClass $wiki The current wiki.

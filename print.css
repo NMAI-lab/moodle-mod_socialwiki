@@ -1,0 +1,17 @@
+@media print {
+    body {
+        visibility: hidden;
+    }
+
+    #socialwiki_content_area {
+        visibility: visible;
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: 100%;
+    }
+
+    .nav-tabs, .socialwiki-likebutton, #block-region-side-pre, #page-footer {
+        display: none;
+    }
+}

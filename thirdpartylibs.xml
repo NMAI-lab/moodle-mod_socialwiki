@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <libraries>
     <library>
-        <location>table/jquery.dataTables.js</location>
+        <location>table/datatables.min.js</location>
         <name>DataTables</name>
-        <version>1.10.8-dev</version>
+        <version>1.10.10</version>
         <license>MIT</license>
         <licenseversion></licenseversion>
     </library>
