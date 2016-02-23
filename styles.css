@@ -160,17 +160,25 @@
     border: thin solid black;
 }
 
-.socialwiki_wikicontent .socialwiki-deletecomment-yes {
-    float: left;
+.socialwiki_wikicontent #socialwiki-comdirection {
+    margin-left: 2.5em;
+    cursor: pointer;
 }
 
-.socialwiki_wikicontent .socialwiki-deletecomment-no {
-    float: right;
+.socialwiki_wikicontent .socialwiki-commentlist > li {
+    list-style: none;
+    margin-top: 1em;
 }
 
-.socialwiki_wikicontent .socialwiki-deletecommentform {
-    width: 10%;
-    margin: auto;
+.socialwiki_wikicontent .socialwiki-commentlist.reversed,
+.socialwiki_wikicontent .socialwiki-commentlist.reversed > li {
+    -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+            transform: rotate(180deg);
+}
+
+.socialwiki_wikicontent .socialwiki-deletecomment {
+    display: inline-block;
 }
 
 .socialwiki_wikicontent .socialwiki-diff {
@@ -244,10 +252,6 @@
 .socialwiki_wikicontent #intro.generalbox {
     margin-top: 10px;
     padding: 5px;
-}
-
-.socialwiki_wikicontent .socialwiki-title {
-    text-align: left;
 }
 
 .socialwiki_wikicontent .socialwiki-clear {

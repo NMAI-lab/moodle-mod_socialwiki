@@ -89,10 +89,10 @@ abstract class socialwiki_table {
     /**
      * Prints the table in HTML format.
      *
-     * @param string $tableid The HTML ID of the table.
+     * @return string
      */
     public function print_html() {
-        $output = "<table class='datatable{$this->tabletype}'>";
+        $output = "<table class='datatable{$this->tabletype}' width='100%'>";
         $tabledata = $this->get_table_data();
         // Headers.
         $output .= "<thead><tr>";

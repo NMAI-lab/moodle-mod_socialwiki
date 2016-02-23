@@ -24,36 +24,44 @@
 /**
  * Implements a DataTable on any HTML tables on the page.
  */
-$(document).ready(function () {
+$(function() {
     // Build the Datatables from HTML tables.
     $('.datatable.typev').DataTable({  // Version Table.
+        "scrollY": 220,
         "scrollX": true,
-        "scrollY": "220px",
         "scrollCollapse": true,
         "info": false,
         "paging": false,
-        "columnDefs": [{"type": "time-ago","targets": 2}, {"type": "contrib","targets": [1, 5]}]
+        "columnDefs": [{"type": "time-ago", "targets": 2}, {"type": "contrib", "targets": [1, 5]}]
     });
     $('.datatable.typeu').DataTable({  // User Table.
+        "scrollY": 220,
         "scrollX": true,
-        "scrollY": "220px",
         "scrollCollapse": true,
         "info": false,
         "paging": false,
-        "columnDefs": [{"type": "distance","targets": 4}]
+        "columnDefs": [{"type": "distance", "targets": 4}]
     });
     $('.datatable.typeg').DataTable({  // General Table (used for Topic).
+        "scrollY": 220,
         "scrollX": true,
-        "scrollY": "220px",
         "scrollCollapse": true,
         "info": false,
         "paging": false
+    });
+
+    // Allow resizing of tables.
+    $('.dataTables_scrollBody').each(function () {
+        $(this).css({
+            'height': ($(this).height()),
+            'max-height': $($(this).children()[0]).height() + 20
+        });
     });
 });
 
 /**
  * Sort function for updated time ago column.
- * 
+ *
  * @param {String} d The text in the box
  * @returns {String}
  */
@@ -64,7 +72,7 @@ $.fn.dataTable.ext.type.order['time-ago-pre'] = function (d) {
 
 /**
  * Sort function for contributor column.
- * 
+ *
  * @param {String} d The text in the box
  * @returns {String}
  */
@@ -72,15 +80,15 @@ $.fn.dataTable.ext.type.order['contrib-pre'] = function (d) {
     var w = d.split(">")[1].split(" ");
     var l = parseInt(w[w.length - 2]);
     if (!isNaN(l)) {
-        return String.fromCharCode(l+150) + w;
+        return String.fromCharCode(l + 150) + w;
     } else {
-        return w;
+        return w.join("");
     }
 };
 
 /**
  * Sort function for social distance column.
- * 
+ *
  * @param {String} d The text in the box
  * @returns {String}
  */

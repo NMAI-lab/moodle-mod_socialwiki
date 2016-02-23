@@ -152,4 +152,5 @@ $wikipage->set_page($page);
 
 $wikipage->print_header();
 $wikipage->print_content();
+$wikipage->print_comments();
 $wikipage->print_footer();

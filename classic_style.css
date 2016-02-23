@@ -147,11 +147,14 @@ h1, h2, h3, h4, h5, h6 {
     text-align: right;
 }
 
-.socialwiki_wikicontent .socialwiki-likebutton {
-    line-height: 20px;
+.socialwiki_wikicontent #socialwiki-like {
+    float: right;
+}
+
+.socialwiki_wikicontent #socialwiki-like button {
+    color: gray;
     font-size: 1.5em;
     font-weight: bold;
-    color: gray;
     width: 7.5em;
     margin: 0;
 }

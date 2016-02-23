@@ -15,22 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines backup_wiki_activity_task class.
+ * Defines Socialwiki backup task including all steps.
  *
  * @package   mod_socialwiki
- * @copyright 2010 Jordi Piguillem <pigui0@hotmail.com>
+ * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/socialwiki/backup/moodle2/backup_socialwiki_stepslib.php');
 
 /**
- * Provides all the settings and steps to perform one complete backup of the activity.
- *
- * @copyright 2010 Jordi Piguillem <pigui0@hotmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Provides all the settings and steps to perform a complete backup of the activity.
  */
 class backup_socialwiki_activity_task extends backup_activity_task {
 
@@ -56,18 +51,18 @@ class backup_socialwiki_activity_task extends backup_activity_task {
     public static function encode_content_links($content) {
         global $CFG;
 
-        $base = preg_quote("$CFG->wwwroot/");
+        $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of wikis.
-        $search = "/($base\/mod\/socialwiki\/index.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/socialwiki\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIINDEX*$2@$', $content);
 
         // Link to wiki view by moduleid.
-        $search = "/($base\/mod\/socialwiki\/view.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIVIEWBYID*$2@$', $content);
 
         // Link to wiki view by pageid.
-        $search = "/($base\/mod\/socialwiki\/view.php\?pageid\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/socialwiki\/view.php\?pageid\=)([0-9]+)/";
         $content = preg_replace($search, '$@WIKIPAGEBYID*$2@$', $content);
 
         return $content;

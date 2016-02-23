@@ -86,7 +86,6 @@ class restore_socialwiki_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('socialwiki', 'add', 'view.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'update', 'view.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'view', 'view.php?id={course_module}', '{socialwiki}');
-        $rules[] = new restore_log_rule('socialwiki', 'comments', 'comments.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'diff', 'diff.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'edit', 'edit.php?id={course_module}', '{socialwiki}');
         $rules[] = new restore_log_rule('socialwiki', 'history', 'versions.php?id={course_module}', '{socialwiki}');

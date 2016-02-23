@@ -318,12 +318,6 @@
     display: inline-block;
 }
 
-.socialwiki_wikicontent .socialwiki-title {
-    display: inline-block;
-    text-align: center;
-    width: 100%;
-}
-
 .socialwiki_wikicontent #socialwiki_followerror {
     text-align: center;
 }

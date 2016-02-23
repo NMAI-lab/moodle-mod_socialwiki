@@ -208,7 +208,7 @@ abstract class page_socialwiki {
      */
     protected function print_pagetitle() {
         global $OUTPUT;
-        echo $OUTPUT->heading(format_string($this->title), 2, 'socialwiki-title');
+        echo $OUTPUT->heading(format_string($this->title), 2);
     }
 
     /**
@@ -317,7 +317,7 @@ class page_socialwiki_view extends page_socialwiki {
         // Print styling.
         $PAGE->requires->css(new moodle_url("/mod/socialwiki/print.css"));
         // JS code for the ajax-powered like button.
-        $PAGE->requires->js(new moodle_url("/mod/socialwiki/like.ajax.js"));
+        $PAGE->requires->js(new moodle_url("/mod/socialwiki/view.js"));
         parent::print_header();
         $this->wikioutput->socialwiki_print_subwiki_selector($PAGE->activityrecord, $this->subwiki, $this->page, 'view');
     }
@@ -363,41 +363,33 @@ class page_socialwiki_view extends page_socialwiki {
      * Prints the page title.
      */
     protected function print_pagetitle() {
-        global $OUTPUT;
-        $html = "";
-        $html .= $OUTPUT->container_start("", 'socialwiki-title');
-        $html .= '<script> var options="?pageid='.$this->page->id.'&sesskey='.sesskey().'"</script>'; // Passed to like.ajax.js.
-
-        $thetitle = html_writer::tag('h2', format_string($this->page->title));
+        echo '<script> var options="?pageid='.$this->page->id.'&sesskey='.sesskey().'"</script>'; // Passed to ajax liker.
 
         $isliked = socialwiki_liked($this->uid, $this->page->id);
         $likecurrent = ($isliked ? 'unlike' : 'like');
         $likeother = (!$isliked ? 'unlike' : 'like');
         $pixurl = new moodle_url('/mod/socialwiki/pix/icons/');
 
-        $theliker = '<noscript>' . html_writer::start_tag('form',
-                array('style' => "display: inline", 'action' => 'like.php', "method" => "get"));
-        $theliker .= '<input type="hidden" name="pageid" value="' . $this->page->id . '"/>';
-        $theliker .= '<input type="hidden" name="sesskey" value="' . sesskey() . '" />' . '</noscript>';
-        $theliker .= html_writer::start_tag('div', array('style' => 'float:right'));
+        $liker = html_writer::start_tag('form', array('id' => "socialwiki-like", 'action' => 'like.php', "method" => "get"));
+        $liker .= '<input type="hidden" name="pageid" value="' . $this->page->id . '"/>';
+        $liker .= '<input type="hidden" name="sesskey" value="' . sesskey() . '" />';
 
-        $theliker .= html_writer::start_tag('button',
-                array('class' => 'socialwiki-likebutton', 'title' => get_string('like_tip', 'socialwiki')));
-        $theliker .= html_writer::tag('img', "", array('src' => $pixurl.$likecurrent.'.png', 'other' => $pixurl.$likeother.'.png'));
-        $theliker .= '<span other='.get_string($likeother, 'socialwiki').'>'.get_string($likecurrent, 'socialwiki').'</span>';
-        $theliker .= html_writer::end_tag('button');
+        // Button to like/unlike.
+        $liker .= html_writer::start_tag('button', array('title' => get_string('like_tip', 'socialwiki')));
+        $liker .= html_writer::tag('img', "", array('src' => $pixurl.$likecurrent.'.png', 'other' => $pixurl.$likeother.'.png'));
+        $liker .= '<span other='.get_string($likeother, 'socialwiki').'>'.get_string($likecurrent, 'socialwiki').'</span>';
+        $liker .= html_writer::end_tag('button');
 
         // Show number of likes.
         $numlikes = socialwiki_numlikes($this->page->id);
-        $theliker .= html_writer::start_tag('div', array('id' => 'numlikes'));
-        $theliker .= $numlikes . ($numlikes == 1 ? ' like' : ' likes');
-        $theliker .= html_writer::end_tag('div');
+        $liker .= html_writer::start_tag('div', array('id' => 'numlikes'));
+        $liker .= $numlikes . ($numlikes === 1 ? ' like' : ' likes');
+        $liker .= html_writer::end_tag('div');
 
-        $theliker .= html_writer::end_tag('div');
-        $theliker .= '<noscript>' . html_writer::end_tag('form') . '</noscript>';
+        $liker .= html_writer::end_tag('form');
 
-        $html .= $theliker . $thetitle . $OUTPUT->container_end();
-        echo $html;
+        echo $liker;
+        parent::print_pagetitle();
     }
 
     /**
@@ -413,6 +405,58 @@ class page_socialwiki_view extends page_socialwiki {
         } else {
             echo get_string('cannotviewpage', 'socialwiki');
         }
+    }
+
+    /**
+     * Print comments.
+     */
+    public function print_comments() {
+        global $CFG, $OUTPUT, $USER;
+        $course = get_context_info_array($this->modcontext->id)[1];
+
+        if (!has_capability('mod/socialwiki:viewcomment', $this->modcontext)) {
+            return;
+        }
+
+        echo '<hr>';
+        $comments = socialwiki_get_comments($this->modcontext->id, $this->page->id);
+
+        // Add comment button.
+        if (has_capability('mod/socialwiki:editcomment', $this->modcontext)) {
+            echo "<div class='midpad'><a href='$CFG->wwwroot/mod/socialwiki/editcomments.php?action=add&amp;pageid="
+                . "{$this->page->id}'>" . get_string('addcomment', 'socialwiki') . "</a></div>";
+        }
+
+        // Show reversible button.
+        echo '<a id="socialwiki-comdirection" other="' . get_string('commentoldest', 'socialwiki') . '")>' . get_string('commentnewest', 'socialwiki') .'</a>';
+
+        // List comments.
+        echo '<ol class="socialwiki-commentlist reversed">';
+        foreach ($comments as $comment) {
+            $user = socialwiki_get_user_info($comment->userid);
+
+            // Get the user name and date of posting.
+            $info = '<b><a href="' . $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid='
+                . $user->id . '&amp;subwikiid=' . $this->page->subwikiid . '">'
+                . fullname($user, has_capability('moodle/site:viewfullnames', context_course::instance($course->id)))
+                . '</a></b> ' . socialwiki_format_time($comment->timecreated) . ' ';
+
+            // Check if edit and delete icons should be shown.
+            if (has_capability('mod/socialwiki:managecomment', $this->modcontext) || (has_capability('mod/socialwiki:editcomment', $this->modcontext) && $USER->id == $user->id)) {
+                $urledit = new moodle_url('/mod/socialwiki/editcomments.php',
+                    array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'edit'));
+                $urldelet = new moodle_url('/mod/socialwiki/instancecomments.php',
+                    array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'delete'));
+                $info .= $OUTPUT->action_icon($urledit, new pix_icon('t/edit', get_string('edit'), "",
+                        array('class' => 'iconsmall'))) . $OUTPUT->action_icon($urldelet,
+                        new pix_icon('t/delete', get_string('delete'), "", array('class' => 'iconsmall')));
+            }
+
+            // Print out the full comment.
+            echo "<li><div style='float:left; margin-right:12px'>" . $OUTPUT->user_picture($user, array('popup' => true))
+                . "</div>$info<div>$comment->content</div></li>";
+        }
+        echo '</ol>';
     }
 }
 
@@ -500,19 +544,6 @@ class page_socialwiki_edit extends page_socialwiki {
     }
 
     /**
-     * Prints out the header at the top of the page.
-     */
-    protected function print_pagetitle() {
-        global $OUTPUT;
-
-        $title = $this->page->title;
-        if (isset($this->section)) {
-            $title .= ' : ' . $this->section;
-        }
-        echo $OUTPUT->heading(format_string($title), 2, 'socialwiki-title');
-    }
-
-    /**
      * Prints the page content.
      */
     public function print_content() {
@@ -579,7 +610,7 @@ class page_socialwiki_edit extends page_socialwiki {
         $data->newcontent = $content;
         $data->format = $this->page->format;
 
-        if ($this->page->format == 'html') {
+        if ($this->page->format === 'html') {
             $data->newcontentformat = FORMAT_HTML;
             // Append editor context to editor options, giving preference to existing context.
             self::$attachmentoptions = array_merge(
@@ -599,124 +630,6 @@ class page_socialwiki_edit extends page_socialwiki {
     }
 }
 
-/**
- * The socialwiki comments page class.
- *
- * @copyright 2015 NMAI-lab
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class page_socialwiki_comments extends page_socialwiki {
-
-    /**
-     * Sets the URL of the page.
-     */
-    public function set_url() {
-        global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
-    }
-
-    /**
-     * Add to the navigation bar at the top of the page.
-     */
-    protected function create_navbar() {
-        global $PAGE;
-        parent::create_navbar();
-        $PAGE->navbar->add(get_string('comments', 'socialwiki'));
-    }
-
-    /**
-     * Prints the page content.
-     */
-    public function print_content() {
-        global $CFG, $OUTPUT, $USER;
-        require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-        list($context, $course, $cm) = get_context_info_array($this->modcontext->id);
-
-        require_capability('mod/socialwiki:viewcomment', $this->modcontext, null, true, 'noviewcommentpermission', 'socialwiki');
-
-        $comments = socialwiki_get_comments($this->modcontext->id, $this->page->id);
-
-        if (has_capability('mod/socialwiki:editcomment', $this->modcontext)) {
-            echo "<div class='midpad'><a href='$CFG->wwwroot/mod/socialwiki/editcomments.php?action=add&amp;pageid="
-                    . "{$this->page->id}'>" . get_string('addcomment', 'socialwiki') . "</a></div>";
-        }
-
-        $options = array('swid' => $this->page->subwikiid, 'pageid' => $this->page->id);
-        $format = $this->page->format;
-
-        if (empty($comments)) {
-            echo $OUTPUT->heading(get_string('nocomments', 'socialwiki'));
-        }
-
-        foreach ($comments as $comment) {
-
-            $user = socialwiki_get_user_info($comment->userid);
-
-            $fullname = fullname($user, has_capability('moodle/site:viewfullnames', context_course::instance($course->id)));
-            $by = new stdclass();
-            $by->name = '<a href="' . $CFG->wwwroot . '/mod/socialwiki/viewuserpages.php?userid='
-                    . $user->id . '&amp;subwikiid=' . $this->page->subwikiid . '">' . $fullname . '</a>';
-            $by->date = userdate($comment->timecreated);
-
-            $t = new html_table();
-            $cell1 = new html_table_cell($OUTPUT->user_picture($user, array('popup' => true)));
-            $cell2 = new html_table_cell(get_string('bynameondate', 'forum', $by));
-            $cell3 = new html_table_cell();
-            $cell3->atributtes ['width'] = "80%";
-            $cell4 = new html_table_cell();
-            $cell5 = new html_table_cell();
-
-            $row1 = new html_table_row();
-            $row1->cells[] = $cell1;
-            $row1->cells[] = $cell2;
-            $row2 = new html_table_row();
-            $row2->cells[] = $cell3;
-
-            if ($format != 'html') {
-                if ($format == 'creole') {
-                    $parsedcontent = socialwiki_parse_content('creole', $comment->content, $options);
-                } else if ($format == 'nwiki') {
-                    $parsedcontent = socialwiki_parse_content('nwiki', $comment->content, $options);
-                }
-
-                $cell4->text = format_text(html_entity_decode($parsedcontent['parsed_text'], ENT_QUOTES, 'UTF-8'), FORMAT_HTML);
-            } else {
-                $cell4->text = format_text($comment->content, FORMAT_HTML);
-            }
-
-            $row2->cells[] = $cell4;
-
-            $t->data = array($row1, $row2);
-
-            $actionicons = false;
-            if ((has_capability('mod/socialwiki:managecomment', $this->modcontext))) {
-                $urledit = new moodle_url('/mod/socialwiki/editcomments.php',
-                        array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'edit'));
-                $urldelet = new moodle_url('/mod/socialwiki/instancecomments.php',
-                        array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'delete'));
-                $actionicons = true;
-            } else if ((has_capability('mod/socialwiki:editcomment', $this->modcontext)) && ($USER->id == $user->id)) {
-                $urledit = new moodle_url('/mod/socialwiki/editcomments.php',
-                        array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'edit'));
-                $urldelet = new moodle_url('/mod/socialwiki/instancecomments.php',
-                        array('commentid' => $comment->id, 'pageid' => $this->page->id, 'action' => 'delete'));
-                $actionicons = true;
-            }
-
-            if ($actionicons) {
-                $cell6 = new html_table_cell($OUTPUT->action_icon($urledit, new pix_icon('t/edit', get_string('edit'), "",
-                        array('class' => 'iconsmall'))) . $OUTPUT->action_icon($urldelet,
-                                new pix_icon('t/delete', get_string('delete'), "", array('class' => 'iconsmall'))));
-                $row3 = new html_table_row();
-                $row3->cells[] = $cell5;
-                $row3->cells[] = $cell6;
-                $t->data[] = $row3;
-            }
-
-            echo html_writer::tag('div', html_writer::table($t), array('class' => 'no-overflow'));
-        }
-    }
-}
 
 /**
  * The socialwiki edit comment page class.
@@ -729,14 +642,13 @@ class page_socialwiki_editcomment extends page_socialwiki {
     private $comment;
     private $action;
     private $form;
-    private $format;
 
     /**
      * Sets the URL of the page.
      */
     public function set_url() {
         global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/editcomments.php', array('pageid' => $this->page->id));
     }
 
     /**
@@ -746,7 +658,7 @@ class page_socialwiki_editcomment extends page_socialwiki {
         global $PAGE, $CFG;
 
         $PAGE->navbar->add(get_string('comments', 'socialwiki'), $CFG->wwwroot
-                . '/mod/socialwiki/comments.php?pageid=' . $this->page->id);
+                . '/mod/socialwiki/view.php?pageid=' . $this->page->id);
 
         if ($this->action == 'add') {
             $PAGE->navbar->add(get_string('insertcomment', 'socialwiki'));
@@ -770,11 +682,18 @@ class page_socialwiki_editcomment extends page_socialwiki {
     public function print_content() {
         require_capability('mod/socialwiki:editcomment', $this->modcontext, null, true, 'noeditcommentpermission', 'socialwiki');
 
-        if ($this->action == 'add') {
-            $this->add_comment_form();
-        } else if ($this->action == 'edit') {
-            $this->edit_comment_form($this->comment);
+        // Setup a new comment or put together a comment to edit.
+        $com = new stdClass();
+        if ($this->action === 'edit') {
+            $com = $this->comment;
+            $com->entrycomment_editor['text'] = $com->content;
         }
+        $com->action = $this->action;
+        $com->entrycomment_editor['text'] = $com->content;
+        $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
+
+        $this->form->set_data($com);
+        $this->form->display();
     }
 
     public function set_action($action, $comment) {
@@ -783,47 +702,10 @@ class page_socialwiki_editcomment extends page_socialwiki {
 
         $this->action = $action;
         $this->comment = $comment;
-        $this->format = $this->page->format;
 
-        if ($this->format == 'html') {
-            $destination = $CFG->wwwroot . '/mod/socialwiki/instancecomments.php?pageid=' . $this->page->id;
-            $this->form = new mod_socialwiki_comments_form($destination);
-        }
+        $destination = $CFG->wwwroot . '/mod/socialwiki/instancecomments.php?pageid=' . $this->page->id;
+        $this->form = new mod_socialwiki_comments_form($destination);
     }
-
-    private function add_comment_form() {
-        global $CFG;
-        require_once($CFG->dirroot . '/mod/socialwiki/editors/socialwiki_editor.php');
-
-        if ($this->format == 'html') {
-            $com = new stdClass();
-            $com->action = 'add';
-            $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
-            $this->form->set_data($com);
-            $this->form->display();
-        } else {
-            socialwiki_print_editor_wiki($this->page->id, null, $this->format, null, false, null, 'addcomments');
-        }
-    }
-
-    private function edit_comment_form($com) {
-        global $CFG;
-        require_once($CFG->dirroot . '/mod/socialwiki/comments_form.php');
-        require_once($CFG->dirroot . '/mod/socialwiki/editors/socialwiki_editor.php');
-
-        if ($this->format == 'html') {
-            $com->action = 'edit';
-            $com->entrycomment_editor['text'] = $com->content;
-            $com->commentoptions = array('trusttext' => true, 'maxfiles' => 0);
-
-            $this->form->set_data($com);
-            $this->form->display();
-        } else {
-            socialwiki_print_editor_wiki($this->page->id,
-                    $com->content, $this->format, null, false, array(), 'editcomments', $com->id);
-        }
-    }
-
 }
 
 /**
@@ -1438,7 +1320,7 @@ class page_socialwiki_home extends page_socialwiki {
      * Prints the review tab.
      */
     public function print_review_tab() {
-        Global $USER;
+        global $USER;
         echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'myfaves'); // Favourites Table.
         echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mylikes'); // Likes Table.
         echo socialwiki_table::builder($USER->id, $this->subwiki->id, 'mypages'); // My Versions Table.
@@ -1495,7 +1377,22 @@ class page_socialwiki_deletecomment extends page_socialwiki {
      * Prints the page content.
      */
     public function print_content() {
-        $this->printconfirmdelete();
+        global $OUTPUT;
+
+        $strdeletecheckfull = get_string('deletecommentcheckfull', 'socialwiki');
+
+        // Ask confirmation.
+        $optionsyes = array('confirm' => 1, 'pageid' => $this->page->id, 'action' => 'delete',
+            'commentid' => $this->commentid, 'sesskey' => sesskey());
+        $deleteurl = new moodle_url('/mod/socialwiki/instancecomments.php', $optionsyes);
+        $return = new moodle_url('/mod/socialwiki/view.php', array('pageid' => $this->page->id));
+
+        // Print the comment deletion confirmation form.
+        echo $OUTPUT->heading($strdeletecheckfull, 3);
+        echo '<form class="socialwiki-deletecomment" action="' . $deleteurl . '" method="post" id="deletecomment">' .
+            '<input type="submit" name="confirmdeletecomment" value="' . get_string('yes') . '" /></form>' .
+            '<form class="socialwiki-deletecomment" action="' . $return . '" method="post">' .
+            '<input type="submit" name="norestore" value="' . get_string('no') . '" /></form>';
     }
 
     public function set_action($action, $commentid, $content) {
@@ -1503,33 +1400,6 @@ class page_socialwiki_deletecomment extends page_socialwiki {
         $this->commentid = $commentid;
         $this->content = $content;
     }
-
-    /**
-     * Prints the comment deletion confirmation form.
-     */
-    private function printconfirmdelete() {
-        global $OUTPUT;
-
-        $strdeletecheck = get_string('deletecommentcheck', 'socialwiki');
-        $strdeletecheckfull = get_string('deletecommentcheckfull', 'socialwiki');
-
-        // Ask confirmation.
-        $optionsyes = array('confirm' => 1, 'pageid' => $this->page->id, 'action' => 'delete',
-                            'commentid' => $this->commentid, 'sesskey' => sesskey());
-        $deleteurl = new moodle_url('/mod/socialwiki/instancecomments.php', $optionsyes);
-        $return = new moodle_url('/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
-
-        echo $OUTPUT->heading($strdeletecheckfull);
-        print_container_start(false, 'socialwiki-deletecommentform');
-        echo '<form class="socialwiki-deletecomment-yes" action="' . $deleteurl . '" method="post" id="deletecomment">';
-        echo '<div><input type="submit" name="confirmdeletecomment" value="' . get_string('yes') . '" /></div>';
-        echo '</form>';
-        echo '<form class="socialwiki-deletecomment-no" action="' . $return . '" method="post">';
-        echo '<div><input type="submit" name="norestore" value="' . get_string('no') . '" /></div>';
-        echo '</form>';
-        print_container_end();
-    }
-
 }
 
 /**
@@ -1687,7 +1557,7 @@ class page_socialwiki_handlecomments extends page_socialwiki {
      */
     public function set_url() {
         global $PAGE, $CFG;
-        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/comments.php', array('pageid' => $this->page->id));
+        $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/instancecomments.php', array('pageid' => $this->page->id));
     }
 
     /**
@@ -1713,7 +1583,7 @@ class page_socialwiki_handlecomments extends page_socialwiki {
             $owner = ($comment->userid == $USER->id);
             if ($owner || $manage) {
                 $this->delete_comment($this->commentid);
-                redirect($CFG->wwwroot . '/mod/socialwiki/comments.php?pageid=' .
+                redirect($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' .
                          $this->page->id, get_string('deletecomment', 'socialwiki'), 2);
             }
         }
@@ -1735,11 +1605,11 @@ class page_socialwiki_handlecomments extends page_socialwiki {
         socialwiki_add_comment($this->modcontext, $pageid, $content, $this->format);
 
         if (!$idcomment) {
-            redirect($CFG->wwwroot . '/mod/socialwiki/comments.php?pageid=' .
+            redirect($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' .
                      $pageid, get_string('createcomment', 'socialwiki'), 2);
         } else {
             $this->delete_comment($idcomment);
-            redirect($CFG->wwwroot . '/mod/socialwiki/comments.php?pageid=' .
+            redirect($CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' .
                      $pageid, get_string('editingcomment', 'socialwiki'), 2);
         }
     }
@@ -1944,7 +1814,7 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
      */
     public function print_content() {
         Global $OUTPUT, $CFG, $USER;
-        
+
         // USER INFO OUTPUT.
         $user = socialwiki_get_user_info($this->uid);
         $html = $OUTPUT->heading(fullname($user), 1, 'colourtext');
@@ -1992,7 +1862,7 @@ class page_socialwiki_viewuserpages extends page_socialwiki {
 
             // Get this user's peer score.
             $peer = socialwiki_peer::socialwiki_get_peer($user->id, $this->subwiki->id, $USER->id);
-            
+
             $row1 = new html_table_row(array(get_string('networkdistance', 'socialwiki').':', $peer->depth, $followbtn));
             $row1->cells[2]->rowspan = 3;
 

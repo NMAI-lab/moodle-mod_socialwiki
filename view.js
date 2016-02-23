@@ -21,20 +21,32 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$(document).ready(function () {
-    $(".socialwiki-likebutton").click(function () {
+$(function() {
+    var $like = $("#socialwiki-like");
+    $like.submit(function (e) {
         $.get("like.ajax.php" + options, function (data) {
             if (toString.call(data) === '[object Number]') {
-                var btnimg = $(".socialwiki-likebutton").children("img");
-                var url = btnimg.attr("other");
-                btnimg.attr("other", btnimg.attr("src"));
-                btnimg.attr("src", url);
-                var btntxt = $(".socialwiki-likebutton").children("span");
-                var swap = btntxt.attr("other");
-                btntxt.attr("other", btntxt.html());
-                btntxt.html(swap);
+                var $btnimg = $like.children("button").children("img");
+                var url = $btnimg.attr("other");
+                $btnimg.attr("other", $btnimg.attr("src"));
+                $btnimg.attr("src", url);
+                var $btntxt = $like.children("button").children("span");
+                var swap = $btntxt.attr("other");
+                $btntxt.attr("other", $btntxt.html());
+                $btntxt.html(swap);
                 $("#numlikes").text(data + ((data == 1) ? ' like' : ' likes'));
             }
         });
+        e.preventDefault();
+    });
+
+    var $com = $("#socialwiki-comdirection");
+    $com.show();
+    $com.click(function () {
+        console.log('test');
+        var swap = $com.attr("other");
+        $com.attr("other", $com.text());
+        $com.text(swap);
+        $(".socialwiki-commentlist").toggleClass('reversed');
     });
 });

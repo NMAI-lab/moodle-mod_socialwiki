@@ -3,7 +3,7 @@ socialwiki
 
 ## What is this?
 
-This is a Moodle plugin. It is a social kind of wiki, where many page versions may coexist, and where users can connect ('follow' each other) in a social network. See http://nmai.ca/home/research-projects/socialwiki for details.
+This is a Moodle plugin. It is a social kind of wiki, where many page versions may coexist, and where users can connect ('follow' each other) in a social network. See https://sites.google.com/a/nmai.ca/home/research-projects/socialwiki for details.
 
 ## Moodle
 

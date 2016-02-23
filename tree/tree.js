@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$(document).ready(function() {
+$(function() {
     if (/view=2/.test(document.URL)) { // Only in view 'popular'.
         $('.tagcloud').tagcloud();
     }
@@ -69,20 +69,21 @@ $(document).ready(function() {
      * The Hide Button.
      */
     $(".hider").click(function () {
-        var img = $("#hid" + ($(this).attr("value")));
+        var $i = $("#hid" + ($(this).attr("value")));
+        var $b = $("#bgroup" + ($(this).attr("value")));
 
-        if (img.attr("title") === "Minimize") {
-            img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "more");
-            img.attr("title", "Maximize");
-            $("#bgroup" + ($(this).attr("value"))).css("left", "0");
-            $("#bgroup" + ($(this).attr("value"))).css("margin-right", "0");
+        if ($i.attr("title") === "Minimize") {
+            $i.attr("src", $i.attr("src").substring(0, $i.attr("src").length - 4) + "more");
+            $i.attr("title", "Maximize");
+            $b.css("left", "0");
+            $b.css("margin-right", "0");
             $("#content" + ($(this).attr("value"))).css("display", "none");
             $("#comp" + ($(this).attr("value"))).css("display", "none");
         } else {
-            img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "less");
-            img.attr("title", "Minimize");
-            $("#bgroup" + ($(this).attr("value"))).css("left", "50%");
-            $("#bgroup" + ($(this).attr("value"))).css("margin-right", "29px");
+            $i.attr("src", $i.attr("src").substring(0, $i.attr("src").length - 4) + "less");
+            $i.attr("title", "Minimize");
+            $b.css("left", "50%");
+            $b.css("margin-right", "29px");
             $("#content" + ($(this).attr("value"))).css("display", "initial");
             $("#comp" + ($(this).attr("value"))).css("display", "block");
         }
@@ -93,15 +94,17 @@ $(document).ready(function() {
      * The Collapse Button.
      */
     $(".collapser").click(function () {
-        var img = $("#cop" + ($(this).attr("value")));
+        var $i = $("#cop" + ($(this).attr("value")));
+        var $b = $("#bgroup" + ($(this).attr("value")));
+        var $h = $("#hid" + ($(this).attr("value")));
 
-        if (img.attr("title") === "Collapse") {
-            img.attr("src", img.attr("src").substring(0, img.attr("src").length - 2) + "down");
-            img.attr("title", "Expand");
-            $("#hid" + ($(this).attr("value"))).css("display", "none");
-            if ($("#hid" + ($(this).attr("value"))).attr("title") === "Minimize") {
-                $("#bgroup" + ($(this).attr("value"))).css("left", "0");
-                $("#bgroup" + ($(this).attr("value"))).css("margin-right", "0");
+        if ($i.attr("title") === "Collapse") {
+            $i.attr("src", $i.attr("src").substring(0, $i.attr("src").length - 2) + "down");
+            $i.attr("title", "Expand");
+            $h.css("display", "none");
+            if ($h.attr("title") === "Minimize") {
+                $b.css("left", "0");
+                $b.css("margin-right", "0");
                 $("#content" + ($(this).attr("value"))).css("display", "none");
                 if ($("#comp" + ($(this).attr("value")))) {
                     $("#comp" + ($(this).attr("value"))).css("display", "none");
@@ -111,12 +114,12 @@ $(document).ready(function() {
                 $("#" + ($(this).attr("value"))).css("display", "none");
             }
         } else {
-            img.attr("src", img.attr("src").substring(0, img.attr("src").length - 4) + "up");
-            img.attr("title", "Collapse");
-            $("#hid" + ($(this).attr("value"))).css("display", "inline");
-            if ($("#hid" + ($(this).attr("value"))).attr("title") === "Minimize") {
-                $("#bgroup" + ($(this).attr("value"))).css("left", "50%");
-                $("#bgroup" + ($(this).attr("value"))).css("margin-right", "29px");
+            $i.attr("src", $i.attr("src").substring(0, $i.attr("src").length - 4) + "up");
+            $i.attr("title", "Collapse");
+            $h.css("display", "inline");
+            if ($h.attr("title") === "Minimize") {
+                $b.css("left", "50%");
+                $b.css("margin-right", "29px");
                 $("#content" + ($(this).attr("value"))).css("display", "block");
                 if ($("#comp" + ($(this).attr("value")))) {
                     $("#comp" + ($(this).attr("value"))).css("display", "block");
