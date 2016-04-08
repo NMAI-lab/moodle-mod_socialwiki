@@ -526,7 +526,7 @@ function socialwiki_parse_content($markup, $pagecontent, $options = array()) {
  * !!!!!! IMPORTANT !!!!!!
  * It is critical that you call format_string on the content before it is used.
  *
- * @param string|page_wiki $link Name of a page.
+ * @param string|page_socialwiki $link Name of a page.
  * @param array $options Extra options.
  * @return array Array('content' => string, 'url' => string, 'new' => bool, 'link_info' => array)
  */
@@ -658,7 +658,7 @@ function socialwiki_parser_get_token($markup, $name) {
 /**
  * Checks if current user can view a subwiki.
  *
- * @param int $subwiki The subwiki ID.
+ * @param stdClass $subwiki The subwiki ID.
  * @return bool
  */
 function socialwiki_user_can_view($subwiki) {
@@ -722,7 +722,7 @@ function socialwiki_user_can_view($subwiki) {
 /**
  * Checks if current user can edit a subwiki.
  *
- * @param int $subwiki The subwiki ID.
+ * @param stdClass $subwiki The subwiki ID.
  * @return bool
  */
 function socialwiki_user_can_edit($subwiki) {
@@ -1289,7 +1289,7 @@ function socialwiki_get_user_likes($uid, $swid) {
  *
  * @param int $pid The page ID.
  * @param int $swid The subwiki ID.
- * @return stdClass[]
+ * @return int[]
  */
 function socialwiki_get_page_likes($pid, $swid) {
     global $DB;
@@ -1525,31 +1525,49 @@ function socialwiki_get_recommended_pages($uid, $swid) {
     Global $CFG;
     require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
     $scale = array('follow' => 1, 'like' => 1, 'trust' => 1, 'popular' => 1); // Scale with weight for each peer category.
-    $peers = socialwiki_get_peers($swid, $scale);
-    $pages = socialwiki_get_page_list($swid);
-
-    foreach ($pages as $page) {
-        if (socialwiki_liked($uid, $page->id)) {
-            unset($pages[$page->id]);
-            continue;
-        }
-        $votes = $page->timecreated / time();
-        foreach ($peers as $peer) {
-            if (socialwiki_liked($peer->id, $page->id)) {
-                $votes += $peer->score;
-            }
-        }
-        $page->votes = $votes;
-    }
-    // Sort pages based on votes.
-    usort($pages, "socialwiki_page_comp");
+    $users = socialwiki_get_subwiki_users($swid);
+    $peers = array_map(function($u) {
+        return socialwiki_get_user_info($u);
+    }, $users);
+    $pages = socialwiki_order_pages_using_peers($peers, socialwiki_get_page_list($swid), $scale);
 
     // Return top ten pages.
-    if (count($pages) <= 20) {
+    if (count($pages) <= 10) {
         return($pages);
     } else {
-        return array_slice($pages, 0, 20);
+        return array_slice($pages, 0, 10);
     }
+}
+
+/**
+ * Orders pages using the trust indicators from an array of peers also sends peers to JavaScript.
+ *
+ * @param array $peers Peer objects.
+ * @param array $pages Set of pages.
+ * @param array $scale Scale of each indicator.
+ * @return stdClass[]
+ */
+function socialwiki_order_pages_using_peers($peers, $pages, $scale) {
+    foreach ($pages as $page) {
+        $page->trust = 0;
+        $page->time = $page->timecreated / time();
+        $page->likesim = 0;
+        $page->followsim = 0;
+        $page->peerpopular = 0;
+        $page->votes = $page->time;
+
+        foreach ($peers as $peer) {
+            if (socialwiki_liked($peer->id, $page->id)) {
+                $page->votes += $peer->score;
+                $page->trust += $peer->trust * $scale['trust'];
+                $page->likesim += $peer->likesim * $scale['like'];
+                $page->followsim += $peer->followsim * $scale['follow'];
+                $page->peerpopular += $peer->popularity * $scale['popular'];
+            }
+        }
+    }
+
+    return usort($pages, "socialwiki_page_comp");;
 }
 
 /**
@@ -1621,37 +1639,6 @@ function socialwiki_merge_nodes($left, $right) {
 }
 
 /**
- * Orders pages using the trust indicators from an array of peers also sends peers to JavaScript.
- *
- * @param array $peers Peer objects.
- * @param array $pages Set of pages.
- * @param array $scale Scale of each indicator.
- * @return stdClass[]
- */
-function socialwiki_order_pages_using_peers($peers, $pages, $scale) {
-    foreach ($pages as $page) {
-        $page->trust = 0;
-        $page->time = $page->timecreated / time();
-        $page->likesim = 0;
-        $page->followsim = 0;
-        $page->peerpopular = 0;
-        $page->votes = $page->time;
-
-        foreach ($peers as $peer) {
-            if (socialwiki_liked($peer->id, $page->id)) {
-                $page->votes += $peer->score;
-                $page->trust += $peer->trust * $scale['trust'];
-                $page->likesim += $peer->likesim * $scale['like'];
-                $page->followsim += $peer->followsim * $scale['follow'];
-                $page->peerpopular += $peer->popularity * $scale['popular'];
-            }
-        }
-    }
-    usort($pages, "socialwiki_page_comp");
-    return $pages;
-}
-
-/**
  * Finds the following depth for a user.
  *
  * @param int $userfrom
@@ -1667,7 +1654,7 @@ function socialwiki_follow_depth($userfrom, $userto, $swid, $depth = 1, &$checke
     }
     // Get userfrom's follows.
     $follows = socialwiki_get_follows($userfrom, $swid);
-    if (count($follows > 0)) {
+    if (count($follows) > 0) {
         // Add the userfrom to checked array.
         $checked[] = $userfrom;
         $depth++;
@@ -1693,25 +1680,10 @@ function socialwiki_follow_depth($userfrom, $userto, $swid, $depth = 1, &$checke
  */
 function socialwiki_format_time($time, $timeago = true) {
     // Standard day, month, year format.
-    $date = strftime('%d %b %Y', $time);
     if (!$timeago) {
-        return $date;
+        return strftime('%d %b %Y', $time);
     }
 
-    // Return the time based upon how long ago from the current time.
-    $diff = (new DateTime)->diff(new DateTime('@' . $time));
-    $types = array(
-        'y' => 'year',
-        'm' => 'month',
-        'd' => 'day',
-        'h' => 'hour',
-        'i' => 'minute',
-        's' => 'second',
-    );
-    // Loops through to return the first type available.
-    foreach ($types as $t => &$i) {
-        if ($diff->$t) {
-            return "<span title='$date'>" . $diff->$t . ' ' . $i . ($diff->$t > 1 ? 's' : "") . ' ago</span>';
-        }
-    }
+    // Standard Moodle time ago formatting.
+    return format_time(time() - $time) . " ago";
 }

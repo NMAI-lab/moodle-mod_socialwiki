@@ -25,9 +25,9 @@
  */
 
 require('../../config.php');
-require($CFG->dirroot . '/mod/socialwiki/create_form.php');
 require($CFG->dirroot . '/mod/socialwiki/locallib.php');
 require($CFG->dirroot . '/mod/socialwiki/pagelib.php');
+require($CFG->dirroot . '/mod/socialwiki/create_form.php');
 
 // New action will display a form contains page title and page format selections.
 // Create action will create a new page in db, and redirect to page editing page.

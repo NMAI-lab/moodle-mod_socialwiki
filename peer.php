@@ -185,7 +185,7 @@ class socialwiki_peer {
      * @param int $id A user ID.
      * @param int $swid The subwiki ID.
      * @param int $thisuser The current user ID.
-     * @return peer
+     * @return stdClass peer
      */
     public static function socialwiki_get_peer($id, $swid, $thisuser = null) {
         Global $USER;

@@ -32,8 +32,8 @@
  */
 
 require_once('../../config.php');
-require_once($CFG->dirroot . "/mod/socialwiki/pagelib.php");
 require_once($CFG->dirroot . "/mod/socialwiki/locallib.php");
+require_once($CFG->dirroot . "/mod/socialwiki/pagelib.php");
 require_once($CFG->dirroot . '/mod/socialwiki/comments_form.php');
 
 $pageid     = required_param('pageid', PARAM_TEXT);
@@ -46,7 +46,6 @@ $confirm    = optional_param('confirm', 0, PARAM_BOOL);
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
 }
-
 if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
     print_error('incorrectsubwikiid', 'socialwiki');
 }
@@ -59,29 +58,24 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 }
 require_login($course, true, $cm);
 
-if ($action == 'add' || $action == 'edit') {
-    // Just check sesskey.
+// Create correct page.
+if ($action == 'delete' && !$confirm) {
+    // Confirm the use would like to delete the comment.
+    $comm = new page_socialwiki_deletecomment($wiki, $subwiki, $cm);
+} else {
+    // Check sesskey for modifications.
     if (!confirm_sesskey()) {
         print_error(get_string('invalidsesskey', 'socialwiki'));
     }
-    $comm = new page_socialwiki_handlecomments($wiki, $subwiki, $cm);
-    $comm->set_page($page);
-} else {
-    if (!$confirm) {
-        $comm = new page_socialwiki_deletecomment($wiki, $subwiki, $cm);
-        $comm->set_page($page);
-        $comm->set_url();
-    } else {
-        $comm = new page_socialwiki_handlecomments($wiki, $subwiki, $cm);
-        $comm->set_page($page);
-        if (!confirm_sesskey()) {
-            print_error(get_string('invalidsesskey', 'socialwiki'));
-        }
-    }
+    // Handle add, edit, delete.
+    $comm = new page_socialwiki_handlecomment($wiki, $subwiki, $cm);
 }
+$comm->set_page($page);
 
+// Set correct action.
 if ($action == 'delete') {
-    $comm->set_action($action, $commentid, 0);
+    // Hand over commentid.
+    $comm->set_action($action, $commentid);
 } else {
     if (empty($newcontent)) {
         $form = new mod_socialwiki_comments_form();

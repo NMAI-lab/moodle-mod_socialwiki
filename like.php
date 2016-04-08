@@ -42,10 +42,7 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
     print_error('invalidcoursemodule', 'socialwiki');
 }
-if (!is_enrolled(context_module::instance($cm->id), $USER->id)) {
-    // Must be an enrolled user to like a page.
-    print_error('cannotlike', 'socialwiki');
-}
+require_capability('mod/socialwiki:editpage', context_module::instance($cm->id));
 
 if (confirm_sesskey()) {
     $out = socialwiki_page_like($USER->id, $pageid, $subwiki->id);

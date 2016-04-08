@@ -45,27 +45,19 @@ if ($pageid > -1) {
     if (!$page = socialwiki_get_page($pageid)) {
         print_error('incorrectpageid', 'socialwiki');
     }
-
     if (!$subwiki = socialwiki_get_subwiki($page->subwikiid)) {
         print_error('incorrectsubwikiid', 'socialwiki');
     }
-
     if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
         print_error('incorrectwikiid', 'socialwiki');
     }
-
     if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
         print_error('invalidcoursemodule', 'socialwiki');
     }
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-
-    if (!is_enrolled($context, $USER->id)) {
-        // Must be an enrolled user to follow someone.
-        print_error('deniedfollow', 'socialwiki');
-    }
+    require_capability('mod/socialwiki:editpage', context_module::instance($cm->id));
 
     // Get the author of the current page.
-    $page = socialwiki_get_page($pageid, 0);
+    $page = socialwiki_get_page($pageid);
     $user2 = $page->userid;
     // Check if the user is following themselves.
     if ($USER->id == $user2) {

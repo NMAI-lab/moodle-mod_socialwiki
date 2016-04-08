@@ -73,7 +73,7 @@ $string['like_tip'] = 'Like/Unlike this page';
 
 $string['deletecomment'] = 'Deleting comment';
 $string['deletecommentcheck'] = 'Delete comment';
-$string['deletecommentcheckfull'] = 'Are you sure you want to delete the comment?';
+$string['deletecommentcheckfull'] = 'Are you sure you want to delete this comment?';
 $string['deleteupload'] = 'Delete';
 $string['deletedbegins'] = 'Deleted begins';
 $string['deletedends'] = 'Deleted ends';

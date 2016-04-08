@@ -54,17 +54,18 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 }
 require_login($course, true, $cm);
 
-$editcomments = new page_socialwiki_editcomment($wiki, $subwiki, $cm);
+$comm = new page_socialwiki_editcomment($wiki, $subwiki, $cm);
 $comment = new stdClass();
+// Get comment if editing.
 if ($action == 'edit') {
     if (!$comment = $DB->get_record('comments', array('id' => $comid))) {
         print_error('invalidcomment', 'socialwiki');
     }
 }
 
-$editcomments->set_page($page);
-$editcomments->set_action($action, $comment);
+$comm->set_page($page);
+$comm->set_action($action, $comment);
 
-$editcomments->print_header();
-$editcomments->print_content();
-$editcomments->print_footer();
+$comm->print_header();
+$comm->print_content();
+$comm->print_footer();
