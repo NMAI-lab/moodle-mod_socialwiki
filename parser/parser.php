@@ -150,8 +150,8 @@ abstract class socialgeneric_parser {
      * Block processing function & callbacks
      */
     protected function process_block_rule($name, $block) {
-        $this->rulestack[] =
-                array('callback' => method_exists($this, $name . "_block_rule") ? $name . "_block_rule" : null, 'rule' => $block);
+        $this->rulestack[] = array(
+            'callback' => method_exists($this, $name . "_block_rule") ? $name . "_block_rule" : null, 'rule' => $block);
 
         $this->string = preg_replace_callback($block['expression'], array($this, 'block_callback'), $this->string);
 

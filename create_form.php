@@ -36,24 +36,23 @@ class mod_socialwiki_create_form extends moodleform {
      * Build the full form.
      */
     protected function definition() {
-        $mform = $this->_form;
+        $form = $this->_form;
 
         $formats = $this->_customdata['formats'];
         $defaultformat = $this->_customdata['defaultformat'];
         $forceformat = $this->_customdata['forceformat'];
 
-        $mform->addElement('header', 'general', get_string('newpagehdr', 'socialwiki'));
+        $form->addElement('header', 'general', get_string('newpagehdr', 'socialwiki'));
 
-        $textoptions = array();
-        $mform->addElement('text', 'pagetitle', get_string('newpagetitle', 'socialwiki'), $textoptions);
-        $mform->setType('pagetitle', PARAM_TEXT);
-        $mform->addRule('pagetitle', get_string('required'), 'required', null, 'client');
+        $form->addElement('text', 'pagetitle', get_string('newpagetitle', 'socialwiki'));
+        $form->setType('pagetitle', PARAM_TEXT);
+        $form->addRule('pagetitle', get_string('required'), 'required', null, 'client');
 
         if ($forceformat) {
-            $mform->addElement('hidden', 'pageformat', $defaultformat);
+            $form->addElement('hidden', 'pageformat', $defaultformat);
         } else {
-            $mform->addElement('static', 'format', get_string('format', 'socialwiki'));
-            $mform->addHelpButton('format', 'format', 'socialwiki');
+            $form->addElement('static', 'format', get_string('format', 'socialwiki'));
+            $form->addHelpButton('format', 'format', 'socialwiki');
             foreach ($formats as $format) {
                 if ($format == $defaultformat) {
                     $attr = array('checked' => 'checked');
@@ -62,33 +61,34 @@ class mod_socialwiki_create_form extends moodleform {
                 } else {
                     $attr = array();
                 }
-                $mform->addElement('radio', 'pageformat', "", get_string('format' . $format, 'socialwiki'), $format, $attr);
+                $form->addElement('radio', 'pageformat', "", get_string('format' . $format, 'socialwiki'), $format, $attr);
             }
+            $form->addRule('pageformat', get_string('required'), 'required', null, 'client');
         }
-        $mform->setType('pageformat', PARAM_ALPHANUMEXT);
-        $mform->addRule('pageformat', get_string('required'), 'required', null, 'client');
+        $form->setType('pageformat', PARAM_ALPHANUMEXT);
 
         if (!empty($this->_customdata['groups']->availablegroups)) {
+            $groupinfo = [];
             foreach ($this->_customdata['groups']->availablegroups as $groupdata) {
                 $groupinfo[$groupdata->id] = $groupdata->name;
             }
             if (count($groupinfo) > 1) {
-                $mform->addElement('select', 'groupinfo', get_string('group'), $groupinfo);
-                $mform->setDefault('groupinfo', $this->_customdata['groups']->currentgroup);
-                $mform->setType('groupinfo', PARAM_ALPHANUMEXT);
+                $form->addElement('select', 'groupinfo', get_string('group'), $groupinfo);
+                $form->setDefault('groupinfo', $this->_customdata['groups']->currentgroup);
+                $form->setType('groupinfo', PARAM_ALPHANUMEXT);
             } else {
                 $groupid = key($groupinfo);
                 $groupname = $groupinfo[$groupid];
-                $mform->addElement('static', 'groupdesciption', get_string('group'), $groupname);
-                $mform->addElement('hidden', 'groupinfo', $groupid);
-                $mform->setType('groupinfo', PARAM_ALPHANUMEXT);
+                $form->addElement('static', 'groupdesciption', get_string('group'), $groupname);
+                $form->addElement('hidden', 'groupinfo', $groupid);
+                $form->setType('groupinfo', PARAM_ALPHANUMEXT);
             }
         }
 
         // Hidden elements.
-        $mform->addElement('hidden', 'action', 'create');
-        $mform->setType('action', PARAM_ALPHA);
-        $mform->addElement('submit', 'submitbutton', get_string('createpage', 'socialwiki'));
+        $form->addElement('hidden', 'action', 'create');
+        $form->setType('action', PARAM_ALPHA);
+        $form->addElement('submit', 'submitbutton', get_string('createpage', 'socialwiki'));
     }
 
 }

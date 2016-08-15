@@ -91,7 +91,7 @@ if ($option == get_string('save', 'socialwiki')) {
         if (!confirm_sesskey()) {
             print_error(get_string('invalidsesskey', 'socialwiki'));
         }
-        $wikipage = new page_socialwiki_preview($wiki, $subwiki, $cm);
+        $wikipage = new page_socialwiki_preview($wiki, $subwiki, $cm, $makenew);
         $wikipage->set_page($page);
     } else {
         if ($option == get_string('cancel')) {

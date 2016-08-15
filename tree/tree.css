@@ -48,43 +48,52 @@
     margin-bottom: 15px;
     text-align: center;
     overflow: auto;
+    transform: rotate(180deg) scaleX(-1);
 }
 
 .socialwiki_wikicontent .tree ul:first-child {
     padding-top: 0;
+    transform: rotate(180deg) scaleX(-1);
 }
 
 .socialwiki_wikicontent .tree ul {
-    padding-top: 20px; position: relative;
-    margin : 0;
-    transition: all 0.5s;
+    padding-top: 20px;
+    position: relative;
+    margin: 0;
+
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
+    transition: all 0.5s;
 }
 
 .socialwiki_wikicontent .tree li {
-    display:inline-block;
-    vertical-align:top;
+    display: inline-block;
+    vertical-align: top;
     text-align: center;
     list-style-type: none;
     position: relative;
     padding: 20px 5px 0 5px;
 
-    transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
+    transition: all 0.5s;
 }
 
 /*We will use ::before and ::after to draw the connectors*/
 .socialwiki_wikicontent .tree li::before,
 .socialwiki_wikicontent .tree li::after {
     content: '';
-    position: absolute; top: 0; right: 50%;
+    position: absolute;
+    top: 0;
+    right: 50%;
     border-top: 1px solid #ccc;
-    width: 50%; height: 20px;
+    width: 50%;
+    height: 20px;
 }
+
 .socialwiki_wikicontent .tree li::after {
-    right: auto; left: 50%;
+    right: auto;
+    left: 50%;
     border-left: 1px solid #ccc;
 }
 
@@ -108,42 +117,48 @@
 /*Adding back the vertical connector to the last nodes*/
 .socialwiki_wikicontent .tree li:last-child::before {
     border-right: 1px solid #ccc;
-    border-radius: 0 5px 0 0;
     -webkit-border-radius: 0 5px 0 0;
     -moz-border-radius: 0 5px 0 0;
+    border-radius: 0 5px 0 0;
 }
+
 .socialwiki_wikicontent .tree li:first-child::after {
-    border-radius: 5px 0 0 0;
     -webkit-border-radius: 5px 0 0 0;
     -moz-border-radius: 5px 0 0 0;
+    border-radius: 5px 0 0 0;
 }
 
 /*Time to add downward connectors from parents*/
 .socialwiki_wikicontent .tree ul ul::before {
     content: '';
-    position: absolute; top: 0; left: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
     border-left: 1px solid #ccc;
-    width: 0; height: 20px;
+    width: 0;
+    height: 20px;
 }
 
 .socialwiki_wikicontent .tree li div {
-    border: 1px solid #ccc;
     padding: 5px 10px;
     text-decoration: none;
     display: inline-block;
-
-    border-radius: 5px;
+    border: 1px solid #ccc;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
+    border-radius: 5px;
 
-    transition: all 0.5s;
     -webkit-transition: all 0.5s;
     -moz-transition: all 0.5s;
+    transition: all 0.5s;
+
 }
 
 /*Time for some hover effects*/
 .socialwiki_wikicontent .tree li div:hover {
-    background: #c8e4f8; color: #000; border: 1px solid #94a0b4;
+    background: #c8e4f8;
+    color: #000;
+    border: 1px solid #94a0b4;
 }
 
 .socialwiki_wikicontent input[type="radio"] {

@@ -51,7 +51,7 @@ class mod_socialwiki_mod_form extends moodleform_mod {
      */
     protected function definition() {
         Global $CFG;
-        
+
         $mform = $this->_form;
         $required = get_string('required');
 
@@ -63,7 +63,7 @@ class mod_socialwiki_mod_form extends moodleform_mod {
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', $required, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', "", 255), 'maxlength', 255, 'client');
-        
+
         // Adding the optional "intro" and "introformat" pair of fields.
         if ($CFG->branch >= 29) {
             // Moodle 2.9.0 and higher use the new API.

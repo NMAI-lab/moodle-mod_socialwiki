@@ -395,6 +395,51 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
         }
     }
 
+    public function navigator($options, $pid, $swid) {
+        global $USER, $SESSION;
+
+        $context = context_module::instance($this->page->cm->id);
+        $current = $SESSION->mod_socialwiki->navi;
+        $ids = array_merge(socialwiki_get_page_likes($pid, $swid), socialwiki_get_contributors($pid));
+
+        if (has_capability('mod/socialwiki:editpage', $context)) {
+            array_unshift($ids, $USER->id);
+        }
+        if ($current != -1 && $current != $USER->id) {
+            array_unshift($ids, $current);
+        }
+        $ids = array_unique($ids);
+
+        $users = array(-1 => 'Latest');
+        foreach ($ids as $u) {
+            if ($u == $USER->id) {
+                if (has_capability('mod/socialwiki:editpage', $context)) {
+                    $users[$u] = "My favourite";
+                }
+            } else {
+                $users[$u] = fullname(socialwiki_get_user_info($u)) . "'s favourite";
+            }
+        }
+
+        // Create output.
+        $output = '';
+        foreach ($options as $name => $value) {
+            $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => $name, 'value' => $value));
+        }
+        $output .= html_writer::label('Navigate by:', 'navigator', false);
+        $output .= html_writer::select($users, 'navi', $current, ['Default'], array('id' => 'navigator'));
+
+        $go = html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('go')));
+        $output .= html_writer::tag('noscript', $go, array('class' => 'inline'));
+
+        $formattributes = array(
+            'method' => 'get',
+            'action' => new moodle_url("/mod/socialwiki/view.php"),
+            'class'  => 'singleselect navigator');
+        $output = html_writer::tag('form', $output, $formattributes);
+        echo $output;
+    }
+
     /**
      * Builds the version view for search or pages.
      *
@@ -544,7 +589,7 @@ class mod_socialwiki_renderer extends plugin_renderer_base {
     public function help_content($type) {
         $html = "";
         $html .= html_writer::start_div("", array('id' => $type, 'style' => 'padding-top: 40px; margin-top: -20px'));
-        $html .= html_writer::tag('h2', get_string($type, 'socialwiki'));
+        $html .= html_writer::tag('h3', html_writer::tag('a', get_string($type, 'socialwiki'), array('href' => "#$type")));
         $html .= get_string('help_' . $type, 'socialwiki');
         $html .= html_writer::end_div();
         return $html;

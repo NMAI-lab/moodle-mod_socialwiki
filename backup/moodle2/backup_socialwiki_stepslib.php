@@ -25,42 +25,34 @@
 /**
  * Define the complete wiki structure for backup, with file and id annotations.
  */
-class backup_socialwiki_activity_structure_step extends backup_activity_structure_step {
+class backup_socialwiki_activity_structure_step extends backup_activity_structure_step
+{
 
-    protected function define_structure() {
-
+    protected function define_structure()
+    {
         // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
-        $wiki = new backup_nested_element('socialwiki', array('id'), array(
-            'name', 'intro', 'introformat', 'timecreated', 'timemodified',
-            'wikimode', 'defaultformat', 'forceformat', 'editbegin', 'editend'));
+        $wiki = new backup_nested_element('socialwiki', array('id'), array('name', 'intro', 'introformat',
+            'timecreated', 'timemodified', 'wikimode', 'defaultformat', 'forceformat', 'editbegin', 'editend'));
 
         $subwikis = new backup_nested_element('subwikis');
-
-        $subwiki = new backup_nested_element('subwiki', array('id'), array(
-            'groupid', 'userid'));
+        $subwiki = new backup_nested_element('subwiki', array('id'), array('groupid', 'userid'));
 
         $pages = new backup_nested_element('pages');
-
-        $page = new backup_nested_element('page', array('id'), array(
-            'title', 'content', 'format', 'timecreated', 'userid', 'pageviews', 'parent'));
+        $page = new backup_nested_element('page', array('id'), $userinfo ?
+            array('title', 'content', 'format', 'timecreated', 'userid', 'pageviews', 'parent') :
+            array('title', 'content', 'format', 'timecreated', 'pageviews', 'parent'));
 
         $likes = new backup_nested_element('likes');
-
-        $like = new backup_nested_element('like', array('id'), array(
-            'userid', 'pageid'));
+        $like = new backup_nested_element('like', array('id'), array('userid', 'pageid'));
 
         $follows = new backup_nested_element('follows');
-
-        $follow = new backup_nested_element('follow', array('id'), array(
-            'userfromid', 'usertoid'));
+        $follow = new backup_nested_element('follow', array('id'), array('userfromid', 'usertoid'));
 
         $tags = new backup_nested_element('tags');
-
-        $tag = new backup_nested_element('tag', array('id'), array(
-            'name', 'rawname'));
+        $tag = new backup_nested_element('tag', array('id'), array('name', 'rawname'));
 
         // Build the tree.
         $wiki->add_child($subwikis);
@@ -82,23 +74,25 @@ class backup_socialwiki_activity_structure_step extends backup_activity_structur
         $wiki->set_source_table('socialwiki', array('id' => backup::VAR_ACTIVITYID));
 
         // All these source definitions only happen if we are including user info.
-        if ($userinfo) {
-            $subwiki->set_source_sql('SELECT * FROM {socialwiki_subwikis} WHERE wikiid = ?', array(backup::VAR_PARENTID));
+        $subwiki->set_source_sql('SELECT * FROM {socialwiki_subwikis} WHERE wikiid = ?', array(backup::VAR_PARENTID));
 
-            $page->set_source_table('socialwiki_pages', array('subwikiid' => backup::VAR_PARENTID));
+        $tag->set_source_sql('SELECT t.id, t.name, t.rawname FROM {tag} t
+                              JOIN {tag_instance} ti ON ti.tagid = t.id
+                              WHERE ti.itemtype = ? AND ti.itemid = ?',
+            array(backup_helper::is_sqlparam('socialwiki_pages'), backup::VAR_PARENTID));
+
+        $page->set_source_table('socialwiki_pages', array('subwikiid' => backup::VAR_PARENTID));
+        if ($userinfo) {
             $like->set_source_table('socialwiki_likes', array('subwikiid' => backup::VAR_PARENTID));
             $follow->set_source_table('socialwiki_follows', array('subwikiid' => backup::VAR_PARENTID));
 
-            $tag->set_source_sql('SELECT t.id, t.name, t.rawname FROM {tag} t
-                                  JOIN {tag_instance} ti ON ti.tagid = t.id
-                                  WHERE ti.itemtype = ? AND ti.itemid = ?',
-                array(backup_helper::is_sqlparam('socialwiki_pages'), backup::VAR_PARENTID));
+            // Define userid annotation.
+            $page->annotate_ids('user', 'userid');
         }
 
         // Define id annotations.
         $subwiki->annotate_ids('group', 'groupid');
         $subwiki->annotate_ids('user', 'userid');
-        $page->annotate_ids('user', 'userid');
 
         // Define file annotations.
         $wiki->annotate_files('mod_socialwiki', 'intro', null); // This file area hasn't itemid.

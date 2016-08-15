@@ -66,7 +66,7 @@ abstract class socialwiki_table {
      * @var string[]
      */
     protected $tabletype;
-    
+
     /**
      * Create a table.
      *

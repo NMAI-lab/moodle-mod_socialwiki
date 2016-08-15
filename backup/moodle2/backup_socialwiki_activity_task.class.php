@@ -33,6 +33,8 @@ class backup_socialwiki_activity_task extends backup_activity_task {
      * No specific settings for this activity.
      */
     protected function define_my_settings() {
+        $this->get_setting('userinfo')->get_ui()->set_label(get_string('userdata', 'socialwiki'));
+        $this->get_setting('userinfo')->set_help('userdata', 'socialwiki');
     }
 
     /**

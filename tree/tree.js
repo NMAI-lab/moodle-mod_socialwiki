@@ -21,53 +21,55 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$(function() {
+"use strict";
+$(function () {
     if (/view=2/.test(document.URL)) { // Only in view 'popular'.
         $('.tagcloud').tagcloud();
     }
 
-    /**
-     * Double scroll bar above and below the area.
-     */
-    var element = document.getElementById('doublescroll');
-    var scrollbar = document.createElement('div');
-    scrollbar.appendChild(document.createElement('div'));
-    scrollbar.style.overflowY = 'hidden';
-    scrollbar.firstChild.style.width = element.scrollWidth + 'px';
-    scrollbar.firstChild.style.paddingTop = '10px';
-    scrollbar.onscroll = function () {
-        element.scrollLeft = scrollbar.scrollLeft;
+    var d = document.getElementById('dragscroll'), lastX, lastY, down = false;
+    d.style.cursor = 'move';
+    d.onmousedown = function(e) {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        down = true;
+        return false;
     };
-    element.onscroll = function () {
-        scrollbar.scrollLeft = element.scrollLeft;
+    document.onmousemove = function(e) {
+        if (down) {
+            d.scrollLeft += (lastX - (lastX = e.clientX));
+            window.scrollBy(0, lastY - (lastY = e.clientY));
+            return false;
+        }
     };
-    element.parentNode.insertBefore(scrollbar, element);
+    document.onmouseup = function() {
+        down = false;
+        return false;
+    };
 
-    scrollbar.scrollLeft = (element.scrollWidth-element.offsetWidth)/2;
-    element.scrollLeft = scrollbar.scrollLeft;
-    /**
-     * Enable the compare button if 2 nodes have been selected.
-     */
+    // Enable the compare button if 2 nodes have been selected.
     var compare = false;
     var comparewith = false;
-    document.getElementById('comparebtn').disabled = true;
+    var comparebtn = document.getElementById('comparebtn');
+    if (comparebtn !== null) {
+        comparebtn.disabled = true;
+    }
     var radio = document.querySelectorAll('input[type=radio]');
-    for (var i = 0; i < radio.length; i++)
-    radio[i].onchange = function() {
-        var name = this.getAttribute("name");
-        if (name === 'compare') {
-            compare = true;
-        } else if (name === 'comparewith') {
-            comparewith = true;
-        }
-        if (compare && comparewith) {
-            document.getElementById('comparebtn').disabled = false;
-        }
-    };
+    for (var i = 0; i < radio.length; i++) {
+        radio[i].onchange = function () {
+            var name = this.getAttribute("name");
+            if (name === 'compare') {
+                compare = true;
+            } else if (name === 'comparewith') {
+                comparewith = true;
+            }
+            if (compare && comparewith) {
+                comparebtn.disabled = false;
+            }
+        };
+    }
 
-    /**
-     * The Hide Button.
-     */
+    // The Hide Button.
     $(".hider").click(function () {
         var $i = $("#hid" + ($(this).attr("value")));
         var $b = $("#bgroup" + ($(this).attr("value")));
@@ -87,12 +89,9 @@ $(function() {
             $("#content" + ($(this).attr("value"))).css("display", "initial");
             $("#comp" + ($(this).attr("value"))).css("display", "block");
         }
-        scrollbar.firstChild.style.width = element.scrollWidth + 'px';
     });
 
-    /**
-     * The Collapse Button.
-     */
+    // The Collapse Button.
     $(".collapser").click(function () {
         var $i = $("#cop" + ($(this).attr("value")));
         var $b = $("#bgroup" + ($(this).attr("value")));
@@ -129,7 +128,6 @@ $(function() {
                 $("#" + ($(this).attr("value"))).css("display", "block");
             }
         }
-        scrollbar.firstChild.style.width = element.scrollWidth + 'px';
     });
 });
 
@@ -141,8 +139,6 @@ $(function() {
  * created by Adam Groves
  */
 (function ($) {
-    "use strict";
-
     var compareWeights = function (a, b) {
         return a - b;
     };

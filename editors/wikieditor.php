@@ -29,11 +29,12 @@
 require_once($CFG->dirroot.'/lib/formslib.php');
 require_once($CFG->dirroot.'/lib/form/textarea.php');
 
-class moodlequickform_socialwikieditor extends moodlequickform_textarea {
+class moodlequickform_socialwikieditor extends MoodleQuickForm_textarea {
 
     private $files;
+    private $wikiformat;
 
-    public function moodlequickform_socialwikieditor($elementname = null, $elementlabel = null, $attributes = null) {
+    public function __construct($elementname = null, $elementlabel = null, $attributes = null) {
         if (isset($attributes['socialwiki_format'])) {
             $this->wikiformat = $attributes['socialwiki_format'];
             unset($attributes['socialwiki_format']);
@@ -51,7 +52,7 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
     }
 
     public function tohtml() {
-        return $this->{$this->wikiformat . "Editor"}(parent::tohtml());
+        return $this->{$this->wikiformat . "Editor"}(parent::toHtml());
     }
 
     public function creoleeditor($textarea) {
@@ -157,5 +158,5 @@ class moodlequickform_socialwikieditor extends moodlequickform_textarea {
 }
 
 // Register wikieditor.
-moodlequickform::registerElementType('socialwikieditor', $CFG->dirroot
+MoodleQuickForm::registerElementType('socialwikieditor', $CFG->dirroot
         . "/mod/socialwiki/editors/wikieditor.php", 'moodlequickform_socialwikieditor');

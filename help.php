@@ -43,7 +43,7 @@ if (!$wiki = socialwiki_get_wiki($cm->instance)) {
 }
 
 
-$wikipage = new page_socialwiki_help($wiki, 0, $cm);
+$wikipage = new page_socialwiki_help($wiki, null, $cm);
 $wikipage->set_title(get_string('help', 'socialwiki'));
 $wikipage->print_header();
 $wikipage->print_content();

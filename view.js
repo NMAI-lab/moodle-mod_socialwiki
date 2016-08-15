@@ -21,32 +21,39 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$(function() {
-    var $like = $("#socialwiki-like");
-    $like.submit(function (e) {
-        $.get("like.ajax.php" + options, function (data) {
-            if (toString.call(data) === '[object Number]') {
-                var $btnimg = $like.children("button").children("img");
-                var url = $btnimg.attr("other");
-                $btnimg.attr("other", $btnimg.attr("src"));
-                $btnimg.attr("src", url);
-                var $btntxt = $like.children("button").children("span");
-                var swap = $btntxt.attr("other");
-                $btntxt.attr("other", $btntxt.html());
-                $btntxt.html(swap);
-                $("#numlikes").text(data + ((data == 1) ? ' like' : ' likes'));
-            }
-        });
-        e.preventDefault();
-    });
-
-    var $com = $("#socialwiki-comdirection");
-    $com.show();
-    $com.click(function () {
-        console.log('test');
-        var swap = $com.attr("other");
-        $com.attr("other", $com.text());
-        $com.text(swap);
-        $(".socialwiki-commentlist").toggleClass('reversed');
+$("#socialwiki-like").on('click', function (e) {
+    e.preventDefault();
+    var $like = $(this);
+    if ($like.attr('href') == '') {
+        return;
+    }
+    $.get("like.ajax.php" + options, function (data) {
+        if (data !== 'error') {
+            var $btnimg = $like.find("img");
+            $btnimg.attr({
+                'other': $btnimg.attr('src'),
+                'src': $btnimg.attr('other')
+            });
+            $like.toggleClass('liked');
+            $like.find("span").text(data);
+        }
     });
 });
+
+$("#navigator").on('change', function() {
+    $(this).find('option[value=' + this.value + ']').insertAfter($(this).find('option:eq(1)'));
+    $.get("like.ajax.php" + options + "&navi=" + this.value, function (data) {
+        if (data !== 'error') {
+            $(".socialwiki-contributors").remove();
+            $(".wikipage").replaceWith(data);
+        }
+    });
+});
+
+$("#socialwiki-comdirection").on('click', function () {
+    var $this = $(this);
+    var swap = $this.attr("other");
+    $this.attr("other", $this.text());
+    $this.text(swap);
+    $(".socialwiki-commentlist").toggleClass('reversed');
+}).show();

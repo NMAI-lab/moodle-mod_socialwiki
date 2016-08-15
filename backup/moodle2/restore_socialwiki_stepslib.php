@@ -31,22 +31,14 @@
 class restore_socialwiki_activity_structure_step extends restore_activity_structure_step {
 
     protected function define_structure() {
-
         $paths = array();
-        $userinfo = $this->get_setting_value('userinfo');
-
         $paths[] = new restore_path_element('socialwiki', '/activity/socialwiki');
-        if ($userinfo) {
-            $paths[] = new restore_path_element('socialwiki_subwiki',
-                    '/activity/socialwiki/subwikis/subwiki');
-            $paths[] = new restore_path_element('socialwiki_page',
-                    '/activity/socialwiki/subwikis/subwiki/pages/page');
-            $paths[] = new restore_path_element('socialwiki_tag',
-                    '/activity/socialwiki/subwikis/subwiki/pages/page/tags/tag');
-            $paths[] = new restore_path_element('socialwiki_like',
-                    '/activity/socialwiki/subwikis/subwiki/likes/like');
-            $paths[] = new restore_path_element('socialwiki_follow',
-                    '/activity/socialwiki/subwikis/subwiki/follows/follow');
+        $paths[] = new restore_path_element('socialwiki_subwiki', '/activity/socialwiki/subwikis/subwiki');
+        $paths[] = new restore_path_element('socialwiki_page', '/activity/socialwiki/subwikis/subwiki/pages/page');
+        $paths[] = new restore_path_element('socialwiki_tag', '/activity/socialwiki/subwikis/subwiki/pages/page/tags/tag');
+        if ($this->get_setting_value('userinfo')) {
+            $paths[] = new restore_path_element('socialwiki_like', '/activity/socialwiki/subwikis/subwiki/likes/like');
+            $paths[] = new restore_path_element('socialwiki_follow', '/activity/socialwiki/subwikis/subwiki/follows/follow');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -87,7 +79,7 @@ class restore_socialwiki_activity_structure_step extends restore_activity_struct
         $data = (object) $data;
         $oldid = $data->id;
         $data->subwikiid = $this->get_new_parentid('socialwiki_subwiki');
-        $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->userid = $this->get_mappingid('user', $this->get_setting_value('userinfo') ? $data->userid : null, -1);
         $data->timecreated = $this->apply_date_offset($data->timecreated);
         $data->parent = $this->get_mappingid('socialwiki_page', $data->parent);
 

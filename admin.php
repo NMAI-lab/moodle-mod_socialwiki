@@ -55,7 +55,7 @@ require_capability('mod/socialwiki:managewiki', $context);
 // Delete page if a page ID to delete was supplied.
 if (!empty($delete) && confirm_sesskey()) {
     socialwiki_delete_pages($context, $delete, $page->subwikiid);
-    // When current wiki page is deleted, then redirect user to create that page, as current pageid is invalid after deletion.
+    // When current wiki page is deleted, then redirect user to create that page, as pageid is invalid after deletion.
     if ($pageid == $delete) {
         redirect(new moodle_url('/mod/socialwiki/home.php', array('id' => $cm->id)));
     }

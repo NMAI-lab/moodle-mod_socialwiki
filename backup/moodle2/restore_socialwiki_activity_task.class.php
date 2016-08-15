@@ -38,7 +38,8 @@ class restore_socialwiki_activity_task extends restore_activity_task {
      * Define (add) particular settings this activity can have.
      */
     protected function define_my_settings() {
-        // No particular settings for this activity.
+        $this->get_setting('userinfo')->get_ui()->set_label(get_string('userdata', 'socialwiki'));
+        $this->get_setting('userinfo')->set_help('userdata', 'socialwiki');
     }
 
     /**

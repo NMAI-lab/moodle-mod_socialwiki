@@ -21,7 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
+/*
  * Implements a DataTable on any HTML tables on the page.
  */
 $(function() {
@@ -59,7 +59,7 @@ $(function() {
     });
 });
 
-/**
+/*
  * Sort function for updated time ago column.
  *
  * @param {String} d The text in the box
@@ -70,7 +70,7 @@ $.fn.dataTable.ext.type.order['time-ago-pre'] = function (d) {
     return (isNaN(val) ? d : val);
 };
 
-/**
+/*
  * Sort function for contributor column.
  *
  * @param {String} d The text in the box
@@ -86,7 +86,7 @@ $.fn.dataTable.ext.type.order['contrib-pre'] = function (d) {
     }
 };
 
-/**
+/*
  * Sort function for social distance column.
  *
  * @param {String} d The text in the box

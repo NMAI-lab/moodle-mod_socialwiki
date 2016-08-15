@@ -496,10 +496,10 @@ class socialwiki_diffcontent_changes {
     public function internal_find_deletes($diff, $count2) {
         $deletes = array();
 
-        // 1. Create a new array that includes the lowest-valued
-        //    index2 value below each run of 0s.
-        //    I.e. if our array is say 1,2,0,0,0,3,0 then the
-        //    resulting array will be -,-,3,3,3,-,0.
+        /*
+         * 1. Create a new array that includes the lowest-valued index2 value below each run of 0s.
+         *    I.e. if our array is say 1,2,0,0,0,3,0 then the resulting array will be -,-,3,3,3,-,0.
+         */
         $squidges = array();
         $lowest = 0;
         $countdiff = count($diff);
@@ -512,9 +512,10 @@ class socialwiki_diffcontent_changes {
             }
         }
 
-        // 2. OK now we can use this new array to work out
-        //    items that are known to be deleted because we
-        //    have matching items either side.
+        /*
+         * 2. OK now we can use this new array to work out items that are known
+         *    to be deleted because we have matching items either side.
+         */
         $highest = 0;
         foreach ($diff as $index1 => $index2) {
             if ($index2 === 0) {

@@ -26,11 +26,12 @@
 
 define('AJAX_SCRIPT', true);
 
-require_once('../../config.php');
-require_once($CFG->dirroot . '/mod/socialwiki/locallib.php');
-require_once($CFG->dirroot . '/mod/socialwiki/peer.php');
+require('../../config.php');
+require($CFG->dirroot . '/mod/socialwiki/locallib.php');
+require($CFG->dirroot . '/mod/socialwiki/peer.php');
 
 $pageid = required_param('pageid', PARAM_INT);
+$navi = optional_param('navi', -2, PARAM_INT);
 
 if (!$page = socialwiki_get_page($pageid)) {
     print_error('incorrectpageid', 'socialwiki');
@@ -44,10 +45,22 @@ if (!$wiki = socialwiki_get_wiki($subwiki->wikiid)) {
 if (!$cm = get_coursemodule_from_instance('socialwiki', $wiki->id)) {
     print_error('invalidcoursemodule', 'socialwiki');
 }
-require_capability('mod/socialwiki:editpage', context_module::instance($cm->id));
+// Checking course instance.
+$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+require_login($course, true, $cm);
 
-$out = "";
-if (confirm_sesskey()) {
-    $out = socialwiki_page_like($USER->id, $pageid, $subwiki->id);
+$out = 'error';
+$context = context_module::instance($cm->id);
+if ($navi === -2) {
+    if (has_capability('mod/socialwiki:editpage', $context) && confirm_sesskey()) {
+        $out = socialwiki_page_like($USER->id, $pageid, $subwiki->id);
+        $out = "$out " . ($out === 1 ? get_string('like', 'socialwiki') : get_string('likes', 'socialwiki'));
+    }
+} else {
+    if (has_capability('mod/socialwiki:viewpage', $context)) {
+        // Set the navigator.
+        $SESSION->mod_socialwiki->navi = $navi;
+        $out = socialwiki_print_page_content($page, $context, $page->subwikiid);
+    }
 }
 echo json_encode($out);

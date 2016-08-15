@@ -34,8 +34,7 @@ class html_parser extends nwiki_parser {
 
         // Headers are considered tags here.
         $headerdepth = $this->maxheaderdepth + 2;
-        $this->tagrules['header'] =
-                array('expression' => "/<\s*h([1-$headerdepth])\s*>(.+?)<\/h[1-$headerdepth]>/is");
+        $this->tagrules['header'] = array('expression' => "/<\s*h([1-$headerdepth])\s*>(.+?)<\/h[1-$headerdepth]>/is");
     }
 
     protected function before_parsing() {

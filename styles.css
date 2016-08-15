@@ -34,21 +34,15 @@
 
 .socialwiki_wikicontent .socialwiki-editor {
     width: 50%;
-    margin: auto;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px auto;
     text-align: center;
 }
 
 .socialwiki_wikicontent .socialwiki-previewbox {
-    margin: auto;
     border: thin solid blue;
     padding: 10px;
-}
-
-.socialwiki_wikicontent .socialwiki-info {
-    color: darkred;
-    text-decoration: underline;
+    margin-bottom: 20px;
+    border-radius: 4px;
 }
 
 .socialwiki_wikicontent .socialwiki-button {
@@ -163,6 +157,7 @@
 .socialwiki_wikicontent #socialwiki-comdirection {
     margin-left: 2.5em;
     cursor: pointer;
+    display: none;
 }
 
 .socialwiki_wikicontent .socialwiki-commentlist > li {

@@ -57,7 +57,7 @@ class socialwiki_versiontable extends socialwiki_table {
      *
      * @param int $uid The current uid (userid).
      * @param int $swid The current subwikiid.
-     * @param list $pages What pages are in the table.
+     * @param array $pages What pages are in the table.
      * @param string $type Table header options.
      * @param string $combiner How to combine peer data.
      */
@@ -88,6 +88,7 @@ class socialwiki_versiontable extends socialwiki_table {
             $linkpage = "<a style='margin:0;' class='socialwiki-link' href="
                     . "$CFG->wwwroot/mod/socialwiki/view.php?pageid=$page->id>$page->title</a>";
 
+            // Likes.
             if (socialwiki_liked($this->uid, $page->id)) {
                 $likeimg = "<img style='width:22px' class='socialwiki_unlikeimg unlikeimg_$page->id' "
                         . "alt='unlikeimg_$page->id' src='$CFG->wwwroot/mod/socialwiki/pix/icons/unlike.png'>";
@@ -97,16 +98,13 @@ class socialwiki_versiontable extends socialwiki_table {
             }
 
             // Favourites.
-            $favourites = socialwiki_get_page_favourites($page->id, $this->swid);
-            $favdiv = $this->make_multi_user_div($favourites);
-
-            $combiner = $this->combiner;
+            $favdiv = $this->make_multi_user_div(socialwiki_get_page_favourites($page->id, $this->swid));
 
             // Trust indicators.
-            $peerpop = $this->combine_indicators($page, $combiner, "peerpopularity");
-            $likesim = $this->combine_indicators($page, $combiner, "likesimilarity");
-            $followsim = $this->combine_indicators($page, $combiner, "followsimilarity");
-            $distance = $this->combine_indicators($page, $combiner, "networkdistance");
+            $peerpop = $this->combine_indicators($page, $this->combiner, "peerpopularity");
+            $likesim = $this->combine_indicators($page, $this->combiner, "likesimilarity");
+            $followsim = $this->combine_indicators($page, $this->combiner, "followsimilarity");
+            $distance = $this->combine_indicators($page, $this->combiner, "networkdistance");
 
             $row = array(
                 'title' => $likeimg.$linkpage,
@@ -133,11 +131,11 @@ class socialwiki_versiontable extends socialwiki_table {
      * @return string HTML
      */
     private function make_multi_user_div($contributors) {
-        Global $CFG, $PAGE;
+        Global $CFG;
         $idfirst = array_pop($contributors);
         $firstctr = fullname(socialwiki_get_user_info($idfirst));
         $num = count($contributors);
-        if ($num == 1) {
+        if ($num === 1) {
             $firstctr .= " and 1 other";
         } else if ($num > 1) {
             $firstctr .= " and $num others";
@@ -145,25 +143,22 @@ class socialwiki_versiontable extends socialwiki_table {
 
         $ctr = "";
         if ($num != 0) {
-            $ctr = "Others:\n";
+            $ctr = "title='Others:\n";
             foreach (array_reverse($contributors) as $c) {
                 $ctr .= fullname(socialwiki_get_user_info($c)) . "\n";
             }
+            $ctr = "'";
         }
 
-        if ($idfirst == $this->uid) {
-            $href = "href='$CFG->wwwroot/mod/socialwiki/home.php?id={$PAGE->cm->id}'";
-        } else {
-            $href = "href='$CFG->wwwroot/mod/socialwiki/viewuserpages.php?userid=$idfirst&subwikiid=$this->swid'";
-        }
+        $href = "href='$CFG->wwwroot/mod/socialwiki/viewuserpages.php?userid=$idfirst&subwikiid=$this->swid'";
 
-        return "<a class='socialwiki-link' $href title='$ctr'>$firstctr</a>";
+        return "<a class='socialwiki-link' $href $ctr>$firstctr</a>";
     }
 
     /**
      * Combines trust indicators obtained from the peers who like a page.
      *
-     * @param array $page Group of all the pages.
+     * @param stdClass $page Group of all the pages.
      * @param string $reducer How to reduce the peers.
      * @param string $indicator What should be combined.
      * @return int
