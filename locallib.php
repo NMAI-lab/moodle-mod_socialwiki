@@ -392,23 +392,21 @@ function socialwiki_search($swid, $search, $searchtitle = true, $searchcontent =
     }
 
     // Search SQL.
-    $sql = "SELECT p.*, COUNT(pageid) AS total
-            FROM {socialwiki_pages} p LEFT JOIN {socialwiki_likes} l
-            ON p.id = l.pageid
-            WHERE p.subwikiid=? AND (";
+    $sql = "SELECT * FROM {socialwiki_pages}
+            WHERE subwikiid=? AND (";
 
     if ($searchtitle && $searchcontent) {
         // If looking for title and content then search by both.
-        $sql .= "p.content LIKE ? OR p.title LIKE ?";
+        $sql .= "content LIKE ? OR title LIKE ?";
         $params = array($swid, $search, $search);
     } else {
         // Only place the correct term if title or content are turned off.
-        $sql .= $searchtitle ? "p.title LIKE ?" : "p.content LIKE ?";
+        $sql .= $searchtitle ? "title LIKE ?" : "content LIKE ?";
         $params = array($swid, $search);
     }
 
     // Group the pages with likes together.
-    $sql .= ") GROUP BY p.id ORDER BY total DESC";
+    $sql .= ")";
 
     return $DB->get_records_sql($sql, $params);
 }
@@ -835,29 +833,36 @@ function socialwiki_delete_pages($context, $pages = null, $swid = null) {
         return;
     }
 
-    // Delete page and all it's relevent data.
+    // Delete page and all it's relevant data.
     foreach ($pages as $p) {
-        if (is_object($p)) {
-            $p = $p->id;
+        if (!is_object($p)) {
+            $p = socialwiki_get_page($p);
         }
 
         // Delete page comments.
-        $comments = socialwiki_get_comments($context->id, $p);
+        $comments = socialwiki_get_comments($context->id, $p->id);
         foreach ($comments as $commentid => $commentvalue) {
-            socialwiki_delete_comment($commentid, $context, $p);
+            socialwiki_delete_comment($commentid, $context, $p->id);
         }
 
         // Delete page likes.
-        socialwiki_delete_page_likes($p);
+        socialwiki_delete_page_likes($p->id);
 
         // Delete page tags.
-        $tags = tag_get_tags_array('socialwiki_pages', $p);
+        $tags = tag_get_tags_array('socialwiki_pages', $p->id);
         foreach ($tags as $tagid => $tagvalue) {
-            tag_delete_instance('socialwiki_pages', $p, $tagid);
+            tag_delete_instance('socialwiki_pages', $p->id, $tagid);
+        }
+
+        // Fix parent pages.
+        $records = $DB->get_records('socialwiki_pages', array('parent' => $p->id));
+        foreach ($records as $rec) {
+            $rec->parent = $p->parent;
+            $DB->update_record('socialwiki_pages', $rec);
         }
 
         // Delete page.
-        $DB->delete_records('socialwiki_pages', array('id' => $p));
+        $DB->delete_records('socialwiki_pages', array('id' => $p->id));
     }
 }
 
@@ -1281,7 +1286,7 @@ function socialwiki_page_like($uid, $pid, $swid) {
  * @param bool $filterunseen Hide pages without likes.
  * @return stdClass[]
  */
-function socialwiki_get_pages_from_followed($uid, $swid, $filterunseen = true) {
+function socialwiki_get_pages_from_followed($uid, $swid, $filterunseen = false) {
     global $DB;
 
     $sql = 'SELECT DISTINCT l.pageid
@@ -1290,9 +1295,7 @@ function socialwiki_get_pages_from_followed($uid, $swid, $filterunseen = true) {
             WHERE f.userfromid=? AND l.subwikiid=? AND f.subwikiid=?';
     $params = array($uid, $swid, $swid);
     if ($filterunseen) {
-        $sql = $sql . 'AND NOT EXISTS
-                      (SELECT 1 FROM {socialwiki_user_views} v
-                       WHERE v.userid=? and v.pageid=l.pageid)';
+        $sql = $sql . 'AND NOT EXISTS (SELECT 1 FROM {socialwiki_user_views} v WHERE v.userid=? and v.pageid=l.pageid)';
         $params[] = $uid;
     }
     $results = $DB->get_records_sql($sql, $params);
@@ -1386,8 +1389,8 @@ function socialwiki_get_title_favourite($uid, $title, $swid) {
             INNER JOIN {socialwiki_pages} p
             ON l.pageid=p.id
             WHERE l.userid=? and p.title=? and l.subwikiid=?
-            ORDER BY p.timecreated DESC LIMIT 1';
-    $out = $DB->get_record_sql($sql, array($uid, $title, $swid));
+            ORDER BY p.timecreated DESC';
+    $out = $DB->get_record_sql($sql, array($uid, $title, $swid), IGNORE_MULTIPLE);
     if (isset($out->pageid)) {
         return $out->pageid;
     }
@@ -1410,8 +1413,8 @@ function socialwiki_is_user_favourite($uid, $pid, $swid) {
             INNER JOIN {socialwiki_pages} p
             ON l.pageid=p.id
             WHERE l.userid=? and p.title=? and l.subwikiid=?
-            ORDER BY p.timecreated DESC LIMIT 1';
-    $out = $DB->get_record_sql($sql, array($uid, $page->title, $swid));
+            ORDER BY p.timecreated DESC';
+    $out = $DB->get_record_sql($sql, array($uid, $page->title, $swid), IGNORE_MULTIPLE);
     if (isset($out->pageid)) {
         return ($out->pageid == $pid);
     }

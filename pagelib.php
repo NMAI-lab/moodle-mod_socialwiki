@@ -1126,8 +1126,7 @@ class page_socialwiki_search extends page_socialwiki_versions {
     public function set_url() {
         global $PAGE, $CFG;
         if (isset($this->page)) {
-            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid='
-                    . $this->page->id . '&id=' . $PAGE->cm->id);
+            $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?pageid=' . $this->page->id . '&id=' . $PAGE->cm->id);
         } else {
             $PAGE->set_url($CFG->wwwroot . '/mod/socialwiki/search.php?id=' . $PAGE->cm->id);
         }

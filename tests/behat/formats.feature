@@ -32,7 +32,7 @@ Feature: Using different format options
     Then "div.editor_atto" "css_element" should exist
     And I set the field "HTML format" to "This is HTML!"
     And I press "Save"
-    Then I should see "This is the first page in the wiki, with the HTML format"
+    Then I should see "This is HTML!"
 
     When I follow "Test Socialwiki"
     And I follow "Pages"
