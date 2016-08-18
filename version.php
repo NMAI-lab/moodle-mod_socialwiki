@@ -18,14 +18,14 @@
  * Code fragment to define the version of socialwiki. Called by moodle_needs_upgrading() and /admin/index.php
  *
  * @package   mod_socialwiki
- * @copyright 2015 NMAI-lab
+ * @copyright 2016 NMAI-lab
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2015101500;       // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2013040500;       // Requires Moodle version 2.5 (original release date).
+$plugin->version   = 2016081800;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires  = 2015040500;       // Requires Moodle version 3.0 (original release date).
 $plugin->component = 'mod_socialwiki'; // Full name of the plugin (used for diagnostics).
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.3';
+$plugin->release   = '1.0.4';
 $plugin->cron      = 0;
