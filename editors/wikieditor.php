@@ -29,7 +29,7 @@
 require_once($CFG->dirroot.'/lib/formslib.php');
 require_once($CFG->dirroot.'/lib/form/textarea.php');
 
-class moodlequickform_socialwikieditor extends MoodleQuickForm_textarea {
+class MoodleQuickForm_socialwikieditor extends MoodleQuickForm_textarea {
 
     private $files;
     private $wikiformat;
@@ -158,5 +158,5 @@ class moodlequickform_socialwikieditor extends MoodleQuickForm_textarea {
 }
 
 // Register wikieditor.
-MoodleQuickForm::registerElementType('socialwikieditor', $CFG->dirroot
-        . "/mod/socialwiki/editors/wikieditor.php", 'moodlequickform_socialwikieditor');
+MoodleQuickForm::registerElementType('socialwikieditor',
+    $CFG->dirroot . "/mod/socialwiki/editors/wikieditor.php", 'MoodleQuickForm_socialwikieditor');

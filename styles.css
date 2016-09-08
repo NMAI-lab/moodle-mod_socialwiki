@@ -168,8 +168,8 @@
 .socialwiki_wikicontent .socialwiki-commentlist.reversed,
 .socialwiki_wikicontent .socialwiki-commentlist.reversed > li {
     -webkit-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-            transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 .socialwiki_wikicontent .socialwiki-deletecomment {
@@ -190,6 +190,7 @@
 
 .socialwiki_wikicontent .socialwiki-diffheading {
     border-bottom: none;
+    border-radius: 5px 5px 0 0;
 }
 
 .socialwiki_wikicontent .socialwiki-diffleft {

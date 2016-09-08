@@ -1,6 +1,6 @@
 @media print {
     #socialwiki-comdirection, .action-icon, .midpad, button, header,
-    .breadcrumb, #page-navbar, .nav-tabs, #block-region-side-pre, #page-footer {
+    .breadcrumb, #page-navbar, .nav-tabs, .navigator, #block-region-side-pre, #page-footer {
         display: none;
     }
 
