@@ -45,8 +45,8 @@ class mod_socialwiki_filesedit_form extends moodleform {
 
         $mform->addElement('filemanager', 'files_filemanager', get_string('files'), null, $options);
 
-        $mform->addElement('hidden', 'returnurl', $data->returnurl);
-        $mform->setType('returnurl', PARAM_URL);
+        $mform->addElement('hidden', 'pageid', $data->pageid);
+        $mform->setType('pageid', PARAM_URL);
 
         $mform->addElement('hidden', 'subwiki', $data->subwikiid);
         $mform->setType('subwiki', PARAM_INT);

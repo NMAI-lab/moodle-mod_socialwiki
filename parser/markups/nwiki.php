@@ -55,8 +55,7 @@ class nwiki_parser extends socialwiki_markup_parser {
             'tag' => 'p'
         ),
         'list' => array(
-            'expression' => "/^((?:\ *[\*|#]{1,5}\ *.+?)+)"
-                . "(\n\s*(?:\n|<(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)\ *\/?>))/ims",
+            'expression' => "/^((?:\ *[\*|#]{1,5}\ *.+?)+)(\n\s*(?:\n|<(?:h\d|pre|table|tbody|thead|tr|th|td|ul|li|ol|hr)\ *\/?>))/ims",
             'tags' => array(),
             'token' => array('*', '#')
         ),

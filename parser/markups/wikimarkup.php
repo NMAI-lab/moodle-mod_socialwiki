@@ -297,7 +297,7 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
 
     protected function format_image($src, $alt, $caption = "", $align = 'left') {
         $src = $this->real_path($src);
-        return socialparser_utils::h('div', socialparser_utils::h('p', $caption) . "<img src='$src' alt='$alt' />",
+        return socialparser_utils::h('div', socialparser_utils::h('p', $caption) . "<img src=\"$src\" alt=\"$alt\" />",
                 array('class' => "socialwiki_image_$align"));
     }
 

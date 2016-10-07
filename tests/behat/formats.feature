@@ -1,4 +1,4 @@
-@mod @mod_socialwiki
+@mod @deprecated
 Feature: Using different format options
   In order to use a specific format
   As a user

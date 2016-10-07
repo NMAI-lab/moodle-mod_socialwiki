@@ -6,13 +6,26 @@ var clientPC = navigator.userAgent.toLowerCase(); // Get client info.
 var is_gecko = ((clientPC.indexOf('gecko') != -1) && (clientPC.indexOf('spoofer') == -1)
         && (clientPC.indexOf('khtml') == -1) && (clientPC.indexOf('netscape/7.0') == -1));
 var is_safari = ((clientPC.indexOf('AppleWebKit') != -1) && (clientPC.indexOf('spoofer') == -1));
-var is_khtml = (navigator.vendor == 'KDE' || (document.childNodes && !document.all && !navigator.taintEnabled));
 
-if (clientPC.indexOf('opera') != -1) {
-    var is_opera = true;
-    var is_opera_preseven = (window.opera && !document.childNodes);
-    var is_opera_seven = (window.opera && document.childNodes);
-}
+$('.socialwiki_wikicontent textarea').addClass('socialwikieditor-content');
+
+var $styleheads = $('#styleheads ul');
+var $toolbar = $('.socialwiki_wikicontent .socialwikieditor-toolbar').show();
+
+$('#styleprops').on('click', function(e) {
+    e.preventDefault();
+    $styleheads.toggle();
+});
+$toolbar.find('#styleheads a').on('click', function() {
+    $styleheads.hide();
+    var el = $(this);
+    insertTags(el.attr('start_tag'), el.attr('end_tag'), el.text());
+});
+$toolbar.find('button:not(#styleprops)').on('click', function(e) {
+    e.preventDefault();
+    var el = $(this);
+    insertTags(el.attr('start_tag'), el.attr('end_tag'), el.attr('sample') == 1 ? el.attr('title') : '')
+});
 
 /**
  * Apply tagOpen/tagClose to selection in textarea,
@@ -23,8 +36,8 @@ if (clientPC.indexOf('opera') != -1) {
  */
 function insertTags(tagOpen, tagClose, sampleText) {
 
-    tagOpen = unescape(tagOpen);
-    tagClose = unescape(tagClose);
+    tagOpen = decodeURIComponent(tagOpen);
+    tagClose = decodeURIComponent(tagClose);
 
     var txtarea = document.forms['mform1'].newcontent;
 
@@ -51,6 +64,7 @@ function insertTags(tagOpen, tagClose, sampleText) {
         if (!myText) {
             myText = sampleText;
         }
+        var subst = '';
         if (myText.charAt(myText.length - 1) == " ") { // Exclude ending space char, if any.
             subst = tagOpen + myText.substring(0, (myText.length - 1)) + tagClose + " ";
         } else {

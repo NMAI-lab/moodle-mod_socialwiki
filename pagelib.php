@@ -629,8 +629,8 @@ class page_socialwiki_edit extends page_socialwiki {
             $params['fileitemid'] = $this->subwiki->id;
             $params['component'] = 'mod_socialwiki';
             $params['filearea'] = 'attachments';
-            echo '<a href="' . $CFG->wwwroot . '/mod/socialwiki/files.php?swid='
-                    . $this->subwiki->id . '">' . get_string('uploadtitle', 'socialwiki') . '</a>';
+            echo "<a href='{$CFG->wwwroot}/mod/socialwiki/filesedit.php?subwiki={$this->subwiki->id}&pageid={$this->page->id}'>"
+                . get_string('uploadtitle', 'socialwiki') . '</a>';
         }
         $form = new mod_socialwiki_edit_form($url, $params);
         $form->set_data($data);

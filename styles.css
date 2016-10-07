@@ -304,10 +304,29 @@
     padding-top: 20px;
 }
 
-.socialwiki_wikicontent .socialwikieditor-toolbar img {
-    width: 22px;
-    height: 22px;
-    vertical-align: middle;
+.socialwiki_wikicontent .socialwikieditor-toolbar {
+    display: none;
+}
+
+.socialwiki_wikicontent .socialwikieditor-toolbar #styleheads {
+    position: absolute;
+    margin-top: 28px;
+}
+
+.socialwiki_wikicontent .socialwikieditor-toolbar #addtags {
+    margin: 0 0 0 9px;
+}
+
+.socialwiki_wikicontent textarea {
+    box-sizing: border-box;
+    width: 100% !important;
+    resize: vertical;
+}
+
+.socialwiki_wikicontent .socialwikieditor-content {
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 0;
 }
 
 .socialwiki_wikicontent .slidecontainer {
