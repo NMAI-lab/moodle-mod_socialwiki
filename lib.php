@@ -53,7 +53,7 @@ function socialwiki_add_instance($wiki) {
 
     $wikiid = $DB->insert_record('socialwiki', $wiki);
 
-    $record = new StdClass();
+    $record = new stdClass();
     $record->wikiid = $wikiid;
     $record->groupid = 0;
     $record->userid = 0;
@@ -132,6 +132,11 @@ function socialwiki_delete_instance($id) {
     return $result;
 }
 
+/**
+ * Reset the socialwiki user data.
+ * @param stdClass $data The plugin user data.
+ * @return array|bool The status after reset.
+ */
 function socialwiki_reset_userdata($data) {
     global $CFG, $DB;
     require_once($CFG->dirroot . '/mod/socialwiki/pagelib.php');
@@ -179,6 +184,10 @@ function socialwiki_reset_userdata($data) {
     return $status;
 }
 
+/**
+ * Add extra elements to the reset form.
+ * @param MoodleQuickForm $mform
+ */
 function socialwiki_reset_course_form_definition(&$mform) {
     $mform->addElement('header', 'socialwikiheader', get_string('modulenameplural', 'socialwiki'));
     $mform->addElement('advcheckbox', 'reset_socialwiki_tags', get_string('removeallwikitags', 'socialwiki'));
@@ -250,85 +259,6 @@ function socialwiki_supports($feature) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity
- * that has occurred in wiki activities and print it out.
- * Return true if there was output, or false is there was none.
- *
- * @uses CONTEXT_MODULE
- * @uses VISIBLEGROUPS
- * @param stdClass $course
- * @param bool $viewfullnames capability
- * @param int $timestart
- * @return bool
- * */
-function socialwiki_print_recent_activity($course, $viewfullnames, $timestart) {
-    global $CFG, $DB, $OUTPUT;
-
-    $sql = "SELECT p.*, w.id as wikiid, sw.groupid
-            FROM {socialwiki_pages} p
-            JOIN {socialwiki_subwikis} sw ON sw.id = p.subwikiid
-            JOIN {socialwiki} w ON w.id = sw.wikiid
-            WHERE p.timecreated > ? AND w.course = ?
-            ORDER BY p.timecreated ASC";
-    if (!$pages = $DB->get_records_sql($sql, array($timestart, $course->id))) {
-        return false;
-    }
-
-    $modinfo = get_fast_modinfo($course);
-    $wikis = array();
-
-    foreach ($pages as $page) {
-        if (!isset($modinfo->instances['socialwiki'][$page->wikiid])) {
-            // Not visible.
-            continue;
-        }
-        $cm = $modinfo->instances['socialwiki'][$page->wikiid];
-        if (!$cm->uservisible) {
-            continue;
-        }
-        $context = context_module::instance($cm->id);
-
-        if (!has_capability('mod/socialwiki:viewpage', $context)) {
-            continue;
-        }
-
-        $groupmode = groups_get_activity_groupmode($cm, $course);
-
-        if ($groupmode) {
-            if ($groupmode == SEPARATEGROUPS && !has_capability('mod/socialwiki:managewiki', $context)) {
-                // Separate mode.
-                if (isguestuser()) {
-                    // Shortcut.
-                    continue;
-                }
-
-                if (is_null($modinfo->groups)) {
-                    $modinfo->groups = groups_get_user_groups($course->id); // Load all my groups and cache it in modinfo.
-                }
-
-                if (!in_array($page->groupid, $modinfo->groups[0])) {
-                    continue;
-                }
-            }
-        }
-        $wikis[] = $page;
-    }
-    unset($pages);
-
-    if (!$wikis) {
-        return false;
-    }
-    echo $OUTPUT->heading(get_string("updatedwikipages", 'socialwiki') . ':', 3);
-    foreach ($wikis as $wiki) {
-        $cm = $modinfo->instances['socialwiki'][$wiki->wikiid];
-        $link = $CFG->wwwroot . '/mod/socialwiki/view.php?pageid=' . $wiki->id;
-        print_recent_activity_note($wiki->timecreated, $wiki, $cm->name, $link, false, $viewfullnames);
-    }
-
-    return true; // True if anything was printed, otherwise false.
-}
-
-/**
  * Function to be run periodically according to the moodle cron
  * This function searches for things that need to be done, such
  * as sending out mail, toggling flags etc ...
@@ -383,7 +313,7 @@ function socialwiki_pluginfile($course, $cm, $context, $filearea, $args, $forced
     require_once($CFG->dirroot . "/mod/socialwiki/locallib.php");
 
     if ($filearea == 'attachments') {
-        $swid = (int) array_shift($args);
+        $swid = (int)array_shift($args);
 
         if (!$subwiki = socialwiki_get_subwiki($swid)) {
             return false;
@@ -409,22 +339,18 @@ function socialwiki_pluginfile($course, $cm, $context, $filearea, $args, $forced
 function socialwiki_search_form($cm, $search = "") {
     global $CFG;
 
-    $output = '<div class="socialwikisearch">';
-    $output .= '<form method="post" action="' . $CFG->wwwroot . '/mod/socialwiki/search.php" style="display:inline">';
-    $output .= '<fieldset class="invisiblefieldset">';
-    $output .= '<legend class="accesshide">' . get_string('search', 'socialwiki') . '</legend>';
-    $output .= '<label class="accesshide" for="search_socialwiki">' . get_string("searchterms", "socialwiki") . '</label>';
-    $output .= '<input id="search_socialwiki" name="searchstring" type="text" size="18" value="';
-    $output .= s($search, true) . '" alt="search" />';
-    $output .= '<input name="courseid" type="hidden" value="' . $cm->course . '" />';
-    $output .= '<input name="id" type="hidden" value="' . $cm->id . '" />';
-    $output .= '<input name="search_social_content" type="hidden" value="1" />';
-    $output .= '<input value="' . get_string('search', 'socialwiki') . '" type="submit" />';
-    $output .= '</fieldset>';
-    $output .= '</form>';
-    $output .= '</div>';
-
-    return $output;
+    return '
+<div class="socialwikisearch">
+    <form method="get" action="' . $CFG->wwwroot . '/mod/socialwiki/search.php" style="display:inline">
+        <fieldset class="invisiblefieldset">
+            <legend class="accesshide">' . get_string('search', 'socialwiki') . '</legend>
+            <label class="accesshide" for="search_socialwiki">' . get_string("searchterms", "socialwiki") . '</label>
+            <input id="search_socialwiki" name="searchstring" type="text" size="18" value="' . s($search, true) . '" alt="search" />
+            <input name="id" type="hidden" value="' . $cm->id . '" />
+            <input value="' . get_string('search', 'socialwiki') . '" type="submit" />
+        </fieldset>
+    </form>
+</div>';
 }
 
 /**
@@ -530,13 +456,14 @@ function socialwiki_comment_validate($commentparam) {
  * @param string $pagetype Current page type.
  * @param stdClass $parentcontext Block's parent context.
  * @param stdClass $currentcontext Current context of block.
+ * @return array
  */
 function socialwiki_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $modulepagetype = array(
+    $modulepagetype = [
         'mod-socialwiki-*' => get_string('page-mod-socialwiki-x', 'socialwiki'),
         'mod-socialwiki-view' => get_string('page-mod-socialwiki-view', 'socialwiki'),
         'mod-socialwiki-comments' => get_string('page-mod-socialwiki-comments', 'socialwiki'),
         'mod-socialwiki-versions' => get_string('page-mod-socialwiki-versions', 'socialwiki')
-    );
+    ];
     return $modulepagetype;
 }

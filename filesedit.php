@@ -87,7 +87,5 @@ if ($mform->is_cancelled()) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->box_start('generalbox');
 $mform->display();
-echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

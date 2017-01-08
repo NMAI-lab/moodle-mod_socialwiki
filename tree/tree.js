@@ -27,24 +27,28 @@ $(function () {
         $('.tagcloud').tagcloud();
     }
 
-    var d = document.getElementById('dragscroll'), lastX, lastY, down = false;
+    var d = document.getElementById('dragscroll'), lastX, lastY, down = false, drag = 0, DRAG_LIMIT = 3;
     d.style.cursor = 'move';
     d.onmousedown = function(e) {
         lastX = e.clientX;
         lastY = e.clientY;
         down = true;
+        drag = 0;
         return false;
     };
     document.onmousemove = function(e) {
         if (down) {
             d.scrollLeft += (lastX - (lastX = e.clientX));
             window.scrollBy(0, lastY - (lastY = e.clientY));
+            drag++;
             return false;
         }
     };
     document.onmouseup = function() {
         down = false;
-        return false;
+    };
+    d.onclick = function() {
+        return drag < DRAG_LIMIT;
     };
 
     // Enable the compare button if 2 nodes have been selected.
@@ -71,6 +75,9 @@ $(function () {
 
     // The Hide Button.
     $(".hider").click(function () {
+        if (drag > DRAG_LIMIT) {
+            return false;
+        }
         var $i = $("#hid" + ($(this).attr("value")));
         var $b = $("#bgroup" + ($(this).attr("value")));
 
@@ -93,6 +100,9 @@ $(function () {
 
     // The Collapse Button.
     $(".collapser").click(function () {
+        if (drag > DRAG_LIMIT) {
+            return false;
+        }
         var $i = $("#cop" + ($(this).attr("value")));
         var $b = $("#bgroup" + ($(this).attr("value")));
         var $h = $("#hid" + ($(this).attr("value")));

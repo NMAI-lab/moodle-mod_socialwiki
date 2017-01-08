@@ -211,17 +211,19 @@ abstract class socialwiki_markup_parser extends socialgeneric_parser {
     }
 
     private function process_toc_level($next, $current) {
+        $tags = '';
         if ($next > $current) {
             for ($t = 0; $t < $next - $current; $t++) {
-                return '<ol>';
+                $tags .= '<ol>';
             }
         } else if ($next < $current) {
             for ($t = 0; $t < $current - $next; $t++) {
-                return '</ol></li>';
+                $tags .= '</ol></li>';
             }
         } else {
-            return '</li>';
+            $tags .= '</li>';
         }
+        return $tags;
     }
 
     /**

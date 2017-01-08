@@ -150,10 +150,10 @@ class socialwiki_peer {
         global $DB;
         $sql = 'SELECT COUNT(usertoid) AS total, COUNT(DISTINCT usertoid) AS different
             FROM {socialwiki_follows}
-            WHERE (userfromid=? OR userfromid=?) AND subwikiid=?';
-        $data = $DB->get_record_sql($sql, array($this->id, $uid, $swid));
-        if ($data->total > 0) {
+            WHERE ((userfromid=? AND usertoid<>?) OR (userfromid=? AND usertoid<>?)) AND subwikiid=?';
+        $data = $DB->get_record_sql($sql, array($this->id, $uid, $uid, $this->id , $swid));
 
+        if ($data->total > 0) {
             // Get the similarity between follows and divide by the number of unique likes.
             $this->followsim = ($data->total - $data->different) / $data->different;
         }

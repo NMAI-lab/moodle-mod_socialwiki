@@ -52,9 +52,9 @@ class MoodleQuickForm_socialwikieditor extends MoodleQuickForm_textarea {
      *
      * @deprecated since Moodle 3.1
      */
-    public function MoodleQuickForm_socialwikieditor($elementName = null, $elementLabel = null, $attributes = null) {
+    public function MoodleQuickForm_socialwikieditor($elementname = null, $elementlabel = null, $attributes = null) {
         debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
-        self::__construct($elementName, $elementLabel, $attributes);
+        self::__construct($elementname, $elementlabel, $attributes);
     }
 
     public function setwikiformat($wikiformat) {
@@ -78,7 +78,7 @@ class MoodleQuickForm_socialwikieditor extends MoodleQuickForm_textarea {
     }
 
     private function getbuttons() {
-        global $PAGE, $OUTPUT, $CFG;
+        global $PAGE, $OUTPUT;
 
         $PAGE->requires->js(new moodle_url('/mod/socialwiki/editors/wikieditor.js'));
         $editor = $this->wikiformat;
@@ -155,14 +155,14 @@ class MoodleQuickForm_socialwikieditor extends MoodleQuickForm_textarea {
         return $html;
     }
 
-    private function makeitem($title, $start_tag, $end_tag) {
+    private function makeitem($title, $starttag, $endtag) {
         return html_writer::tag('li', html_writer::tag('a', $title,
-            array('href' => '#', 'start_tag' => $start_tag, 'end_tag' => $end_tag)));
+            array('href' => '#', 'start_tag' => $starttag, 'end_tag' => $endtag)));
     }
 
-    private function makebutton($src, $title, $start_tag, $end_tag, $sample_text = true) {
+    private function makebutton($src, $title, $starttag, $endtag, $sampletext = true) {
         return html_writer::tag('button', $this->imageicon($src), array('title' => get_string($title, 'socialwiki'),
-            'sample' => $sample_text, 'start_tag' => $start_tag, 'end_tag' => $end_tag));
+            'sample' => $sampletext, 'start_tag' => $starttag, 'end_tag' => $endtag));
     }
 
     private function imageicon($src) {

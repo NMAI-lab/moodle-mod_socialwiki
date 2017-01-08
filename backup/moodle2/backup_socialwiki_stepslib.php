@@ -28,8 +28,7 @@
 class backup_socialwiki_activity_structure_step extends backup_activity_structure_step
 {
 
-    protected function define_structure()
-    {
+    protected function define_structure() {
         // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 

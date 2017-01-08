@@ -25,10 +25,13 @@ Feature: Edit page
       | Social Wiki name | Test Socialwiki |
     And I follow "Test Socialwiki"
     And I follow "Pages"
-    And I press "id_submitbutton"
+    And I press "Make a new Page"
+
+    # Create a page
     And I set the field "New page title" to "<format> Page"
     And I set the field "<format> format" to "1"
     And I press "Create page"
+
     # Use toolbar buttons
     Then ".socialwikieditor-toolbar" "css_element" should be visible
     When I click on "Bold text" "button"
@@ -49,6 +52,8 @@ Feature: Edit page
     And I click on "styleprops" "button"
     And I click on "Pre-formatted" "link"
     And I press "Save"
+
+    # Check HTML
     Then I should see "Bold textItalic textInternal linkhttp://External URL"
     And ".wikipage img" "css_element" should exist
     And I should see "Level 1 Header" in the ".wikipage .text_to_html h3" "css_element"
@@ -61,11 +66,11 @@ Feature: Edit page
 
     Examples:
       | format | content                                                                                | bold | italic |
-      | Creole | **Bold text**//Italic text//[[Internal link]]http://External URL{{Image\|Alt}}         | **   | //I    |
       | NWiki  | ''Bold text'''''Italic text'''[[Internal link]]http://External URL[[image:Image\|alt]] | ''   | '''    |
+      | Creole | **Bold text**//Italic text//[[Internal link]]http://External URL{{Image\|Alt}}         | **   | //I    |
 
   Scenario Outline: Forced format + Nojs
-    And I add a "Social Wiki" to section "1" and I fill the form with:
+    When I add a "Social Wiki" to section "1" and I fill the form with:
       | Social Wiki name | Force Format Socialwiki |
       | Default format   | <format>                |
       | Force format     | 1                       |
@@ -77,7 +82,8 @@ Feature: Edit page
     And I press "Create page"
     And I set the field "<format> format" to "<input> [[<format> format]]."
     And I press "Save"
-    Then I should see "Forcing" in the ".wikipage strong" "css_element"
+    Then I should see "Forcing the use of the <format> format" in the ".wikipage" "css_element"
+    And I should see "Forcing" in the ".wikipage strong" "css_element"
     And I should see "use of" in the ".wikipage em" "css_element"
 
     Examples:
